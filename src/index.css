@@ -226,6 +226,9 @@ label{
 .side-menu li .logout{
   color: rgb(228, 30, 30);
 }
+.side-menu li .logout:hover{
+  color: rgb(228, 30, 30);
+}
 #sidebar.hide .side-menu li .logout{
   color: rgb(228, 30, 30);
 

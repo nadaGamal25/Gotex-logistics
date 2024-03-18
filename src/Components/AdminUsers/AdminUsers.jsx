@@ -36,7 +36,7 @@ export default function AdminUsers() {
             <th scope="col">الإيميل </th>
             <th scope="col">المدينة </th>
             <th scope="col">العنوان </th>
-            <th scope="col">nid </th>
+            <th scope="col">رقم الهوية </th>
             <th>role</th>
            
             

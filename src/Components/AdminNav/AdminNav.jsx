@@ -68,11 +68,25 @@ export default function AdminNav({logout}) {
                 </Link>
             </li>
             <li >
-                <Link to="#">
+                <Link to="/carrierRegister">
                     <i class="fa-solid fa-user-plus bx"></i>
                     <span class="text">تسجيل مندوب</span>
                 </Link>
             </li>
+            <li className=''>
+                <Link to="/adminCarriers">
+                    <i class="fa-solid fa-users bx"></i>
+                    <span class="text">المناديب</span>
+                </Link>
+            </li>
+            
+            <li >
+                <Link to="/carrierResendEmail">
+                <i class="fa-solid fa-envelope-circle-check bx"></i>
+               <span class="text">إعادة إرسال إيميل للمندوب</span>
+                </Link>
+            </li>
+            
             
             
            

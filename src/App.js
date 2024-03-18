@@ -11,6 +11,11 @@ import RegisterUser from './Components/RegisterUser/RegisterUser';
 import UserResendEmail from './Components/UserResendEmail/UserResendEmail';
 import UserPasswordFirst from './Components/UserPasswordFirst/UserPasswordFirst';
 import UserLogin from './Components/UserLogin/UserLogin';
+import AdminCarriers from './Components/AdminCarriers/AdminCarriers';
+import CarrierRegister from './Components/CarrierRegister/CarrierRegister';
+import CarrierResendEmail from './Components/CarrierResendEmail/CarrierResendEmail';
+import CarrierLogin from './Components/CarrierLogin/CarrierLogin';
+import CarrierPasswordFirst from './Components/CarrierPasswordFirst/CarrierPasswordFirst';
 
 function App() {
   useEffect(()=>{
@@ -42,8 +47,10 @@ function App() {
 
   let routers =createBrowserRouter([
     {index:true,element:<AdminLogin saveAdminData={saveAdminData} setAdminData={setAdminData} adminData={adminData}/>},
-    {path:'user/set-password-first-time/:id',element:<UserPasswordFirst/>},
+    {path:'set-password-first-time/:id',element:<UserPasswordFirst/>},
     {path:'userLogin',element:<UserLogin/>},
+    {path:'carrier/set-password-first-time/:id',element:<CarrierPasswordFirst/>},
+    {path:'carrierLogin',element:<CarrierLogin/>},
     
     
     {path:'/',element:<AdminLayout setAdminData={setAdminData} adminData={adminData}/> ,children:[
@@ -51,6 +58,9 @@ function App() {
       {path:'adminUsers',element:<AdminUsers/>},
       {path:'registerUser',element:<RegisterUser/>},
       {path:'UserResendEmail',element:<UserResendEmail/>},
+      {path:'adminCarriers',element:<AdminCarriers/>},
+      {path:'carrierRegister',element:<CarrierRegister/>},
+      {path:'carrierResendEmail',element:<CarrierResendEmail/>},
         
        
       ]},

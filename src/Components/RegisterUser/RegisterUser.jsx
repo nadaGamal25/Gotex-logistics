@@ -163,7 +163,7 @@ export default function RegisterUser() {
       })}
       </div>
       <div className="col-md-6">
-        <label htmlFor="nid">nid :</label>
+        <label htmlFor="nid">رقم الهوية :</label>
         <input onChange={getUserData} type="text" className='my-input my-2 form-control' name='nid' id='nid' />
         {errorList.map((err,index)=>{
         if(err.context.label ==='nid'){

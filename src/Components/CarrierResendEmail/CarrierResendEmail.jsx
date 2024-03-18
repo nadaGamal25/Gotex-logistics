@@ -1,52 +1,51 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 
-export default function UserResendEmail() {
-  useEffect(()=>{
-    getUsersListsAdmin()
-  },[])
-  const [usersListAdmin,setUsersListsAdmin]=useState([])
-
-  async function getUsersListsAdmin() {
-    try {
-      const response = await axios.get('https://dashboard.go-tex.net/logistics-test/user',
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
-        },
-      });
-      const usersList = response.data.data;
-      console.log(usersList)
-      setUsersListsAdmin(usersList)
-    } catch (error) {
-      console.error(error);
+export default function CarrierResendEmail() {
+    useEffect(()=>{
+        getUsersListsAdmin()
+      },[])
+      const [usersListAdmin,setUsersListsAdmin]=useState([])
+    
+      async function getUsersListsAdmin() {
+        try {
+          const response = await axios.get('https://dashboard.go-tex.net/logistics-test/carrier/',
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
+            },
+          });
+          const usersList = response.data.data;
+          console.log(usersList)
+          setUsersListsAdmin(usersList)
+        } catch (error) {
+          console.error(error);
+        }
+      }
+      async function resendEmail(userId){
+        try{
+        const response= await axios.post(`https://dashboard.go-tex.net/logistics-test/carrier/resend-verify-email/${userId}`,{},
+        {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
+            },
+        }
+          );
+        if(response.status == 200){
+          console.log(response)
+          window.alert("تم ارسال الايميل بنجاح")  
+        }
+        else{
+          window.alert(response.data.msg.name)
+        }
+      
+      }catch(error){
+          console.log(error.response)
+          window.alert(error.response.data.msg.name || error.response.data.msg || "error")
+      }
     }
-  }
-  async function resendEmail(userId){
-    try{
-    const response= await axios.post(`https://dashboard.go-tex.net/logistics-test/user/resend-verify-email/${userId}`,{},
-    {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
-        },
-    }
-      );
-    if(response.status == 200){
-      console.log(response)
-      window.alert("تم ارسال الايميل بنجاح")  
-    }
-    else{
-      window.alert(response.data.msg.name)
-    }
-  
-  }catch(error){
-      console.log(error.response)
-      window.alert(error.response.data.msg.name || error.response.data.msg || "error")
-  }
-}
-
   return (
-    <div className='p-5' id='content'>
+<div className='p-5' id='content'>
     
     <div className="my-table p-4 ">
       <table className="table">
@@ -58,7 +57,7 @@ export default function UserResendEmail() {
             <th scope="col">الإيميل </th>
             <th scope="col">المدينة </th>
             <th scope="col">العنوان </th>
-            <th scope="col">nid </th>
+            <th scope="col">رقم الهوية </th>
             {/* <th>role</th> */}
            <th></th>
             
@@ -90,5 +89,6 @@ export default function UserResendEmail() {
         </tbody>
       </table>
      </div>
-    </div>  )
+    </div>
+      )
 }

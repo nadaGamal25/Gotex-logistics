@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import logo from '../../assets/logo.png'
 import { useNavigate } from 'react-router-dom';
+import {Modal, Button } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function AdminNav({logout}) {
   let navigate= useNavigate();
@@ -34,6 +36,17 @@ export default function AdminNav({logout}) {
     };
   }, []);
 
+  const [showModal, setShowModal] = useState(false);
+
+  const openModal = () => {
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
+
   return (
     <>
     {/* <!-- start side navbar --> */}
@@ -56,12 +69,12 @@ export default function AdminNav({logout}) {
                 </Link>
             </li>
             <li >
-                <Link to="/registerUser">
+                <Link to='#' onClick={openModal}>
                     <i class="fa-solid fa-user-plus bx"></i>
-                    <span class="text">تسجيل مدخلة</span>
+                    <span class="text">تسجيل مستخدم</span>
                 </Link>
             </li>
-            <li >
+            {/* <li >
                 <Link to="/UserResendEmail">
                 <i class="fa-solid fa-envelope-circle-check bx"></i>
                <span class="text">إعادة إرسال إيميل للمدخلة</span>
@@ -85,7 +98,7 @@ export default function AdminNav({logout}) {
                 <i class="fa-solid fa-envelope-circle-check bx"></i>
                <span class="text">إعادة إرسال إيميل للمندوب</span>
                 </Link>
-            </li>
+            </li> */}
             
             
             
@@ -113,6 +126,22 @@ export default function AdminNav({logout}) {
             </div>
         </nav>
         </section>
-        
+        <Modal show={showModal} onHide={closeModal}>
+        <Modal.Header >
+          <Modal.Title>تسجيل مستخدم
+             </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className='text-center'>
+          <Link to="/registerUser" onClick={closeModal} className="btn btn-success m-2">تسجيل مدخلة </Link>
+          <Link to="/carrierRegister" onClick={closeModal} className="btn btn-orange m-2">تسجيل مندوب  </Link>            
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={closeModal}>
+          إغلاق
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>  )
 }

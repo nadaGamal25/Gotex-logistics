@@ -9,6 +9,7 @@ import ar from 'react-phone-number-input/locale/ar'
 export default function CarrierRegister() {
     const [selectedFile, setSelectedFile] = useState(null);
     const [selectedPhoto, setSelectedPhoto] = useState(null);
+    const [selectedNid, setSelectedNid] = useState(null);
 
   const [visible , setVisible] =useState(false);  
   let navigate= useNavigate(); 
@@ -35,7 +36,7 @@ export default function CarrierRegister() {
     formData.append('email', theUser.email);
     formData.append('address', theUser.address);
     formData.append('city', theUser.city);
-    formData.append('nid', theUser.nid);
+    // formData.append('nid', theUser.nid);
     
     if (selectedFile) {
       formData.append('papers', selectedFile, selectedFile.name);
@@ -43,6 +44,10 @@ export default function CarrierRegister() {
     if (selectedPhoto) {
         formData.append('photo', selectedPhoto, selectedPhoto.name);
       }
+
+    if (selectedNid) {
+        formData.append('nid', selectedNid, selectedNid.name);
+      } 
     try {
       const response = await axios.post('https://dashboard.go-tex.net/logistics-test/carrier/register', formData
       ,{
@@ -58,13 +63,13 @@ export default function CarrierRegister() {
         window.alert('تم التسجيل بنجاح');
       } else {
         setisLoading(true);
-        setError(response.data.msg);
+        // setError(response.data.msg);
       }
     } catch (error) {
         setisLoading(true)
-        setError(error.response.data.msg)
+        // setError(error.response.data.msg)
         console.log(error.response)
-        window.alert(error.response.data.msg.name || error.response.data.msg || "error")
+        window.alert(error.response?.data?.msg?.name || error.response?.data?.errors[0]?.msg|| "error")
     }
   }
 
@@ -75,6 +80,10 @@ export default function CarrierRegister() {
   function handlePhotoChange(event) {
     console.log(event.target.files)
     setSelectedPhoto(event.target.files[0]);
+  }
+  function handleNidChange(event) {
+    console.log(event.target.files)
+    setSelectedNid(event.target.files[0]);
   }
   
 function submitRegisterForm(e){
@@ -89,7 +98,7 @@ function submitRegisterForm(e){
     }else{
       sendRegisterDataToApi();
       console.log("yes")
-
+// alert('yeb')
     }
   
   }
@@ -109,7 +118,7 @@ function submitRegisterForm(e){
         email:Joi.string().email({ tlds: { allow: ['com', 'net'] }}).required(),
         address:Joi.string().required(),
         city:Joi.string().required(),
-        nid:Joi.string().required(),
+        nid:Joi.required(),
         photo:Joi.allow(null, ''),
         papers:Joi.allow(null, ''),
         // :Joi.allow(null, ''),
@@ -133,7 +142,7 @@ function submitRegisterForm(e){
     <form onSubmit={submitRegisterForm} className='my-3' action="">
       <div className="row">
       <div className="col-md-6">
-      <label htmlFor="firstName">الاسم الأول  :</label>
+      <label htmlFor="firstName">الاسم الأول : <span className="star-requered">*</span></label>
       <input onChange={getUserData} type="text" className='my-input my-2 form-control' name='firstName' id='firstName' />
       {errorList.map((err,index)=>{
       if(err.context.label ==='firstName'){
@@ -143,7 +152,7 @@ function submitRegisterForm(e){
     })}
     </div>
     <div className="col-md-6">
-      <label htmlFor="lastName"> اسم العائلة  :</label>
+      <label htmlFor="lastName"> اسم العائلة  : <span className="star-requered">*</span></label>
       <input onChange={getUserData} type="text" className='my-input my-2 form-control' name='lastName' id='lastName' />
       {errorList.map((err,index)=>{
       if(err.context.label ==='lastName'){
@@ -153,7 +162,7 @@ function submitRegisterForm(e){
     })}
     </div>
     <div className="col-md-6">
-    <label htmlFor="email">البريد الالكترونى :</label>
+    <label htmlFor="email">البريد الالكترونى : <span className="star-requered">*</span></label>
       <input onChange={getUserData} type="email" className='my-input my-2 form-control' name='email' id='email' />
       {errorList.map((err,index)=>{
       if(err.context.label ==='email'){
@@ -163,7 +172,7 @@ function submitRegisterForm(e){
     })}
     </div>
       <div className="col-md-6">     
-    <label htmlFor="mobile">رقم الهاتف :</label>    
+    <label htmlFor="mobile">رقم الهاتف : <span className="star-requered">*</span></label>    
     <PhoneInput name='mobile' value={value} 
     labels={ar} defaultCountry='SA' dir='ltr' className='phoneInput' onChange={(value) => {
       setPhoneValue(value);
@@ -179,7 +188,7 @@ function submitRegisterForm(e){
     })}
       </div>
       <div className="col-md-6">
-      <label htmlFor="city">الموقع(المدينة) :</label>
+      <label htmlFor="city">الموقع(المدينة) : <span className="star-requered">*</span></label>
       <input onChange={getUserData} type="text" className='my-input my-2 form-control' name='city' id='city' />
       {errorList.map((err,index)=>{
       if(err.context.label ==='city'){
@@ -189,7 +198,7 @@ function submitRegisterForm(e){
     })}
     </div>
       <div className="col-md-6">
-      <label htmlFor="address">العنوان :</label>
+      <label htmlFor="address">العنوان : <span className="star-requered">*</span></label>
       <input onChange={getUserData} type="text" className='my-input my-2 form-control' name='address' id='address' />
       {errorList.map((err,index)=>{
       if(err.context.label ==='address'){
@@ -199,8 +208,11 @@ function submitRegisterForm(e){
     })}
     </div>
     <div className="col-md-6">
-      <label htmlFor="nid">رقم الهوية :</label>
-      <input onChange={getUserData} type="text" className='my-input my-2 form-control' name='nid' id='nid' />
+      <label htmlFor="nid">صورة الهوية : <span className="star-requered">*</span></label>
+      <input onChange={(e) => {
+          handleNidChange(e);
+          getUserData(e);
+        }} type="file" className='my-input my-2 form-control' name='nid' id='nid' />
       {errorList.map((err,index)=>{
       if(err.context.label ==='nid'){
         return <div key={index} className="alert alert-danger my-2">يجب ملىء جميع البيانات</div>
@@ -249,7 +261,7 @@ function submitRegisterForm(e){
     </div>
     <div className="text-center">
       <button className='btn btn-orange mt-3'>
-        {isLoading == true?<i class="fa-solid fa-spinner fa-spin"></i>:'انشاء حساب'}
+        {isLoading == true?<i class="fa-solid fa-spinner fa-spin"></i>:'انشاء حساب مندوب'}
       </button>
       </div>
      </form>

@@ -3,7 +3,7 @@ import Joi from 'joi';
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
-export default function UserForgetPass() {
+export default function CarrierForgetPass() {
     const [errorList, seterrorList]= useState([]); 
     const [theUser,setUser] =useState({
       email:'',
@@ -14,7 +14,7 @@ export default function UserForgetPass() {
  
   async function sendDataToApi(){
     try {
-          const response = await axios.post('https://dashboard.go-tex.net/logistics-test/user/send-forget-password-email', theUser);
+          const response = await axios.post('https://dashboard.go-tex.net/logistics-test/carrier/send-forget-password-email', theUser);
           if (response.status === 200) {
             console.log(response.data)
             setisLoading(false)

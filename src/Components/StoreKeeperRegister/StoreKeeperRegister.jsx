@@ -7,9 +7,7 @@ import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css'
 import ar from 'react-phone-number-input/locale/ar'
 
-export default function RegisterUser() {
-  const [selectedNid, setSelectedNid] = useState(null);
-
+export default function StoreKeeperRegister() {
     const [visible , setVisible] =useState(false);  
     let navigate= useNavigate(); //hoke
     const [errorList, seterrorList]= useState([]); 
@@ -21,25 +19,12 @@ export default function RegisterUser() {
         lastName: "",
         email: "",
         mobile: "",
-        nid:"",
         city: "",
         address: ""
     })
-    async function sendRegisterDataToApi() {
-      const formData = new FormData();
-      formData.append('firstName', theUser.firstName);
-      formData.append('lastName', theUser.lastName);
-      formData.append('mobile', theUser.mobile);
-      formData.append('email', theUser.email);
-      formData.append('address', theUser.address);
-      formData.append('city', theUser.city);
-      // formData.append('nid', theUser.nid);
-
-      if (selectedNid) {
-        formData.append('nid', selectedNid, selectedNid.name);
-      } 
-      try{
-    let response= await axios.post(`https://dashboard.go-tex.net/logistics-test/user/register`,formData,
+    async function sendRegisterDataToApi(){
+    try{
+    let response= await axios.post(`https://dashboard.go-tex.net/logistics-test/store-keeper/register`,theUser,
     {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -59,10 +44,10 @@ export default function RegisterUser() {
   
   }catch(error){
     setisLoading(true)
-      // setError(error.response.data.msg)
+      setError(error.response.data.msg)
       console.log(error.response)
-      window.alert(error.response?.data?.msg?.name || error.response?.data?.errors[0]?.msg|| "error")
-    }
+      window.alert(error.response.data.msg.name || error.response.data.msg)
+  }
 }
   function submitRegisterForm(e){
       e.preventDefault();
@@ -95,14 +80,9 @@ export default function RegisterUser() {
         email:Joi.string().email({ tlds: { allow: ['com', 'net'] }}).required(),
         address:Joi.string().required(),
         city:Joi.string().required(),
-        nid:Joi.required(),
       });
   
       return scheme.validate(theUser, {abortEarly:false});
-    }
-    function handleNidChange(event) {
-      console.log(event.target.files)
-      setSelectedNid(event.target.files[0]);
     }
   
     return (
@@ -180,23 +160,11 @@ export default function RegisterUser() {
         
       })}
       </div>
-      <div className="col-md-6">
-        <label htmlFor="nid">رقم الهوية :</label>
-        <input onChange={(e) => {
-          handleNidChange(e);
-          getUserData(e);
-        }} type="file" className='my-input my-2 form-control' name='nid' id='nid' />
-        {errorList.map((err,index)=>{
-        if(err.context.label ==='nid'){
-          return <div key={index} className="alert alert-danger my-2">يجب ملىء جميع البيانات</div>
-        }
-        
-      })}
-      </div>
+     
       </div>
       <div className="text-center">
         <button className='btn btn-orange mt-3'>
-          {isLoading == true?<i class="fa-solid fa-spinner fa-spin"></i>:'انشاء حساب مدخلة'}
+          {isLoading == true?<i class="fa-solid fa-spinner fa-spin"></i>:'انشاء حساب امين مخزن'}
         </button>
         </div>
        </form>

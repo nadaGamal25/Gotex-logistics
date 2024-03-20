@@ -105,6 +105,9 @@ export default function CarrierLogin() {
     <button className='btn btn-orange mt-3 mb-2'>
       تسجيل الدخول
     </button>
+    <br/>
+        <Link className='pt-2' to="/CarrierForgetPass">هل نسيت كلمة المرور؟</Link> 
+        
     </div>
    </form>
    

@@ -16,6 +16,11 @@ import CarrierRegister from './Components/CarrierRegister/CarrierRegister';
 import CarrierResendEmail from './Components/CarrierResendEmail/CarrierResendEmail';
 import CarrierLogin from './Components/CarrierLogin/CarrierLogin';
 import CarrierPasswordFirst from './Components/CarrierPasswordFirst/CarrierPasswordFirst';
+import UserForgetPass from './Components/UserForgetPass/UserForgetPass';
+import CarrierForgetPass from  './Components/CarrierForgetPass/CarrierForgetPass';
+import UserLayout from './Components/UserLayout/UserLayout';
+import UserCreateOrder from './Components/UserCreateOrder/UserCreateOrder';
+import UserOrders from './Components/UserOrders/UserOrders';
 
 function App() {
   useEffect(()=>{
@@ -23,7 +28,12 @@ function App() {
       saveAdminData();
     }
   },[])
-
+  // useEffect(()=>{
+   
+  //   if(localStorage.getItem('userToken') !== null){
+  //     saveUserData();
+  //   }
+  // },[])
   const [adminData, setAdminData] = useState(null)
 
   async function saveAdminData(){
@@ -34,6 +44,14 @@ function App() {
     console.log(adminData)
   }
 
+  const [userData, setUserData] = useState(null)
+  async function saveUserData(){
+    let encodedToken =localStorage.getItem('userToken')
+    let decodedToken = jwtDecode(encodedToken);
+    console.log(decodedToken);
+    setUserData(decodedToken)
+    console.log(userData)
+  }
   // useEffect(() => {
   //   const timeout = setTimeout(() => {
   //     window.alert('الجلسة انتهت..قم بتسجيل الدخول مرة اخرى');
@@ -48,13 +66,15 @@ function App() {
   let routers =createBrowserRouter([
     {index:true,element:<AdminLogin saveAdminData={saveAdminData} setAdminData={setAdminData} adminData={adminData}/>},
     {path:'set-password-first-time/:id',element:<UserPasswordFirst/>},
-    {path:'userLogin',element:<UserLogin/>},
+    {path:'userLogin',element:<UserLogin saveUserData={saveUserData}/>},
     {path:'carrier/set-password-first-time/:id',element:<CarrierPasswordFirst/>},
     {path:'carrierLogin',element:<CarrierLogin/>},
+    {path:'userForgetPass',element:<UserForgetPass/>},
+    {path:'carrierForgetPass',element:<CarrierForgetPass/>},
     
     
     {path:'/',element:<AdminLayout setAdminData={setAdminData} adminData={adminData}/> ,children:[
-      {path:'main',element:<Main/>},
+      // {path:'main',element:<Main/>},
       {path:'adminUsers',element:<AdminUsers/>},
       {path:'registerUser',element:<RegisterUser/>},
       {path:'UserResendEmail',element:<UserResendEmail/>},
@@ -64,6 +84,14 @@ function App() {
         
        
       ]},
+      {path:'/',element:<UserLayout setUserData={setUserData} userData={userData}/> ,children:[
+        {path:'userCreateOrder',element:<UserCreateOrder/>},
+        {path:'userOrders',element:<UserOrders/>},
+        
+        // {path:'main',element:<Main/>},
+
+         
+        ]},
       
   ])
   return (

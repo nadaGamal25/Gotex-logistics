@@ -96,6 +96,23 @@ label{
   box-shadow: 3px 3px 5px #8ca0aa;
   overflow-x: auto;
 }
+.star-requered{
+  color: rgb(199, 61, 61);
+  padding-right: 3px;
+  font-size: 24px;
+  font-weight: 500; 
+}
+.email-box{
+border-radius: 10px;
+background-color: #fff;
+box-shadow: 5px 5px 10px #8ca0aa;
+width: 60%;
+padding: 20px !important;
+}
+.email-box p{
+color: var(--dark--color);
+font-weight: 600;
+}
 /*login*/
 .login-container{
   background-image: url(../src/assets/orangedelivery.avif);
@@ -114,6 +131,9 @@ label{
   .login-box{
     width: 100%;
     padding: 20px;
+  }
+  .email-box{
+    width: 90%;
   }
 }
 /*side nav & nav */
@@ -387,4 +407,24 @@ nav form .form-input button{
 }
 .box-setPass .logo{
   width: 70px;
+}
+/*create order*/
+.shipmenForm{
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 15px;
+}
+.brdr-grey{
+  border: 3px solid #dadada;
+  background-color: #fff;
+  border-radius: 15px;
+}
+.brdr-grey h6{
+  color: var(--dark--color);
+  
+}
+.brdr-grey h3{
+  font-weight: 500;
+  color: var(--dark--color);
+  padding-bottom: 5px;
 }

@@ -5,7 +5,7 @@ import Joi from 'joi';
 import { Link } from 'react-router-dom';
 import logo from '../../assets/logo.png'
 
-export default function UserLogin() {
+export default function UserLogin({saveUserData}) {
   let navigate= useNavigate(); 
     const [errorList, seterrorList]= useState([]); 
     const [theUser,setUser] =useState({
@@ -22,13 +22,13 @@ export default function UserLogin() {
       try {
         const response = await axios.post('https://dashboard.go-tex.net/logistics-test/user/login', theUser);
         if (response.status === 201) {
-          // navigate('/adminUsers');
-          // localStorage.setItem('adminToken', response.data.token);
+          navigate('/userCreateOrder');
+          localStorage.setItem('userToken', response.data.token);
           console.log(response.data.token);
           console.log(response)
           setisLoading(false);
-          window.alert('تم التسجيل')
-          // saveAdminData();
+          // window.alert('تم التسجيل')
+          saveUserData();
         } else {
           setisLoading(false);
           setError(response.data.msg);
@@ -104,8 +104,10 @@ export default function UserLogin() {
         <div className="text-center">
         <button className='btn btn-orange mt-3 mb-2'>
           تسجيل الدخول
-        </button>
+        </button><br/>
+        <Link className='pt-2' to="/userForgetPass">هل نسيت كلمة المرور؟</Link> 
         </div>
+        
        </form>
        
       

@@ -135,6 +135,7 @@ export default function AdminNav({logout}) {
           <div className='text-center'>
           <Link to="/registerUser" onClick={closeModal} className="btn btn-success m-2">تسجيل مدخلة </Link>
           <Link to="/carrierRegister" onClick={closeModal} className="btn btn-orange m-2">تسجيل مندوب  </Link>            
+          <Link to="/storeKeeperRegister" onClick={closeModal} className="btn btn-primary m-2">تسجيل أمين مخزن  </Link>            
           </div>
         </Modal.Body>
         <Modal.Footer>

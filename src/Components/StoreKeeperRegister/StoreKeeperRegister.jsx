@@ -44,10 +44,10 @@ export default function StoreKeeperRegister() {
   
   }catch(error){
     setisLoading(true)
-      setError(error.response.data.msg)
+    //   setError(error.response.data.msg)
       console.log(error.response)
-      window.alert(error.response.data.msg.name || error.response.data.msg)
-  }
+      window.alert(error.response?.data?.msg?.name || error.response?.data?.errors[0]?.msg|| "error")
+    }
 }
   function submitRegisterForm(e){
       e.preventDefault();
@@ -77,7 +77,7 @@ export default function StoreKeeperRegister() {
         firstName:Joi.string().required(),
         lastName:Joi.string().required(),
         mobile:Joi.string().required(),
-        email:Joi.string().email({ tlds: { allow: ['com', 'net'] }}).required(),
+        email:Joi.string().email({ tlds: { allow: ['com', 'net','pro'] }}).required(),
         address:Joi.string().required(),
         city:Joi.string().required(),
       });

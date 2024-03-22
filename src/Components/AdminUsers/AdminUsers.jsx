@@ -5,9 +5,11 @@ export default function AdminUsers() {
   useEffect(()=>{
     getUsersListsAdmin()
     getUsersCarriersAdmin()
+    getUsersStorekeepersAdmin()
   },[])
   const [usersListAdmin,setUsersListsAdmin]=useState([])
   const [carriersListAdmin, setCarriersListsAdmin] = useState([]);
+  const [storekeepersListAdmin, setStorekeepersListsAdmin] = useState([]);
 
   async function getUsersListsAdmin() {
     try {
@@ -39,8 +41,23 @@ export default function AdminUsers() {
       console.error(error);
     }
   }
+  async function getUsersStorekeepersAdmin() {
+    try {
+      const response = await axios.get('https://dashboard.go-tex.net/logistics-test/store-keeper',
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
+        },
+      });
+      const List = response.data.data;
+      console.log(List)
+      setStorekeepersListsAdmin(List)
+    } catch (error) {
+      console.error(error);
+    }
+  }
  
-  const combinedList = [...usersListAdmin, ...carriersListAdmin];
+  const combinedList = [...usersListAdmin, ...carriersListAdmin, ...storekeepersListAdmin];
 
   async function userResendEmail(userId){
     try{

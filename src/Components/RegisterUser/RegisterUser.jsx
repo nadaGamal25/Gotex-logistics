@@ -33,11 +33,11 @@ export default function RegisterUser() {
       formData.append('email', theUser.email);
       formData.append('address', theUser.address);
       formData.append('city', theUser.city);
-      // formData.append('nid', theUser.nid);
+      formData.append('nid', theUser.nid);
 
-      if (selectedNid) {
-        formData.append('nid', selectedNid, selectedNid.name);
-      } 
+      // if (selectedNid) {
+      //   formData.append('nid', selectedNid, selectedNid.name);
+      // } 
       try{
     let response= await axios.post(`https://dashboard.go-tex.net/logistics-test/user/register`,formData,
     {
@@ -183,9 +183,9 @@ export default function RegisterUser() {
       <div className="col-md-6">
         <label htmlFor="nid">رقم الهوية :</label>
         <input onChange={(e) => {
-          handleNidChange(e);
+          // handleNidChange(e);
           getUserData(e);
-        }} type="file" className='my-input my-2 form-control' name='nid' id='nid' />
+        }} type=" text" className='my-input my-2 form-control' name='nid' id='nid' />
         {errorList.map((err,index)=>{
         if(err.context.label ==='nid'){
           return <div key={index} className="alert alert-danger my-2">يجب ملىء جميع البيانات</div>

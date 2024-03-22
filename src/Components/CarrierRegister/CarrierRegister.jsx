@@ -36,7 +36,7 @@ export default function CarrierRegister() {
     formData.append('email', theUser.email);
     formData.append('address', theUser.address);
     formData.append('city', theUser.city);
-    // formData.append('nid', theUser.nid);
+    formData.append('nid', theUser.nid);
     
     if (selectedFile) {
       formData.append('papers', selectedFile, selectedFile.name);
@@ -45,9 +45,9 @@ export default function CarrierRegister() {
         formData.append('photo', selectedPhoto, selectedPhoto.name);
       }
 
-    if (selectedNid) {
-        formData.append('nid', selectedNid, selectedNid.name);
-      } 
+    // if (selectedNid) {
+    //     formData.append('nid', selectedNid, selectedNid.name);
+    //   } 
     try {
       const response = await axios.post('https://dashboard.go-tex.net/logistics-test/carrier/register', formData
       ,{
@@ -208,13 +208,31 @@ function submitRegisterForm(e){
     })}
     </div>
     <div className="col-md-6">
-      <label htmlFor="nid">صورة الهوية : <span className="star-requered">*</span></label>
+      <label htmlFor="nid">رقم الهوية : <span className="star-requered">*</span></label>
       <input onChange={(e) => {
-          handleNidChange(e);
           getUserData(e);
-        }} type="file" className='my-input my-2 form-control' name='nid' id='nid' />
+        }} type="text" className='my-input my-2 form-control' name='nid' id='nid' />
       {errorList.map((err,index)=>{
       if(err.context.label ==='nid'){
+        return <div key={index} ctextlassName="alert alert-danger my-2">يجب ملىء جميع البيانات</div>
+      }
+      
+    })}
+    </div>
+    <div className="col-md-6">
+      <label htmlFor="papers">صورة الهوية  :</label>
+      <input
+        type="file"
+        className="my-2 form-control"
+        name="papers"
+        onChange={(e) => {
+          handleFileChange(e);
+          getUserData(e);
+        }}
+    
+      /> 
+          {errorList.map((err,index)=>{
+      if(err.context.label ==='papers'){
         return <div key={index} className="alert alert-danger my-2">يجب ملىء جميع البيانات</div>
       }
       
@@ -239,25 +257,7 @@ function submitRegisterForm(e){
       
     })}
     </div>
-    <div className="col-md-6">
-      <label htmlFor="papers">ملف توثيق :</label>
-      <input
-        type="file"
-        className="my-2 form-control"
-        name="papers"
-        onChange={(e) => {
-          handleFileChange(e);
-          getUserData(e);
-        }}
     
-      /> 
-          {errorList.map((err,index)=>{
-      if(err.context.label ==='papers'){
-        return <div key={index} className="alert alert-danger my-2">يجب ملىء جميع البيانات</div>
-      }
-      
-    })}
-    </div>
     </div>
     <div className="text-center">
       <button className='btn btn-orange mt-3'>

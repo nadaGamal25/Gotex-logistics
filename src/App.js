@@ -21,6 +21,11 @@ import CarrierForgetPass from  './Components/CarrierForgetPass/CarrierForgetPass
 import UserLayout from './Components/UserLayout/UserLayout';
 import UserCreateOrder from './Components/UserCreateOrder/UserCreateOrder';
 import UserOrders from './Components/UserOrders/UserOrders';
+import StoreKeeperRegister from './Components/StoreKeeperRegister/StoreKeeperRegister';
+import StoreKeeperLogin from './Components/StoreKeeperLogin/StoreKeeperLogin';
+import StoreKeeperFirstPass from './Components/StoreKeeperFirstPass/StoreKeeperFirstPass';
+import StorekeeperLayout from './Components/StorekeeperLayout/StorekeeperLayout';
+import StoreAddOrder from './Components/StoreAddOrder/StoreAddOrder';
 
 function App() {
   useEffect(()=>{
@@ -52,6 +57,15 @@ function App() {
     setUserData(decodedToken)
     console.log(userData)
   }
+
+  const [storekeeperData, setStorekeeperData] = useState(null)
+  async function saveStorekeeperData(){
+    let encodedToken =localStorage.getItem('storekeeperToken')
+    let decodedToken = jwtDecode(encodedToken);
+    console.log(decodedToken);
+    setStorekeeperData(decodedToken)
+    console.log(storekeeperData)
+  }
   // useEffect(() => {
   //   const timeout = setTimeout(() => {
   //     window.alert('الجلسة انتهت..قم بتسجيل الدخول مرة اخرى');
@@ -68,10 +82,11 @@ function App() {
     {path:'set-password-first-time/:id',element:<UserPasswordFirst/>},
     {path:'userLogin',element:<UserLogin saveUserData={saveUserData}/>},
     {path:'carrier/set-password-first-time/:id',element:<CarrierPasswordFirst/>},
-    {path:'carrierLogin',element:<CarrierLogin/>},
+    {path:'carrierLogin',element:<CarrierLogin />},
     {path:'userForgetPass',element:<UserForgetPass/>},
     {path:'carrierForgetPass',element:<CarrierForgetPass/>},
-    
+    {path:'storeKeeperLogin',element:<StoreKeeperLogin saveStorekeeperData={saveStorekeeperData}/>},
+    {path:'/store-keepe/set-password-first-time/:id',element:<StoreKeeperFirstPass/>},
     
     {path:'/',element:<AdminLayout setAdminData={setAdminData} adminData={adminData}/> ,children:[
       // {path:'main',element:<Main/>},
@@ -81,6 +96,7 @@ function App() {
       {path:'adminCarriers',element:<AdminCarriers/>},
       {path:'carrierRegister',element:<CarrierRegister/>},
       {path:'carrierResendEmail',element:<CarrierResendEmail/>},
+      {path:'storeKeeperRegister',element:<StoreKeeperRegister/>},
         
        
       ]},
@@ -92,6 +108,13 @@ function App() {
 
          
         ]},
+        {path:'/',element:<StorekeeperLayout setStorekeeperData={setStorekeeperData} storekeeperData={storekeeperData}/> ,children:[
+          {path:'storeAddOrder',element:<StoreAddOrder/>},
+          
+          // {path:'main',element:<Main/>},
+  
+           
+          ]},
       
   ])
   return (

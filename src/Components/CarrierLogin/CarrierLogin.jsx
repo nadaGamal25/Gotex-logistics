@@ -106,7 +106,7 @@ export default function CarrierLogin() {
       تسجيل الدخول
     </button>
     <br/>
-        <Link className='pt-2' to="/CarrierForgetPass">هل نسيت كلمة المرور؟</Link> 
+        <Link className='pt-2' to="/carrierForgetpassProcess">هل نسيت كلمة المرور؟</Link> 
         
     </div>
    </form>

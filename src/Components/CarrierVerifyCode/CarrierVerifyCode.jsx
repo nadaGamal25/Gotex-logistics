@@ -1,18 +1,14 @@
+
 import React from 'react'
 import { useState } from "react";
 
-// export default function UserVerifyCode() {
-//   return (
-//     <div>UserVerifyCode</div>
-//   )
-// }
-const UserVerifyCode = ({ token, onCodeVerified }) => {
+const CarrierVerifyCode = ({ token, onCodeVerified }) => {
   const [code, setCode] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('https://dashboard.go-tex.net/logistics-test/user/verify-forget-password-code', {
+      const response = await fetch('https://dashboard.go-tex.net/logistics-test/carrier/verify-forget-password-code', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -25,7 +21,6 @@ const UserVerifyCode = ({ token, onCodeVerified }) => {
         onCodeVerified();
       } else {
         console.error('Code verification failed:', data);
-        // Handle error or display appropriate message to the user
       }
     } catch (error) {
       console.error('Error verifying forget password code:', error);
@@ -46,4 +41,4 @@ const UserVerifyCode = ({ token, onCodeVerified }) => {
     </div>
   );
 };
-export default UserVerifyCode;
+export default CarrierVerifyCode;

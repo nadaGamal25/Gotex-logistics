@@ -1,8 +1,9 @@
+
 import React from 'react'
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
-const UserSetNewPass = ({ token }) => {
+const CarrierSetNewPass = ({ token }) => {
   const [password, setPassword] = useState('');
   let navigate= useNavigate(); 
   const [visible , setVisible] =useState(false);
@@ -10,7 +11,7 @@ const UserSetNewPass = ({ token }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('https://dashboard.go-tex.net/logistics-test/user/set-new-password', {
+      const response = await fetch('https://dashboard.go-tex.net/logistics-test/carrier/set-new-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -19,7 +20,7 @@ const UserSetNewPass = ({ token }) => {
       });
       const data = await response.json();
       window.alert('تم تغيير كلمة المرور بنجاح')
-      navigate('/userLogin')
+      navigate('/carrierLogin')
     } catch (error) {
       console.error('Error setting new password:', error);
     }
@@ -47,4 +48,4 @@ const UserSetNewPass = ({ token }) => {
   );
 };
 
-export default UserSetNewPass;
+export default CarrierSetNewPass;

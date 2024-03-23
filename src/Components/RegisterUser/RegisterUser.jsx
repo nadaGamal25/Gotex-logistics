@@ -26,20 +26,20 @@ export default function RegisterUser() {
         address: ""
     })
     async function sendRegisterDataToApi() {
-      const formData = new FormData();
-      formData.append('firstName', theUser.firstName);
-      formData.append('lastName', theUser.lastName);
-      formData.append('mobile', theUser.mobile);
-      formData.append('email', theUser.email);
-      formData.append('address', theUser.address);
-      formData.append('city', theUser.city);
-      formData.append('nid', theUser.nid);
+      // const formData = new FormData();
+      // formData.append('firstName', theUser.firstName);
+      // formData.append('lastName', theUser.lastName);
+      // formData.append('mobile', theUser.mobile);
+      // formData.append('email', theUser.email);
+      // formData.append('address', theUser.address);
+      // formData.append('city', theUser.city);
+      // formData.append('nid', theUser.nid);
 
-      // if (selectedNid) {
-      //   formData.append('nid', selectedNid, selectedNid.name);
-      // } 
+      // // if (selectedNid) {
+      // //   formData.append('nid', selectedNid, selectedNid.name);
+      // // } 
       try{
-    let response= await axios.post(`https://dashboard.go-tex.net/logistics-test/user/register`,formData,
+    let response= await axios.post(`https://dashboard.go-tex.net/logistics-test/user/register`,theUser,
     {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('adminToken')}`,

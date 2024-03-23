@@ -105,7 +105,7 @@ export default function UserLogin({saveUserData}) {
         <button className='btn btn-orange mt-3 mb-2'>
           تسجيل الدخول
         </button><br/>
-        <Link className='pt-2' to="/userForgetPass">هل نسيت كلمة المرور؟</Link> 
+        <Link className='pt-2' to="/forgetPasswordProcess">هل نسيت كلمة المرور؟</Link> 
         </div>
         
        </form>

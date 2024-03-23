@@ -16,7 +16,7 @@ import CarrierRegister from './Components/CarrierRegister/CarrierRegister';
 import CarrierResendEmail from './Components/CarrierResendEmail/CarrierResendEmail';
 import CarrierLogin from './Components/CarrierLogin/CarrierLogin';
 import CarrierPasswordFirst from './Components/CarrierPasswordFirst/CarrierPasswordFirst';
-import UserForgetPass from './Components/UserForgetPass/UserForgetPass';
+// import UserForgetPass from './Components/UserForgetPass/UserForgetPass';
 import CarrierForgetPass from  './Components/CarrierForgetPass/CarrierForgetPass';
 import UserLayout from './Components/UserLayout/UserLayout';
 import UserCreateOrder from './Components/UserCreateOrder/UserCreateOrder';
@@ -26,6 +26,8 @@ import StoreKeeperLogin from './Components/StoreKeeperLogin/StoreKeeperLogin';
 import StoreKeeperFirstPass from './Components/StoreKeeperFirstPass/StoreKeeperFirstPass';
 import StorekeeperLayout from './Components/StorekeeperLayout/StorekeeperLayout';
 import StoreAddOrder from './Components/StoreAddOrder/StoreAddOrder';
+import ForgetPasswordProcess from './Components/ForgetPasswordProcess/ForgetPasswordProcess ';
+import CarrierForgetpassProcess from './Components/CarrierForgetpassProcess/CarrierForgetpassProcess';
 
 function App() {
   useEffect(()=>{
@@ -83,7 +85,9 @@ function App() {
     {path:'userLogin',element:<UserLogin saveUserData={saveUserData}/>},
     {path:'carrier/set-password-first-time/:id',element:<CarrierPasswordFirst/>},
     {path:'carrierLogin',element:<CarrierLogin />},
-    {path:'userForgetPass',element:<UserForgetPass/>},
+    {path:'forgetPasswordProcess',element:<ForgetPasswordProcess />},
+    {path:'carrierForgetpassProcess',element:<CarrierForgetpassProcess />},
+    // {path:'userForgetPass',element:<UserForgetPass/>},
     {path:'carrierForgetPass',element:<CarrierForgetPass/>},
     {path:'storeKeeperLogin',element:<StoreKeeperLogin saveStorekeeperData={saveStorekeeperData}/>},
     {path:'/store-keepe/set-password-first-time/:id',element:<StoreKeeperFirstPass/>},

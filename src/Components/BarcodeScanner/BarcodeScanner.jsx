@@ -1,89 +1,65 @@
-import React, { useRef, useEffect } from 'react';
-import Quagga from 'quagga';
-import jsQR from 'jsqr';
+import React, { useRef, useEffect } from "react";
+import { Quagga } from "quagga";
 
-const BarcodeScanner = ({ onDetected }) => {
-  const videoRef = useRef();
-  useEffect(() => {
-    navigator.mediaDevices.getUserMedia({ video: true })
-      .then((stream) => {
-        videoRef.current.srcObject = stream;
-        if (videoRef.current.srcObject) {
-          videoRef.current.play();
-        }
-      })
-      .catch((err) => {
-        console.error('Error accessing the camera:', err);
-      });
-  
-    // Rest of the code...
-  }, [onDetected]);
-  const detectBarcode = async (file) => {
-    try {
-      const imageBitmap = await createImageBitmap(file);
-      const canvas = document.createElement('canvas');
-      canvas.setAttribute('willReadFrequently', 'true'); // Set willReadFrequently attribute
-      const context = canvas.getContext('2d');
-      canvas.width = imageBitmap.width;
-      canvas.height = imageBitmap.height;
-      context.drawImage(imageBitmap, 0, 0);
-  
-      const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-      const code = jsQR(imageData.data, imageData.width, imageData.height);
-  
-      return code ? code.data : null;
-    } catch (error) {
-      console.error('Error detecting barcode:', error);
-      return null;
-    }
-  };
-    
-  useEffect(() => {
-    navigator.mediaDevices.getUserMedia({ video: true })
-      .then((stream) => {
-        videoRef.current.srcObject = stream;
-        videoRef.current.play();
-      })
-      .catch((err) => {
-        console.error('Error accessing the camera:', err);
-      });
+function BarcodeScanner() {
+const videoRef = useRef(null);
+const canvasRef = useRef(null);
 
-    Quagga.init({
-      inputStream: {
-        name: 'Live',
-        type: 'LiveStream',
-        target: videoRef.current,
-      },
-      decoder: {
-        readers: ['ean_reader', 'ean_8_reader', 'code_39_reader', 'code_39_vin_reader', 'codabar_reader', 'upc_reader', 'upc_e_reader'],
-      },
-    }, (err) => {
-      if (err) {
-        console.error('Error initializing Quagga:', err);
-        return;
-      }
-      Quagga.start();
-    });
 
-    Quagga.onDetected((data) => {
-      onDetected(data);
-      Quagga.stop();
-    });
+useEffect(() => {
+Quagga.init(
+{
+inputStream: {
+name: "Live",
+type: "LiveStream",
+target: videoRef.current,
+},
+decoder: {    
+readers: ["code_128_reader"],
+},
+},
+(err) => {
+if (err) {
+console.error(err);
+return;
+}
+Quagga.start();
+}
+);
 
-    return () => {
-      Quagga.stop();
-    };
-  }, [onDetected]);
+Quagga.onDetected((data) => {
+const canvas = canvasRef.current;
+const ctx = canvas.getContext("2d");
+ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  return (
-    <div>
-      <video ref={videoRef} style={{ width: '50%', height: 'auto' }} />
-    </div>
-  );
+const code = data.codeResult.code;
+const x = data.codeResult.startX;
+const y = data.codeResult.startY;
+const width = data.codeResult.endX - x;
+const height = data.codeResult.endY - y;
+
+ctx.strokeStyle = "#FF3B58";
+ctx.lineWidth = 4;
+ctx.strokeRect(x, y, width, height);
+
+console.log("Code detected:", code);
+Quagga.stop();
+});
+
+return () => {
+Quagga.stop();
 };
+}, []);
+
+return (
+<>
+<video ref={videoRef} />
+<canvas ref={canvasRef} />
+</>
+);
+}
 
 export default BarcodeScanner;
-
 
 
 

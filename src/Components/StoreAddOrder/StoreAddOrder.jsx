@@ -3,6 +3,7 @@ import BarcodeReader from 'react-barcode-reader';
 import { useState } from 'react';
 import BarcodeScanner from '../BarcodeScanner/BarcodeScanner';
 // import BarcodeScannerComponent from "react-qr-barcode-scanner";
+import { useZxing } from "react-zxing";
 
 export default function StoreAddOrder() {
   // const [barcode, setBarcode] = useState('');
@@ -18,17 +19,37 @@ export default function StoreAddOrder() {
   //     {barcode && <p>Detected Barcode: {barcode}</p>}
   //   </div>
   // );
-  const [barcode, setBarcode] = useState('');
 
-  const handleDetected = (data) => {
-    setBarcode(data.codeResult.code);
-  };
+  // const [barcode, setBarcode] = useState('');
+
+  // const handleDetected = (data) => {
+  //   setBarcode(data.codeResult.code);
+  // };
+
+  // return (
+  //   <div id='content' className='p-5'>
+  //     <h1>Barcode Scanner</h1>
+  //     <BarcodeScanner onDetected={handleDetected} />
+  //     {barcode && <p>Detected Barcode: {barcode}</p>}
+  //   </div>
+  // );
+
+  const [result, setResult] = useState("");
+  const { ref } = useZxing({
+    onDecodeResult(result) {
+      setResult(result.getText());
+    },
+  });
 
   return (
-    <div id='content' className='p-5'>
-      <h1>Barcode Scanner</h1>
-      <BarcodeScanner onDetected={handleDetected} />
-      {barcode && <p>Detected Barcode: {barcode}</p>}
-    </div>
+    <>
+    <div className="p-5" id='content'>
+      <video ref={ref} />
+      <p>
+        <span>Last result:</span>
+        <span>{result}</span>
+      </p>
+      </div>
+    </>
   );
 }

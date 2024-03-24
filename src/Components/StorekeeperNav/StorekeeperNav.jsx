@@ -47,19 +47,19 @@ export default function StorekeeperNav({logout}) {
         </div> */}
         <ul class="side-menu top">
            
-            
             <li className='active'>
+                <Link to="/storeShipments">
+                <i class="fa-solid fa-box-open bx"></i>
+                    <span class="text">الشحنات</span>
+                </Link>
+            </li>
+            <li className=''>
                 <Link to="/storeAddOrder">
                 <i class="fa-solid fa-box-open bx"></i>
                     <span class="text"> اضافة شحنة للمخزن</span>
                 </Link>
             </li>
-            {/* <li>
-                <Link to="userOrders">
-                <i class="fa-solid fa-box-open bx"></i>
-                    <span class="text">الشحنات</span>
-                </Link>
-            </li> */}
+            
             
             
             

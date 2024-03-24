@@ -22,13 +22,13 @@ export default function StoreKeeperLogin({saveStorekeeperData}) {
       try {
         const response = await axios.post('https://dashboard.go-tex.net/logistics-test/store-keeper/login', theUser);
         if (response.status === 201) {
-          // navigate('/storeAddOrder');
-          localStorage.setItem('userToken', response.data.token);
+          navigate('/storeShipments');
+          localStorage.setItem('storekeeperToken', response.data.token);
           console.log(response.data.token);
           console.log(response)
           setisLoading(false);
-          window.alert('تم التسجيل')
-          // saveStorekeeperData();
+          // window.alert('تم التسجيل')
+          saveStorekeeperData();
         } else {
           setisLoading(false);
           setError(response.data.msg);

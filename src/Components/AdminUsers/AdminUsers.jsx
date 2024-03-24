@@ -147,9 +147,9 @@ async function carrierResendEmail(userId){
                 {item.role?<td>{item.role}</td>:<td>_</td>}
                 {item.role == 'data entry' ?<td>
                   <button className="btn-dataentry btn btn-orange" onClick={()=>{userResendEmail(item._id)}}>إعادة إرسال إيميل </button>
-                </td>:<td>
+                </td>:item.role == 'collector' || item.role == 'receiver'?<td>
                   <button className="btn-carrier btn btn-orange" onClick={()=>{carrierResendEmail(item._id)}}>إعادة إرسال إيميل </button>
-                </td>}
+                </td>:<td></td>}
                 
                 
               </tr>

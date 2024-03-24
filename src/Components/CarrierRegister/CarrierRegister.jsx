@@ -10,7 +10,7 @@ export default function CarrierRegister() {
     const [selectedFile, setSelectedFile] = useState(null);
     const [selectedPhoto, setSelectedPhoto] = useState(null);
     const [selectedNid, setSelectedNid] = useState(null);
-
+    const [carrierRole, setCarrierrole] = useState(null)
   const [visible , setVisible] =useState(false);  
   let navigate= useNavigate(); 
   const [errorList, seterrorList]= useState([]); 
@@ -28,7 +28,7 @@ export default function CarrierRegister() {
     photo:"",
     papers:"",
   })
-  async function sendRegisterDataToApi() {
+  async function sendRegisterDataToApi(carrierRole) {
     const formData = new FormData();
     formData.append('firstName', theUser.firstName);
     formData.append('lastName', theUser.lastName);
@@ -45,11 +45,8 @@ export default function CarrierRegister() {
         formData.append('photo', selectedPhoto, selectedPhoto.name);
       }
 
-    // if (selectedNid) {
-    //     formData.append('nid', selectedNid, selectedNid.name);
-    //   } 
     try {
-      const response = await axios.post('https://dashboard.go-tex.net/logistics-test/carrier/register', formData
+      const response = await axios.post(`https://dashboard.go-tex.net/logistics-test/carrier/register?role=${carrierRole}`, formData
       ,{
         headers: {
           Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -86,23 +83,40 @@ export default function CarrierRegister() {
     setSelectedNid(event.target.files[0]);
   }
   
-function submitRegisterForm(e){
+// function submitRegisterForm(e){
+//     e.preventDefault();
+//     setisLoading(true)
+//     let validation = validateRegisterForm();
+//     console.log(validation);
+//     if(validation.error){
+//       setisLoading(false)
+//       seterrorList(validation.error.details)
+//   console.log("no")
+//     }else{
+//       sendRegisterDataToApi();
+//       console.log("yes")
+// // alert('yeb')
+//     }
+  
+//   }
+function submitRegisterForm(carrierRole) {
+  return async function (e) {
     e.preventDefault();
-    setisLoading(true)
+    setisLoading(true);
     let validation = validateRegisterForm();
     console.log(validation);
-    if(validation.error){
-      setisLoading(false)
-      seterrorList(validation.error.details)
-  console.log("no")
-    }else{
-      sendRegisterDataToApi();
-      console.log("yes")
-// alert('yeb')
+    if (validation.error) {
+      setisLoading(false);
+      seterrorList(validation.error.details);
+      console.log("no");
+    } else {
+      sendRegisterDataToApi(carrierRole); 
+      console.log("yes");
+      // alert('yeb');
     }
-  
-  }
-  
+  };
+}
+
   function getUserData(e){
     let myUser={...theUser};
     myUser[e.target.name]= e.target.value;
@@ -132,6 +146,7 @@ function submitRegisterForm(e){
     setPhoneValue(value);
     getUserData(e); // Call getUserData function when phone number changes
   }
+
   return (
     <>
     <div className='py-5 px-4' id='content'>
@@ -139,7 +154,7 @@ function submitRegisterForm(e){
     
     
     {/* {error.length >0 ?<div className='alert alert-danger my-2'>{error}</div>:''} */}
-    <form onSubmit={submitRegisterForm} className='my-3' action="">
+    <form onSubmit={submitRegisterForm(carrierRole)} className='my-3' action="">
       <div className="row">
       <div className="col-md-6">
       <label htmlFor="firstName">الاسم الأول : <span className="star-requered">*</span></label>
@@ -260,8 +275,11 @@ function submitRegisterForm(e){
     
     </div>
     <div className="text-center">
-      <button className='btn btn-orange mt-3'>
-        {isLoading == true?<i class="fa-solid fa-spinner fa-spin"></i>:'انشاء حساب مندوب'}
+      <button onClick={()=>setCarrierrole('collector')}  className='btn btn-orange mt-3 mx-1'>
+        {isLoading == true?<i class="fa-solid fa-spinner fa-spin"></i>:' تسجيل مندوب تجميع'}
+      </button>
+      <button onClick={()=>setCarrierrole('receiver')} className='btn btn-primary mt-3 mx-1'>
+        {isLoading == true?<i class="fa-solid fa-spinner fa-spin"></i>:' تسجيل مندوب تسليم'}
       </button>
       </div>
      </form>

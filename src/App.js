@@ -28,6 +28,7 @@ import StorekeeperLayout from './Components/StorekeeperLayout/StorekeeperLayout'
 import StoreAddOrder from './Components/StoreAddOrder/StoreAddOrder';
 import ForgetPasswordProcess from './Components/ForgetPasswordProcess/ForgetPasswordProcess ';
 import CarrierForgetpassProcess from './Components/CarrierForgetpassProcess/CarrierForgetpassProcess';
+import StoreShipments from './Components/StoreShippments/StoreShipments';
 
 function App() {
   useEffect(()=>{
@@ -67,6 +68,7 @@ function App() {
     console.log(decodedToken);
     setStorekeeperData(decodedToken)
     console.log(storekeeperData)
+   
   }
   // useEffect(() => {
   //   const timeout = setTimeout(() => {
@@ -114,6 +116,7 @@ function App() {
         ]},
         {path:'/',element:<StorekeeperLayout setStorekeeperData={setStorekeeperData} storekeeperData={storekeeperData}/> ,children:[
           {path:'storeAddOrder',element:<StoreAddOrder/>},
+          {path:'storeShipments',element:<StoreShipments/>},
           
           // {path:'main',element:<Main/>},
   

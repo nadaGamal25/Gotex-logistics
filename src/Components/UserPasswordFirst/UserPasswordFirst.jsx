@@ -69,7 +69,7 @@ export default function UserPasswordFirst() {
   
     function validateRegisterForm(){
       let scheme= Joi.object({
-        email:Joi.string().email({ tlds: { allow: ['com', 'net'] }}).required(),
+        email:Joi.string().required(),
         password:Joi.string().pattern(/^(?=.*[!@#$%^&*(),.?":{}|<>])(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/
         ).required(),
         confirmPassword: Joi.valid(Joi.ref('password')).required().messages({

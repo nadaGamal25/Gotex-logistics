@@ -29,6 +29,9 @@ import StoreAddOrder from './Components/StoreAddOrder/StoreAddOrder';
 import ForgetPasswordProcess from './Components/ForgetPasswordProcess/ForgetPasswordProcess ';
 import CarrierForgetpassProcess from './Components/CarrierForgetpassProcess/CarrierForgetpassProcess';
 import StoreShipments from './Components/StoreShippments/StoreShipments';
+import CollectorShipments from './Components/CollectorShipments/CollectorShipments';
+import CarrieLayout from './Components/CarrierLayout/CarrieLayout';
+import ReceiverShipments from './Components/ReceiverShipments/ReceiverShipments';
 
 function App() {
   useEffect(()=>{
@@ -70,6 +73,16 @@ function App() {
     console.log(storekeeperData)
    
   }
+
+  const [carrierData, setCarrierData] = useState(null)
+  async function saveCarrierData(){
+    let encodedToken =localStorage.getItem('carrierToken')
+    let decodedToken = jwtDecode(encodedToken);
+    console.log(decodedToken);
+    setCarrierData(decodedToken)
+    console.log(carrierData)
+   
+  }
   // useEffect(() => {
   //   const timeout = setTimeout(() => {
   //     window.alert('الجلسة انتهت..قم بتسجيل الدخول مرة اخرى');
@@ -86,7 +99,7 @@ function App() {
     {path:'set-password-first-time/:id',element:<UserPasswordFirst/>},
     {path:'userLogin',element:<UserLogin saveUserData={saveUserData}/>},
     {path:'carrier/set-password-first-time/:id',element:<CarrierPasswordFirst/>},
-    {path:'carrierLogin',element:<CarrierLogin />},
+    {path:'carrierLogin',element:<CarrierLogin saveCarrierData={saveCarrierData} />},
     {path:'forgetPasswordProcess',element:<ForgetPasswordProcess />},
     {path:'carrierForgetpassProcess',element:<CarrierForgetpassProcess />},
     // {path:'userForgetPass',element:<UserForgetPass/>},
@@ -122,6 +135,13 @@ function App() {
   
            
           ]},
+          {path:'/',element:<CarrieLayout setCarrierData={setCarrierData} carrierData={carrierData}/> ,children:[
+            {path:'collectorShipments',element:<CollectorShipments/>},
+            {path:'receiverShipments',element:<ReceiverShipments/>},
+            {path:'main',element:<Main/>},
+    
+             
+            ]},
       
   ])
   return (

@@ -5,7 +5,7 @@ import Joi from 'joi';
 import { Link } from 'react-router-dom';
 import logo from '../../assets/logo.png'
 
-export default function CarrierLogin() {
+export default function CarrierLogin({saveCarrierData}) {
     let navigate= useNavigate(); 
     const [errorList, seterrorList]= useState([]); 
     const [theUser,setUser] =useState({
@@ -22,13 +22,13 @@ export default function CarrierLogin() {
       try {
         const response = await axios.post('https://dashboard.go-tex.net/logistics-test/carrier/login', theUser);
         if (response.status === 201) {
-          // navigate('/adminUsers');
-          // localStorage.setItem('adminToken', response.data.token);
+          navigate('/main');
+          localStorage.setItem('carrierToken', response.data.token);
           console.log(response.data.token);
           console.log(response)
           setisLoading(false);
-          window.alert('تم التسجيل')
-          // saveAdminData();
+          // window.alert('تم التسجيل')
+          saveCarrierData();
         } else {
           setisLoading(false);
           setError(response.data.msg);
@@ -62,7 +62,8 @@ export default function CarrierLogin() {
   
     function validateLoginForm(){
       let scheme= Joi.object({
-        email:Joi.string().email({ tlds: { allow: ['com', 'net','lol'] }}).required(),
+        // email:Joi.string().email({ tlds: { allow: ['com', 'net','lol','pro'] }}).required(),
+        email:Joi.string().required(),
         password:Joi.string().required()
   
       });
@@ -91,7 +92,7 @@ export default function CarrierLogin() {
     <div className='pass-box'>
     <input onChange={getUserData} type={visible? "text" :"password"} className='my-input my-2 form-control pass' name='password' id='password' />
     <span onClick={()=> setVisible(!visible)} className="seenpass">
-    {visible?<i class="fa-regular fa-eye "></i> : <i class="fa-regular fa-eye-slash "></i> }
+    {visible?<i className="fa-regular fa-eye "></i> : <i className="fa-regular fa-eye-slash "></i> }
     </span>
     {errorList.map((err,index)=>{
     if(err.context.label ==='password'){

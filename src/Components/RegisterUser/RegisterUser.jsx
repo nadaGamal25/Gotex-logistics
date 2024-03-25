@@ -92,7 +92,7 @@ export default function RegisterUser() {
         firstName:Joi.string().required(),
         lastName:Joi.string().required(),
         mobile:Joi.string().required(),
-        email:Joi.string().email({ tlds: { allow: ['com', 'net'] }}).required(),
+        email:Joi.string().required(),
         address:Joi.string().required(),
         city:Joi.string().required(),
         nid:Joi.required(),

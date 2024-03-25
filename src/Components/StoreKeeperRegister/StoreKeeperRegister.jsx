@@ -77,7 +77,7 @@ export default function StoreKeeperRegister() {
         firstName:Joi.string().required(),
         lastName:Joi.string().required(),
         mobile:Joi.string().required(),
-        email:Joi.string().email({ tlds: { allow: ['com', 'net','pro'] }}).required(),
+        email:Joi.string().required(),
         address:Joi.string().required(),
         city:Joi.string().required(),
       });

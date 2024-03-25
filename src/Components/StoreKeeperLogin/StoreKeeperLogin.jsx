@@ -62,7 +62,7 @@ export default function StoreKeeperLogin({saveStorekeeperData}) {
   
     function validateLoginForm(){
       let scheme= Joi.object({
-        email:Joi.string().email({ tlds: { allow: ['com', 'net','lol','pro'] }}).required(),
+        email:Joi.string().required(),
         password:Joi.string().required()
   
       });

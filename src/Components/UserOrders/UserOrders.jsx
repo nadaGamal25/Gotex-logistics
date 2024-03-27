@@ -9,7 +9,7 @@ export default function UserOrders() {
 
   async function getOrders() {
     try {
-      const response = await axios.get('https://dashboard.go-tex.net/logistics-test/order/get-all',
+      const response = await axios.get('https://dashboard.go-tex.net/logistics-test/order/get-user-orders',
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('userToken')}`,

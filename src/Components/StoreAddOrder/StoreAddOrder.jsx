@@ -9,26 +9,27 @@ import Webcam from 'react-webcam';
 
 export default function StoreAddOrder() {
 
-  const [result, setResult] = useState("");
-  const { ref } = useZxing({
-    onDecodeResult(result) {
-      setResult(result.getText());
-    },
-  });
+  // const [result, setResult] = useState("");
+  // const { ref } = useZxing({
+  //   onDecodeResult(result) {
+  //     setResult(result.getText());
+  //   },
+  // });
 
   return (
     <>
     <div className="p-5" id='content'>
-      <video ref={ref} />
-      <p>
-        <span>Last result:</span>
-        <span>{result}</span>
-      </p>
+      <BarcodeScanner/>
       </div>
     </>
   );
   
   // return(
+    // <video ref={ref} />
+    //   <p>
+    //     <span>Last result:</span>
+    //     <span>{result}</span>
+    //   </p>
   //   <div className="p-5" id='content'>
   // <h1>Barcode Scanner</h1>
   // <BarcodeScanner />

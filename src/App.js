@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { useState ,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { jwtDecode } from "jwt-decode";
 import AdminLogin from './Components/AdminLogin/AdminLogin';
 import AdminLayout from './Components/AdminLayout/AdminLayout';
@@ -17,7 +17,7 @@ import CarrierResendEmail from './Components/CarrierResendEmail/CarrierResendEma
 import CarrierLogin from './Components/CarrierLogin/CarrierLogin';
 import CarrierPasswordFirst from './Components/CarrierPasswordFirst/CarrierPasswordFirst';
 // import UserForgetPass from './Components/UserForgetPass/UserForgetPass';
-import CarrierForgetPass from  './Components/CarrierForgetPass/CarrierForgetPass';
+import CarrierForgetPass from './Components/CarrierForgetPass/CarrierForgetPass';
 import UserLayout from './Components/UserLayout/UserLayout';
 import UserCreateOrder from './Components/UserCreateOrder/UserCreateOrder';
 import UserOrders from './Components/UserOrders/UserOrders';
@@ -32,23 +32,24 @@ import StoreShipments from './Components/StoreShippments/StoreShipments';
 import CollectorShipments from './Components/CollectorShipments/CollectorShipments';
 import CarrieLayout from './Components/CarrierLayout/CarrieLayout';
 import ReceiverShipments from './Components/ReceiverShipments/ReceiverShipments';
+import BarcodeScanner from './Components/BarcodeScanner/BarcodeScanner';
 
 function App() {
-  useEffect(()=>{
-    if(localStorage.getItem('adminToken') !== null){
+  useEffect(() => {
+    if (localStorage.getItem('adminToken') !== null) {
       saveAdminData();
     }
-  },[])
+  }, [])
   // useEffect(()=>{
-   
+
   //   if(localStorage.getItem('userToken') !== null){
   //     saveUserData();
   //   }
   // },[])
   const [adminData, setAdminData] = useState(null)
 
-  async function saveAdminData(){
-    let encodedToken =localStorage.getItem('adminToken')
+  async function saveAdminData() {
+    let encodedToken = localStorage.getItem('adminToken')
     let decodedToken = jwtDecode(encodedToken);
     console.log(decodedToken);
     setAdminData(decodedToken)
@@ -56,8 +57,8 @@ function App() {
   }
 
   const [userData, setUserData] = useState(null)
-  async function saveUserData(){
-    let encodedToken =localStorage.getItem('userToken')
+  async function saveUserData() {
+    let encodedToken = localStorage.getItem('userToken')
     let decodedToken = jwtDecode(encodedToken);
     console.log(decodedToken);
     setUserData(decodedToken)
@@ -65,23 +66,23 @@ function App() {
   }
 
   const [storekeeperData, setStorekeeperData] = useState(null)
-  async function saveStorekeeperData(){
-    let encodedToken =localStorage.getItem('storekeeperToken')
+  async function saveStorekeeperData() {
+    let encodedToken = localStorage.getItem('storekeeperToken')
     let decodedToken = jwtDecode(encodedToken);
     console.log(decodedToken);
     setStorekeeperData(decodedToken)
     console.log(storekeeperData)
-   
+
   }
 
   const [carrierData, setCarrierData] = useState(null)
-  async function saveCarrierData(){
-    let encodedToken =localStorage.getItem('carrierToken')
+  async function saveCarrierData() {
+    let encodedToken = localStorage.getItem('carrierToken')
     let decodedToken = jwtDecode(encodedToken);
     console.log(decodedToken);
     setCarrierData(decodedToken)
     console.log(carrierData)
-   
+
   }
   // useEffect(() => {
   //   const timeout = setTimeout(() => {
@@ -94,59 +95,69 @@ function App() {
   //   return () => clearTimeout(timeout);
   // }, [userData]);
 
-  let routers =createBrowserRouter([
-    {index:true,element:<AdminLogin saveAdminData={saveAdminData} setAdminData={setAdminData} adminData={adminData}/>},
-    {path:'set-password-first-time/:id',element:<UserPasswordFirst/>},
-    {path:'userLogin',element:<UserLogin saveUserData={saveUserData}/>},
-    {path:'carrier/set-password-first-time/:id',element:<CarrierPasswordFirst/>},
-    {path:'carrierLogin',element:<CarrierLogin saveCarrierData={saveCarrierData} />},
-    {path:'forgetPasswordProcess',element:<ForgetPasswordProcess />},
-    {path:'carrierForgetpassProcess',element:<CarrierForgetpassProcess />},
+  let routers = createBrowserRouter([
+    { index: true, element: <AdminLogin saveAdminData={saveAdminData} setAdminData={setAdminData} adminData={adminData} /> },
+    { path: 'set-password-first-time/:id', element: <UserPasswordFirst /> },
+    { path: 'userLogin', element: <UserLogin saveUserData={saveUserData} /> },
+    { path: 'carrier/set-password-first-time/:id', element: <CarrierPasswordFirst /> },
+    { path: 'carrierLogin', element: <CarrierLogin saveCarrierData={saveCarrierData} /> },
+    { path: 'forgetPasswordProcess', element: <ForgetPasswordProcess /> },
+    { path: 'carrierForgetpassProcess', element: <CarrierForgetpassProcess /> },
     // {path:'userForgetPass',element:<UserForgetPass/>},
-    {path:'carrierForgetPass',element:<CarrierForgetPass/>},
-    {path:'storeKeeperLogin',element:<StoreKeeperLogin saveStorekeeperData={saveStorekeeperData}/>},
-    {path:'/store-keepe/set-password-first-time/:id',element:<StoreKeeperFirstPass/>},
-    
-    {path:'/',element:<AdminLayout setAdminData={setAdminData} adminData={adminData}/> ,children:[
-      // {path:'main',element:<Main/>},
-      {path:'adminUsers',element:<AdminUsers/>},
-      {path:'registerUser',element:<RegisterUser/>},
-      {path:'UserResendEmail',element:<UserResendEmail/>},
-      {path:'adminCarriers',element:<AdminCarriers/>},
-      {path:'carrierRegister',element:<CarrierRegister/>},
-      {path:'carrierResendEmail',element:<CarrierResendEmail/>},
-      {path:'storeKeeperRegister',element:<StoreKeeperRegister/>},
-        
-       
-      ]},
-      {path:'/',element:<UserLayout setUserData={setUserData} userData={userData}/> ,children:[
-        {path:'userCreateOrder',element:<UserCreateOrder/>},
-        {path:'userOrders',element:<UserOrders/>},
-        
+    { path: 'carrierForgetPass', element: <CarrierForgetPass /> },
+    { path: 'barcode', element: <BarcodeScanner /> },
+
+    { path: 'storeKeeperLogin', element: <StoreKeeperLogin saveStorekeeperData={saveStorekeeperData} /> },
+    { path: '/store-keepe/set-password-first-time/:id', element: <StoreKeeperFirstPass /> },
+
+    {
+      path: '/', element: <AdminLayout setAdminData={setAdminData} adminData={adminData} />, children: [
+        // {path:'main',element:<Main/>},
+        { path: 'adminUsers', element: <AdminUsers /> },
+        { path: 'registerUser', element: <RegisterUser /> },
+        { path: 'UserResendEmail', element: <UserResendEmail /> },
+        { path: 'adminCarriers', element: <AdminCarriers /> },
+        { path: 'carrierRegister', element: <CarrierRegister /> },
+        { path: 'carrierResendEmail', element: <CarrierResendEmail /> },
+        { path: 'storeKeeperRegister', element: <StoreKeeperRegister /> },
+
+
+      ]
+    },
+    {
+      path: '/', element: <UserLayout setUserData={setUserData} userData={userData} />, children: [
+        { path: 'userCreateOrder', element: <UserCreateOrder /> },
+        { path: 'userOrders', element: <UserOrders /> },
+
         // {path:'main',element:<Main/>},
 
-         
-        ]},
-        {path:'/',element:<StorekeeperLayout setStorekeeperData={setStorekeeperData} storekeeperData={storekeeperData}/> ,children:[
-          {path:'storeAddOrder',element:<StoreAddOrder/>},
-          {path:'storeShipments',element:<StoreShipments/>},
-          
-          // {path:'main',element:<Main/>},
-  
-           
-          ]},
-          {path:'/',element:<CarrieLayout setCarrierData={setCarrierData} carrierData={carrierData}/> ,children:[
-            {path:'collectorShipments',element:<CollectorShipments/>},
-            {path:'receiverShipments',element:<ReceiverShipments/>},
-            {path:'main',element:<Main/>},
-    
-             
-            ]},
-      
+
+      ]
+    },
+    {
+      path: '/', element: <StorekeeperLayout setStorekeeperData={setStorekeeperData} storekeeperData={storekeeperData} />, children: [
+        { path: 'storeAddOrder', element: <StoreAddOrder /> },
+        { path: 'storeShipments', element: <StoreShipments /> },
+
+        // {path:'main',element:<Main/>},
+
+
+      ]
+    },
+    {
+      path: '/', element: <CarrieLayout setCarrierData={setCarrierData} carrierData={carrierData} />, children: [
+        { path: 'collectorShipments', element: <CollectorShipments /> },
+        { path: 'receiverShipments', element: <ReceiverShipments /> },
+        { path: 'main', element: <Main /> },
+
+
+      ]
+    },
+
   ])
   return (
-    <> 
-            <RouterProvider router={routers} />
+    <>
+      <RouterProvider router={routers} />
     </>
   );
 }

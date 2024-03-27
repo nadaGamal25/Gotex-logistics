@@ -2,61 +2,61 @@ import React, { useRef, useEffect } from "react";
 import { Quagga } from "quagga";
 
 function BarcodeScanner() {
-const videoRef = useRef(null);
-const canvasRef = useRef(null);
+    const videoRef = useRef(null);
+    const canvasRef = useRef(null);
 
 
-useEffect(() => {
-Quagga.init(
-{
-inputStream: {
-name: "Live",
-type: "LiveStream",
-target: videoRef.current,
-},
-decoder: {    
-readers: ["code_128_reader"],
-},
-},
-(err) => {
-if (err) {
-console.error(err);
-return;
-}
-Quagga.start();
-}
-);
+    useEffect(() => {
+        Quagga.init(
+            {
+                inputStream: {
+                    name: "Live",
+                    type: "LiveStream",
+                    target: videoRef.current,
+                },
+                decoder: {
+                    readers: ["code_128_reader"],
+                },
+            },
+            (err) => {
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+                Quagga.start();
+            }
+        );
 
-Quagga.onDetected((data) => {
-const canvas = canvasRef.current;
-const ctx = canvas.getContext("2d");
-ctx.clearRect(0, 0, canvas.width, canvas.height);
+        Quagga.onDetected((data) => {
+            const canvas = canvasRef.current;
+            const ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-const code = data.codeResult.code;
-const x = data.codeResult.startX;
-const y = data.codeResult.startY;
-const width = data.codeResult.endX - x;
-const height = data.codeResult.endY - y;
+            const code = data.codeResult.code;
+            const x = data.codeResult.startX;
+            const y = data.codeResult.startY;
+            const width = data.codeResult.endX - x;
+            const height = data.codeResult.endY - y;
 
-ctx.strokeStyle = "#FF3B58";
-ctx.lineWidth = 4;
-ctx.strokeRect(x, y, width, height);
+            ctx.strokeStyle = "#FF3B58";
+            ctx.lineWidth = 4;
+            ctx.strokeRect(x, y, width, height);
 
-console.log("Code detected:", code);
-Quagga.stop();
-});
+            console.log("Code detected:", code);
+            Quagga.stop();
+        });
 
-return () => {
-Quagga.stop();
-};
-}, []);
+        return () => {
+            Quagga.stop();
+        };
+    }, []);
 
-return (
-<>
-<video ref={videoRef} />
-<canvas ref={canvasRef} />
-</>
-);
+    return (
+        <>
+            <video ref={videoRef} />
+            <canvas ref={canvasRef} />
+        </>
+    );
 }
 
 export default BarcodeScanner;

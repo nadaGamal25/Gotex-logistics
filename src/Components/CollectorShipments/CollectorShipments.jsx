@@ -1,22 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { io } from 'socket.io-client';
-const URL = 'http://localhost:4000';
-
-const socket = io(URL);
 export default function CollectorShipments() {
   useEffect(() => {
-
     geOrders()
   }, [])
-
-  useEffect(() => {
-    socket.on('create-order', function (data) {
-      console.log(data)
-    })
-  }, [socket])
   const [orders, setOrders] = useState([])
-
   async function geOrders() {
     try {
       const response = await axios.get('https://dashboard.go-tex.net/logistics-test/order/get-collector-orders',

@@ -2,13 +2,20 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import logo from '../../assets/logo.png'
 import { useNavigate } from 'react-router-dom';
+// import { io } from 'socket.io-client';
+// const URL = 'http://localhost:4000';
+// const socket = io(URL);
 
 export default function CarrierNav({ carrierData, logout }) {
   let navigate = useNavigate();
 
   const [sideToggle, setSideToggle] = useState(false);
 
-
+  // useEffect(() => {
+  //   socket.on('create-order', function (data) {
+  //     console.log(data)
+  //   })
+  // }, [socket])
 
   useEffect(() => {
     console.log(carrierData)

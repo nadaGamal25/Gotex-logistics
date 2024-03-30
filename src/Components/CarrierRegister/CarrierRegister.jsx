@@ -27,6 +27,7 @@ export default function CarrierRegister() {
     address: "",
     photo:"",
     papers:"",
+    area:[''],
   })
   async function sendRegisterDataToApi(carrierRole) {
     const formData = new FormData();
@@ -37,7 +38,9 @@ export default function CarrierRegister() {
     formData.append('address', theUser.address);
     formData.append('city', theUser.city);
     formData.append('nid', theUser.nid);
-    
+    theUser.area.forEach((area, index) => {
+      formData.append(`area[${index}]`, area);
+  });
     if (selectedFile) {
       formData.append('papers', selectedFile, selectedFile.name);
     }
@@ -117,13 +120,29 @@ function submitRegisterForm(carrierRole) {
   };
 }
 
-  function getUserData(e){
-    let myUser={...theUser};
-    myUser[e.target.name]= e.target.value;
-    setUser(myUser);
-    console.log(myUser);
-  }
+  // function getUserData(e){
+  //   let myUser={...theUser};
+  //   myUser[e.target.name]= e.target.value;
+  //   setUser(myUser);
+  //   console.log(myUser);
+  // }
 
+  function getUserData(e) {
+    const { name, value } = e.target;
+    if (name === 'area') {
+        const index = parseInt(e.target.dataset.index);
+        const updatedAreas = [...theUser.area];
+        updatedAreas[index] = value;
+        setUser({ ...theUser, area: updatedAreas });
+    } else {
+        setUser({ ...theUser, [name]: value });
+    }
+    console.log(theUser);
+}
+
+function addAreaInput() {
+    setUser({ ...theUser, area: [...theUser.area, ''] });
+}
   function validateRegisterForm(){
     let scheme= Joi.object({
         firstName:Joi.string().required(),
@@ -135,6 +154,7 @@ function submitRegisterForm(carrierRole) {
         nid:Joi.required(),
         photo:Joi.allow(null, ''),
         papers:Joi.allow(null, ''),
+        area: Joi.array().items(Joi.string()),
         // :Joi.allow(null, ''),
     });
 
@@ -222,6 +242,16 @@ function submitRegisterForm(carrierRole) {
       
     })}
     </div>
+    {/* <div className="col-md-6">
+      <label htmlFor="area">المناطق : <span className="star-requered">*</span></label>
+      <input onChange={getUserData} type="text" className='my-input my-2 form-control' name='area' id='area' />
+      {errorList.map((err,index)=>{
+      if(err.context.label ==='area'){
+        return <div key={index} className="alert alert-danger my-2">يجب ملىء جميع البيانات</div>
+      }
+      
+    })}
+    </div> */}
     <div className="col-md-6">
       <label htmlFor="nid">رقم الهوية : <span className="star-requered">*</span></label>
       <input onChange={(e) => {
@@ -272,7 +302,29 @@ function submitRegisterForm(carrierRole) {
       
     })}
     </div>
-    
+    <div className="col-md-6">
+                                <label htmlFor="area">المناطق : <span className="star-requered">*</span></label>
+                                {theUser.area.map((area, index) => (
+                                    <div key={index} className="mb-2">
+                                        <input
+                                            type="text"
+                                            className='my-input my-2 form-control'
+                                            name='area'
+                                            id={`area-${index}`}
+                                            value={area}
+                                            data-index={index}
+                                            onChange={getUserData}
+                                        />
+                                    </div>
+                                ))}
+                                <button type="button" className="btn btn-secondary" onClick={addAreaInput}>إضافة منطقة</button>
+                                {errorList.map((err, index) => {
+                                    if (err.context.label === 'area') {
+                                        return <div key={index} className="alert alert-danger my-2">يجب ملىء جميع البيانات</div>
+                                    }
+
+                                })}
+                            </div>
     </div>
     <div className="text-center">
       <button onClick={()=>setCarrierrole('collector')}  className='btn btn-orange mt-3 mx-1'>

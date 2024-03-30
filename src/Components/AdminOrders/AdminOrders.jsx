@@ -58,6 +58,8 @@ export default function AdminOrders() {
                   <th scope="col">الوزن</th>
                   <th scope="col">عدد القطع</th>
                   <th scope="col">حالة الشحنة</th>
+                  <th scope="col">مندوب التجميع</th>
+                  <th scope="col">مندوب التسليم</th>
                   <th scope="col"></th>
                 </tr>
               </thead>
@@ -75,7 +77,16 @@ export default function AdminOrders() {
                       <td>{item.weight}</td>
                       <td>{item.pieces}</td>
                       <td>{item.status}</td>
-                      <td><button className="btn btn-success" onClick={() => { getSticker(item._id) }}>عرض الاستيكر</button></td>
+                      {item.pickedby && item.pickedby.firstName ? (
+  <td>{item.pickedby.firstName} {item.pickedby.lastName}</td>
+) : (
+  <td></td>
+)}
+{item.deliveredby && item.deliveredby.firstName ? (
+  <td>{item.deliveredby.firstName} {item.deliveredby.lastName}</td>
+) : (
+  <td></td>
+)}                      <td><button className="btn btn-success" onClick={() => { getSticker(item._id) }}>عرض الاستيكر</button></td>
     
                     </tr>
                   );

@@ -1,19 +1,48 @@
 import React, { useRef, useEffect, useState } from "react";
 import Html5QrcodePlugin from "./Html5QrcodePlugin";
-
+import axios from "axios";
 function BarcodeScanner() {
-    const [scanResult , setScanResult] = useState('')
+    const [scanResult , setScanResult] = useState(null)
     const onNewScanResult = (decodedText, decodedResult) => {
         console.log("App [result]", decodedResult);
         setScanResult(decodedResult.decodedText)
 
     };
 
+    async function confirmOrder(scanResult){
+        try{
+        const response= await axios.patch(`https://dashboard.go-tex.net/logistics-test/store-keeper/add-order-store/${scanResult}`,{},
+        {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('storekeeperToken')}`,
+            },
+        }
+          );
+        if(response.status == 200){
+          console.log(response)
+          window.alert("تمت اضافة الشحنة بنجاح")  
+        }
+        else{
+          window.alert(response.data.msg.name)
+        }
+      
+      }catch(error){
+          console.log(error.response)
+          window.alert(error.response.data.msg.name || error.response.data.msg || "error")
+      }
+    }
+
+    useEffect(() => {
+        if (scanResult !== null) {
+            confirmOrder(scanResult);
+        }
+    }, [scanResult]);
+    
     return (
         <div className="App">
             <section className="App-section">
             {/* Html5-qrcode React demo */}
-                <div className="App-section-title">  {scanResult}</div>
+                <div className="App-section-title">  </div>
                 <br />
                 <br />
                 <br />
@@ -24,6 +53,7 @@ function BarcodeScanner() {
                     qrCodeSuccessCallback={onNewScanResult}
                 />
             </section>
+            
         </div>
     );
 

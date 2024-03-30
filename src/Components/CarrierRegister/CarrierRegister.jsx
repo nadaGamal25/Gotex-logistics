@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef , useEffect} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Joi from 'joi';
 import PhoneInput from 'react-phone-number-input';
@@ -38,9 +38,13 @@ export default function CarrierRegister() {
     formData.append('address', theUser.address);
     formData.append('city', theUser.city);
     formData.append('nid', theUser.nid);
-    theUser.area.forEach((area, index) => {
-      formData.append(`area[${index}]`, area);
-  });
+  //   theUser.area.forEach((area, index) => {
+  //     formData.append(`area[${index}]`, area);
+  // });
+  const filteredAreas = theUser.area.filter(area => area.trim() !== '');
+    filteredAreas.forEach((area, index) => {
+        formData.append(`area[${index}]`, area);
+    });
     if (selectedFile) {
       formData.append('papers', selectedFile, selectedFile.name);
     }
@@ -73,6 +77,13 @@ export default function CarrierRegister() {
     }
   }
 
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  useEffect(() => {
+      // Check if at least one area is entered
+      setIsFormValid(theUser.area.some(area => area.trim() !== ''));
+  }, [theUser.area]);
+
   function handleFileChange(event) {
     console.log(event.target.files)
     setSelectedFile(event.target.files[0]);
@@ -102,21 +113,53 @@ export default function CarrierRegister() {
 //     }
   
 //   }
+// function submitRegisterForm(carrierRole) {
+//   const formData = new FormData(); 
+//   const filteredAreas = theUser.area.filter(area => area.trim() !== ''); // Filter out empty areas
+ 
+//   filteredAreas.forEach((area, index) => {
+//       formData.append(`area[${index}]`, area);
+//   });
+//   return async function (e) {
+//     e.preventDefault();
+//     setisLoading(true);
+//     let validation = validateRegisterForm();
+//     console.log(validation);
+//     if (validation.error) {
+//       setisLoading(false);
+//       seterrorList(validation.error.details);
+//       console.log("no");
+//     } else {
+//       sendRegisterDataToApi(carrierRole,formData); 
+//       console.log("yes");
+//       // alert('yeb');
+//     }
+//   };
+// }
 function submitRegisterForm(carrierRole) {
+  // const formData = new FormData(); 
+  // const filteredAreas = theUser.area.filter(area => area.trim() !== ''); // Filter out empty areas
+  // if (filteredAreas.length === 0) {
+  //     alert('يجب ملء جميع البيانات في المناطق');
+  //     return; // Prevent form submission if any area is empty
+  // }
+  // filteredAreas.forEach((area, index) => {
+  //     formData.append(`area[${index}]`, area);
+  // });
   return async function (e) {
-    e.preventDefault();
-    setisLoading(true);
-    let validation = validateRegisterForm();
-    console.log(validation);
-    if (validation.error) {
-      setisLoading(false);
-      seterrorList(validation.error.details);
-      console.log("no");
-    } else {
-      sendRegisterDataToApi(carrierRole); 
-      console.log("yes");
-      // alert('yeb');
-    }
+      e.preventDefault();
+      setisLoading(true);
+      let validation = validateRegisterForm();
+      console.log(validation);
+      if (validation.error) {
+          setisLoading(false);
+          seterrorList(validation.error.details);
+          console.log("no");
+      } else {
+          sendRegisterDataToApi(carrierRole); 
+          console.log("yes");
+          // alert('yeb');
+      }
   };
 }
 
@@ -140,8 +183,13 @@ function submitRegisterForm(carrierRole) {
     console.log(theUser);
 }
 
+// function addAreaInput() {
+//     setUser({ ...theUser, area: [...theUser.area, ''] });
+// }
+
 function addAreaInput() {
-    setUser({ ...theUser, area: [...theUser.area, ''] });
+  const updatedAreas = [...theUser.area, '']; 
+  setUser({ ...theUser, area: updatedAreas });
 }
   function validateRegisterForm(){
     let scheme= Joi.object({
@@ -154,7 +202,7 @@ function addAreaInput() {
         nid:Joi.required(),
         photo:Joi.allow(null, ''),
         papers:Joi.allow(null, ''),
-        area: Joi.array().items(Joi.string()),
+        area: Joi.array().min(0).items(Joi.string().trim().allow('') )      
         // :Joi.allow(null, ''),
     });
 
@@ -164,7 +212,7 @@ function addAreaInput() {
   
   function handlePhoneChange(value,e) {
     setPhoneValue(value);
-    getUserData(e); // Call getUserData function when phone number changes
+    getUserData(e); // Call getUserData function wh
   }
 
   return (
@@ -265,10 +313,10 @@ function addAreaInput() {
     })}
     </div>
     <div className="col-md-6">
-      <label htmlFor="papers">صورة الهوية  :</label>
+      <label htmlFor="papers">صورة الهوية  : <span className="star-requered"> </span></label>
       <input
         type="file"
-        className="my-2 form-control"
+        className="my-2 my-input form-control"
         name="papers"
         onChange={(e) => {
           handleFileChange(e);
@@ -284,7 +332,7 @@ function addAreaInput() {
     })}
     </div>
     <div className="col-md-6">
-      <label htmlFor="photo">صورة شخصية :</label>
+      <label htmlFor="photo">صورة شخصية :<span className="star-requered"> </span></label>
       <input
         type="file"
         className="my-2 form-control"
@@ -303,9 +351,11 @@ function addAreaInput() {
     })}
     </div>
     <div className="col-md-6">
-                                <label htmlFor="area">المناطق : <span className="star-requered">*</span></label>
+                                <label htmlFor="area">مناطق المندوب : <span className="star-requered">*</span></label>
+                                <div className="row">
                                 {theUser.area.map((area, index) => (
-                                    <div key={index} className="mb-2">
+                                  
+                                    <div key={index} className="mb-2 col-11">
                                         <input
                                             type="text"
                                             className='my-input my-2 form-control'
@@ -317,7 +367,10 @@ function addAreaInput() {
                                         />
                                     </div>
                                 ))}
-                                <button type="button" className="btn btn-secondary" onClick={addAreaInput}>إضافة منطقة</button>
+                                <div className="col-1 p-0">
+                                <button type="button" className="btn btn-success mt-2" onClick={addAreaInput}> + </button>
+                                </div>
+                                </div>
                                 {errorList.map((err, index) => {
                                     if (err.context.label === 'area') {
                                         return <div key={index} className="alert alert-danger my-2">يجب ملىء جميع البيانات</div>
@@ -327,10 +380,10 @@ function addAreaInput() {
                             </div>
     </div>
     <div className="text-center">
-      <button onClick={()=>setCarrierrole('collector')}  className='btn btn-orange mt-3 mx-1'>
+      <button onClick={()=>setCarrierrole('collector')} disabled={!isFormValid}  className='btn btn-orange mt-3 mx-1'>
         {isLoading == true?<i class="fa-solid fa-spinner fa-spin"></i>:' تسجيل مندوب تجميع'}
       </button>
-      <button onClick={()=>setCarrierrole('receiver')} className='btn btn-primary mt-3 mx-1'>
+      <button onClick={()=>setCarrierrole('receiver')} disabled={!isFormValid} className='btn btn-primary mt-3 mx-1'>
         {isLoading == true?<i class="fa-solid fa-spinner fa-spin"></i>:' تسجيل مندوب تسليم'}
       </button>
       </div>

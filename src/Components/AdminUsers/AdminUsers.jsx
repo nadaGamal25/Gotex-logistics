@@ -117,6 +117,7 @@ async function carrierResendEmail(userId){
             <th scope="col">الإيميل </th>
             <th scope="col">المدينة </th>
             <th scope="col">العنوان </th>
+            <th scope="col">مناطق المندوب </th>
             <th scope="col"> الهوية </th>
             <th scope="col">الصورة  </th>
             <th scope="col">ملف التوثيق  </th>
@@ -137,6 +138,13 @@ async function carrierResendEmail(userId){
                 {item.email?<td>{item.email}</td>:<td>_</td>}
                 {item.city?<td>{item.city}</td>:<td>_</td>}
                 {item.address?<td>{item.address}</td>:<td>_</td>}
+                {item.area ? (
+          <td>
+            {item.area.join(',')}
+          </td>
+        ) : (
+          <td>_</td>
+        )}
                 {item.nid?<td>{item.nid}</td>:<td>_</td>}
                 {item.photo && item.photo?<td>
                   <a href={item.photo.replace('public', 'https://dashboard.go-tex.net/logistics-test')} target='_blank'>رابط_الصورة</a>

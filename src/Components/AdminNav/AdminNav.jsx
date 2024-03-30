@@ -74,6 +74,12 @@ export default function AdminNav({logout}) {
                     <span class="text">تسجيل مستخدم</span>
                 </Link>
             </li>
+            <li className=''>
+              <Link to="/adminOrders">
+                <i class="fa-solid fa-box-open bx"></i>
+                <span class="text">الشحنات</span>
+              </Link>
+            </li>
             {/* <li >
                 <Link to="/UserResendEmail">
                 <i class="fa-solid fa-envelope-circle-check bx"></i>

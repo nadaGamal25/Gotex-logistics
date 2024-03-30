@@ -7,7 +7,7 @@ const socket = io(URL);
 export default function CollectorShipments() {
   useEffect(() => {
 
-    geOrders()
+    getOrders()
   }, [])
 
   useEffect(() => {
@@ -17,7 +17,7 @@ export default function CollectorShipments() {
   }, [socket])
   const [orders, setOrders] = useState([])
 
-  async function geOrders() {
+  async function getOrders() {
     try {
       const response = await axios.get('https://dashboard.go-tex.net/logistics-test/order/get-collector-orders',
         {
@@ -48,6 +48,28 @@ export default function CollectorShipments() {
       console.error(error);
     }
   }
+
+  async function changeStatus(orderid) {
+    try {
+      const response = await axios.put(
+        `https://dashboard.go-tex.net/logistics-test/order/change-status-by-collector`,
+        {
+          orderId: orderid,
+          status: "pick to store"
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('carrierToken')}`,
+          },
+        }
+      );
+  
+      console.log(response);
+      getOrders()
+    } catch (error) {
+      console.error(error);
+    }
+  }
   return (
     <div className='p-5' id='content'>
 
@@ -66,6 +88,7 @@ export default function CollectorShipments() {
               <th scope="col">عدد القطع</th>
               <th scope="col">حالة الشحنة</th>
               <th scope="col"></th>
+              <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
@@ -83,7 +106,11 @@ export default function CollectorShipments() {
                   <td>{item.pieces}</td>
                   <td>{item.status}</td>
                   <td><button className="btn btn-success" onClick={() => { getSticker(item._id) }}>عرض الاستيكر</button></td>
-
+                  <td><button className="btn btn-orange" onClick={()=>{
+                    if(window.confirm('هل انت بالتأكيد قمت باستلام الشحنة وتوصيلها للمخزن')){
+                      changeStatus(item._id)
+                    }
+                  }}>تأكيد استلام الشنحة</button></td>
                 </tr>
               );
             })}

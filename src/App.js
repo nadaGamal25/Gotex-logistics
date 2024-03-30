@@ -33,6 +33,7 @@ import CollectorShipments from './Components/CollectorShipments/CollectorShipmen
 import CarrieLayout from './Components/CarrierLayout/CarrieLayout';
 import ReceiverShipments from './Components/ReceiverShipments/ReceiverShipments';
 import BarcodeScanner from './Components/BarcodeScanner/BarcodeScanner';
+import AdminOrders from './Components/AdminOrders/AdminOrders';
 
 function App() {
   useEffect(() => {
@@ -120,6 +121,7 @@ function App() {
         { path: 'carrierRegister', element: <CarrierRegister /> },
         { path: 'carrierResendEmail', element: <CarrierResendEmail /> },
         { path: 'storeKeeperRegister', element: <StoreKeeperRegister /> },
+        { path: 'adminOrders', element: <AdminOrders /> },
 
 
       ]

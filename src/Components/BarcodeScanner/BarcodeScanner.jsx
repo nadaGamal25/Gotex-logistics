@@ -2,15 +2,18 @@ import React, { useRef, useEffect, useState } from "react";
 import Html5QrcodePlugin from "./Html5QrcodePlugin";
 
 function BarcodeScanner() {
+    const [scanResult , setScanResult] = useState('')
     const onNewScanResult = (decodedText, decodedResult) => {
         console.log("App [result]", decodedResult);
+        setScanResult(decodedResult.decodedText)
 
     };
 
     return (
         <div className="App">
             <section className="App-section">
-                <div className="App-section-title"> Html5-qrcode React demo</div>
+            {/* Html5-qrcode React demo */}
+                <div className="App-section-title">  {scanResult}</div>
                 <br />
                 <br />
                 <br />

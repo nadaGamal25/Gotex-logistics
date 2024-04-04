@@ -136,22 +136,25 @@ export default function UserCreateOrder() {
     });
     return scheme.validate(orderData, { abortEarly: false });
   }
-  // const [cities,setCities]=useState()
-  //   async function getCities() {
-  //     console.log(localStorage.getItem('userToken'))
-  //     try {
-  //       const response = await axios.get('',
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${localStorage.getItem('userToken')}`,
-  //         },
-  //       });
-  //       // setCities(response.data.data.data)
-  //       console.log(response.data.data)
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   }
+  const [cities,setCities]=useState()
+    async function getCities() {
+      console.log(localStorage.getItem('userToken'))
+      try {
+        const response = await axios.get('https://dashboard.go-tex.net/logistics-test/cities',
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+          },
+        });
+        setCities(response.data.cities)
+        console.log(response)
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    useEffect(() => {
+      getCities()
+    }, [])
   const [search, setSearch] = useState('')
   const [search2, setSearch2] = useState('')
 
@@ -197,7 +200,7 @@ export default function UserCreateOrder() {
       if (
         citiesListRef.current &&
         !citiesListRef.current.contains(e.target) &&
-        e.target.getAttribute('name') !== 's_city'
+        e.target.getAttribute('name') !== 'sendercity'
       ) {
         closeCitiesList();
       }
@@ -218,7 +221,7 @@ export default function UserCreateOrder() {
       if (
         citiesListRef2.current &&
         !citiesListRef2.current.contains(e.target) &&
-        e.target.getAttribute('name') !== 'c_city'
+        e.target.getAttribute('name') !== 'recivercity'
       ) {
         closeCitiesList2();
       }
@@ -289,43 +292,42 @@ export default function UserCreateOrder() {
                   })}
 
                 </div>
-                {/* <div className='pb-3 ul-box'>
-            <label htmlFor="">  الموقع(الفرع الرئيسى)<span className="star-requered">*</span></label>
-                <input type="text" className="form-control" name='s_city'
+                <div className='pb-3 ul-box'>
+            <label htmlFor="">  الموقع( المدينة)<span className="star-requered">*</span></label>
+                <input type="text" className="form-control" name='sendercity'
                 onChange={(e)=>{ 
-                  setItemCity(e.target.value);
-
+                  openCitiesList()
                   const searchValue = e.target.value;
                   setSearch(searchValue);
                   getOrderData(e)
-                  const matchingCities = cities.filter((item) => {
-                    return searchValue === '' ? item : item.toLowerCase().includes(searchValue.toLowerCase());
-                  });
-              
-                  if (matchingCities.length === 0) {
-                    closeCitiesList();
-                  } else {
-                    openCitiesList();
-                  }
+                  // const matchingCities = cities.filter((city) => {
+                  //   return searchValue === '' ? true : city.name_ar.includes(searchValue);
+                  // });
+                  // if (matchingCities.length === 0) {
+                  //   openCitiesList();
+                  // } else {
+                  //   openCitiesList();
+                  // }
                   }}
+                  onFocus={openCitiesList}
                   onClick={openCitiesList}
                   />
                   {showCitiesList && (
                     <ul  className='ul-cities' ref={citiesListRef}>  
                     {cities && cities.filter((item)=>{
-                    return search === ''? item : item.toLowerCase().includes(search.toLowerCase());
+                    return search === ''? item : item.name_ar.includes(search);
                     }).map((item,index) =>{
                      return(
-                      <li key={index} name='s_city' 
+                      <li key={index} name='sendercity' 
                       onClick={(e)=>{ 
                         const selectedCity = e.target.innerText;
-                        setItemCity(selectedCity)
-                        getOrderData({ target: { name: 's_city', value: selectedCity } });
-                        document.querySelector('input[name="s_city"]').value = selectedCity;
+                        // setItemCity(selectedCity)
+                        getOrderData({ target: { name: 'sendercity', value: selectedCity } });
+                        document.querySelector('input[name="sendercity"]').value = selectedCity;
                         closeCitiesList();
                     }}
                       >
-                        {item}
+                        {item.name_ar}
                      </li>
                      )
                     }
@@ -335,13 +337,13 @@ export default function UserCreateOrder() {
                  
                 
                 {errorList.map((err,index)=>{
-      if(err.context.label ==='s_city'){
+      if(err.context.label ==='sendercity'){
         return <div key={index} className="alert alert-danger my-2">يجب ملىء هذه الخانة </div>
       }
       
     })}
-            </div> */}
-                <div className='pb-3'>
+            </div>
+                {/* <div className='pb-3'>
                   <label htmlFor=""> المدينة <span className="star-requered">*</span></label>
                   <input type="text" className="form-control" name='sendercity' onChange={(e) => {
                     getOrderData(e);
@@ -352,7 +354,7 @@ export default function UserCreateOrder() {
                     }
 
                   })}
-                </div>
+                </div> */}
                 <div className='pb-3'>
                   <label htmlFor=""> العنوان <span className="star-requered">*</span></label>
                   <input type="text" className="form-control" name='senderaddress' onChange={(e) => {
@@ -497,40 +499,41 @@ export default function UserCreateOrder() {
                   })}
 
                 </div>
-                {/* <div className='pb-3 ul-box'>
+                <div className='pb-3 ul-box'>
                 <label htmlFor=""> الموقع<span className="star-requered">*</span></label>
-                <input type="text" className="form-control" name='c_city'
+                <input type="text" className="form-control" name='recivercity'
                 onChange={(e)=>{ 
                   const searchValue = e.target.value;
                   setSearch2(searchValue);
                   getOrderData(e)
-                  const matchingCities = cities.filter((item) => {
-                    return searchValue === '' ? item : item.toLowerCase().includes(searchValue.toLowerCase());
-                  });
+                  openCitiesList2()
+                  // const matchingCities = cities.filter((item) => {
+                  //   return searchValue === '' ? item : item.toLowerCase().includes(searchValue.toLowerCase());
+                  // });
               
-                  if (matchingCities.length === 0) {
-                    closeCitiesList2();
-                  } else {
-                    openCitiesList2();
-                  }
+                  // if (matchingCities.length === 0) {
+                  //   closeCitiesList2();
+                  // } else {
+                  //   openCitiesList2();
+                  // }
                   }}
                   onClick={openCitiesList2}
                   />
                   {showCitiesList2 && (
                     <ul  className='ul-cities' ref={citiesListRef2}>
                     {cities && cities.filter((item)=>{
-                    return search2 === ''? item : item.toLowerCase().includes(search2.toLowerCase());
+                    return search2 === ''? item : item.name_ar.includes(search2);
                     }).map((item,index) =>{
                      return(
-                      <li key={index} name='c_city' 
+                      <li key={index} name='recivercity' 
                       onClick={(e)=>{ 
                         const selectedCity = e.target.innerText;
-                        getOrderData({ target: { name: 'c_city', value: selectedCity } });
-                        document.querySelector('input[name="c_city"]').value = selectedCity;
+                        getOrderData({ target: { name: 'recivercity', value: selectedCity } });
+                        document.querySelector('input[name="recivercity"]').value = selectedCity;
                         closeCitiesList2();
                     }}
                       >
-                        {item}
+                        {item.name_ar}
                      </li>
                      )
                     }
@@ -539,14 +542,14 @@ export default function UserCreateOrder() {
                   )}
                
                 {errorList.map((err,index)=>{
-      if(err.context.label ==='c_city'){
+      if(err.context.label ==='recivercity'){
         return <div key={index} className="alert alert-danger my-2">يجب ملىء هذه الخانة </div>
       }
       
     })}
-            </div> */}
+            </div>
 
-                <div className='pb-3'>
+                {/* <div className='pb-3'>
                   <label htmlFor=""> المدينة<span className="star-requered">*</span></label>
                   <input type="text" className="form-control" name='recivercity' onChange={(e) => {
                     getOrderData(e)
@@ -557,7 +560,7 @@ export default function UserCreateOrder() {
                     }
 
                   })}
-                </div>
+                </div> */}
                 <div className='pb-3'>
                   <label htmlFor=""> العنوان<span className="star-requered">*</span></label>
                   <input type="text" className="form-control" name='reciveraddress' onChange={(e) => {

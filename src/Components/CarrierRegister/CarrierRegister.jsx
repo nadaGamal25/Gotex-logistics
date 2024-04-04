@@ -1,5 +1,6 @@
 import axios from 'axios';
-import React, { useState, useRef , useEffect} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import {  createRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Joi from 'joi';
 import PhoneInput from 'react-phone-number-input';
@@ -73,7 +74,7 @@ export default function CarrierRegister() {
         setisLoading(true)
         // setError(error.response.data.msg)
         console.log(error.response)
-        window.alert(error.response?.data?.msg?.name || error.response?.data?.errors[0]?.msg|| "error")
+        window.alert(error.response?.data?.msg || error.response?.data?.msg?.name || error.response?.data?.errors[0]?.msg|| "error")
     }
   }
 
@@ -113,39 +114,9 @@ export default function CarrierRegister() {
 //     }
   
 //   }
-// function submitRegisterForm(carrierRole) {
-//   const formData = new FormData(); 
-//   const filteredAreas = theUser.area.filter(area => area.trim() !== ''); // Filter out empty areas
- 
-//   filteredAreas.forEach((area, index) => {
-//       formData.append(`area[${index}]`, area);
-//   });
-//   return async function (e) {
-//     e.preventDefault();
-//     setisLoading(true);
-//     let validation = validateRegisterForm();
-//     console.log(validation);
-//     if (validation.error) {
-//       setisLoading(false);
-//       seterrorList(validation.error.details);
-//       console.log("no");
-//     } else {
-//       sendRegisterDataToApi(carrierRole,formData); 
-//       console.log("yes");
-//       // alert('yeb');
-//     }
-//   };
-// }
+
 function submitRegisterForm(carrierRole) {
-  // const formData = new FormData(); 
-  // const filteredAreas = theUser.area.filter(area => area.trim() !== ''); // Filter out empty areas
-  // if (filteredAreas.length === 0) {
-  //     alert('يجب ملء جميع البيانات في المناطق');
-  //     return; // Prevent form submission if any area is empty
-  // }
-  // filteredAreas.forEach((area, index) => {
-  //     formData.append(`area[${index}]`, area);
-  // });
+ 
   return async function (e) {
       e.preventDefault();
       setisLoading(true);
@@ -209,12 +180,79 @@ function addAreaInput() {
     return scheme.validate(theUser, {abortEarly:false});
   }
 
-  
-  function handlePhoneChange(value,e) {
-    setPhoneValue(value);
-    getUserData(e); // Call getUserData function wh
-  }
 
+
+  const [cities,setCities]=useState()
+    async function getCities() {
+      console.log(localStorage.getItem('userToken'))
+      try {
+        const response = await axios.get('https://dashboard.go-tex.net/logistics-test/cities',
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+          },
+        });
+        setCities(response.data.cities)
+        console.log(response)
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    useEffect(() => {
+      getCities()
+    }, [])
+  const [search1, setSearch1] = useState('')
+  // const [search2, setSearch2] = useState('')
+
+  const [showCitiesList1, setCitiesList] = useState(false);
+  const openCitiesList1 = () => {
+    setCitiesList(true);
+  };
+
+  const closeCitiesList1 = () => {
+    setCitiesList(false);
+  };
+  const citiesListRef1 = useRef(null);
+
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (
+        citiesListRef1.current &&
+        !citiesListRef1.current.contains(e.target) &&
+        e.target.getAttribute('name') !== 'city'
+      ) {
+        closeCitiesList();
+      }
+    };
+
+    if (showCitiesList1) {
+      window.addEventListener('click', handleOutsideClick);
+    }
+
+    return () => {
+      window.removeEventListener('click', handleOutsideClick);
+    };
+  }, [showCitiesList1]);
+
+  const [showCitiesList, setShowCitiesList] = useState(Array(theUser.area.length).fill(false));
+  const [searchCities, setSearchCities] = useState(Array(theUser.area.length).fill(''));
+  const citiesListRef = useRef(Array(theUser.area.length).map(() => createRef()));
+  
+  const openCitiesList = (index) => {
+    setShowCitiesList((prev) => {
+      const newState = [...prev];
+      newState[index] = true;
+      return newState;
+    });
+  };
+  
+  const closeCitiesList = (index) => {
+    setShowCitiesList((prev) => {
+      const newState = [...prev];
+      newState[index] = false;
+      return newState;
+    });
+  };
   return (
     <>
     <div className='py-5 px-4' id='content'>
@@ -270,12 +308,61 @@ function addAreaInput() {
       
     })}
       </div>
-      <div className="col-md-6">
-      <label htmlFor="city">الموقع(المدينة) : <span className="star-requered">*</span></label>
+      <div className="col-md-6 ul-box">
+      {/* <label htmlFor="city">الموقع(المدينة) : <span className="star-requered">*</span></label>
       <input onChange={getUserData} type="text" className='my-input my-2 form-control' name='city' id='city' />
       {errorList.map((err,index)=>{
       if(err.context.label ==='city'){
         return <div key={index} className="alert alert-danger my-2">يجب ملىء جميع البيانات</div>
+      }
+      
+    })} */}
+    <label htmlFor="">  الموقع( المدينة)<span className="star-requered">*</span></label>
+                <input type="text" className="form-control" name='city'
+                onChange={(e)=>{ 
+                  openCitiesList1()
+                  const searchValue = e.target.value;
+                  setSearch1(searchValue);
+                  getUserData(e)
+                  // const matchingCities = cities.filter((city) => {
+                  //   return searchValue === '' ? true : city.name_ar.includes(searchValue);
+                  // });
+                  // if (matchingCities.length === 0) {
+                  //   openCitiesList();
+                  // } else {
+                  //   openCitiesList();
+                  // }
+                  }}
+                  onFocus={openCitiesList1}
+                  onClick={openCitiesList1}
+                  />
+                  {showCitiesList1 && (
+                    <ul  className='ul-cities' ref={citiesListRef1}>  
+                    {cities && cities.filter((item)=>{
+                    return search1 === ''? item : item.name_ar.includes(search1);
+                    }).map((item,index) =>{
+                     return(
+                      <li key={index} name='city' 
+                      onClick={(e)=>{ 
+                        const selectedCity = e.target.innerText;
+                        // setItemCity(selectedCity)
+                        getUserData({ target: { name: 'city', value: selectedCity } });
+                        document.querySelector('input[name="city"]').value = selectedCity;
+                        closeCitiesList1();
+                    }}
+                      >
+                        {item.name_ar}
+                     </li>
+                     )
+                    }
+                    )}
+                    </ul>
+                  )}
+                 
+                
+                {errorList.map((err,index)=>{
+      if(err.context.label ==='city'){
+        return <div key={index} className="alert alert-danger my-2">يجب ملىء هذه الخانة </div>
       }
       
     })}
@@ -356,7 +443,7 @@ function addAreaInput() {
                                 {theUser.area.map((area, index) => (
                                   
                                     <div key={index} className="mb-2 col-11">
-                                        <input
+                                        <input list='myCities'
                                             type="text"
                                             className='my-input my-2 form-control'
                                             name='area'
@@ -365,6 +452,11 @@ function addAreaInput() {
                                             data-index={index}
                                             onChange={getUserData}
                                         />
+                                        <datalist id='myCities'>
+                                          {cities && cities.map((city,ciIndex)=>(
+                                              <option key={ciIndex} value={city.name_ar} />
+                                          ))}
+                                        </datalist>
                                     </div>
                                 ))}
                                 <div className="col-1 p-0">
@@ -377,7 +469,64 @@ function addAreaInput() {
                                     }
 
                                 })}
-                            </div>
+    </div>
+     {/* <div className="col-md-6 ul-box">
+        <label htmlFor="area">مناطق المندوب : <span className="star-requered">*</span></label>
+        <div className="row">
+        {theUser.area.map((area, index) => (
+    <div key={index} className="mb-2 col-11">
+        <input
+    type="text"
+    className='my-input my-2 form-control'
+    name='area'
+    id={`area-${index}`}
+    value={area}
+    data-index={index}
+    onChange={getUserData}
+    onClick={() => openCitiesList(index)} // Add onClick event handler
+/>
+        {showCitiesList[index] && (
+            <div>
+                <ul className='ul-cities' ref={citiesListRef.current[index]}>
+                    {cities &&
+                        cities
+                            .filter((item) => {
+                                const lowercasedItem = item.name_ar;
+                                const lowercasedSearchValue = (searchCities[index] || '').toLowerCase();
+                                return lowercasedItem.includes(lowercasedSearchValue);
+                            })
+                            .map((item, cityIndex) => (
+                                <li
+                                    key={cityIndex}
+                                    name='city'
+                                    onClick={(e) => {
+                                        const selectedCity = e.target.innerText;
+                                        const updatedAreas = [...theUser.area];
+                                        updatedAreas[index] = selectedCity;
+                                        setUser({ ...theUser, area: updatedAreas });
+                                        closeCitiesList(index);
+                                    }}
+                                >
+                                    {item.name_ar}
+                                </li>
+                            ))}
+                </ul>
+                <div onClick={() => closeCitiesList(index)} style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }} />
+            </div>
+        )}
+   
+    </div>
+))}
+            <div className="col-1 p-0">
+                <button type="button" className="btn btn-success mt-2" onClick={addAreaInput}> + </button>
+            </div>
+        </div>
+        {errorList.map((err, index) => {
+            if (err.context.label === 'area') {
+                return <div key={index} className="alert alert-danger my-2">يجب ملىء جميع البيانات</div>
+            }
+        })}
+    </div> */}
     </div>
     <div className="text-center">
       <button onClick={()=>setCarrierrole('collector')} disabled={!isFormValid}  className='btn btn-orange mt-3 mx-1'>

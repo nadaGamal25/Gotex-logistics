@@ -34,6 +34,7 @@ import CarrieLayout from './Components/CarrierLayout/CarrieLayout';
 import ReceiverShipments from './Components/ReceiverShipments/ReceiverShipments';
 import BarcodeScanner from './Components/BarcodeScanner/BarcodeScanner';
 import AdminOrders from './Components/AdminOrders/AdminOrders';
+import StoreKeeperOrders from './Components/StoreKeeperOrders';
 
 function App() {
   useEffect(() => {
@@ -139,7 +140,7 @@ function App() {
     {
       path: '/', element: <StorekeeperLayout setStorekeeperData={setStorekeeperData} storekeeperData={storekeeperData} />, children: [
         { path: 'storeAddOrder', element: <StoreAddOrder /> },
-        { path: 'storeShipments', element: <StoreShipments /> },
+        { path: 'storeShipments', element: <StoreKeeperOrders /> },
 
         // {path:'main',element:<Main/>},
 

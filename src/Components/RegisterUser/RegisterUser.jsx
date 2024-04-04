@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Joi from 'joi';
 import logo from '../../assets/logo.png';
@@ -104,6 +104,58 @@ export default function RegisterUser() {
       console.log(event.target.files)
       setSelectedNid(event.target.files[0]);
     }
+
+    const [cities,setCities]=useState()
+    async function getCities() {
+      console.log(localStorage.getItem('userToken'))
+      try {
+        const response = await axios.get('https://dashboard.go-tex.net/logistics-test/cities',
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+          },
+        });
+        setCities(response.data.cities)
+        console.log(response)
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    useEffect(() => {
+      getCities()
+    }, [])
+  const [search, setSearch] = useState('')
+  const [search2, setSearch2] = useState('')
+
+  const [showCitiesList, setCitiesList] = useState(false);
+  const openCitiesList = () => {
+    setCitiesList(true);
+  };
+
+  const closeCitiesList = () => {
+    setCitiesList(false);
+  };
+  const citiesListRef = useRef(null);
+
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (
+        citiesListRef.current &&
+        !citiesListRef.current.contains(e.target) &&
+        e.target.getAttribute('name') !== 'city'
+      ) {
+        closeCitiesList();
+      }
+    };
+
+    if (showCitiesList) {
+      window.addEventListener('click', handleOutsideClick);
+    }
+
+    return () => {
+      window.removeEventListener('click', handleOutsideClick);
+    };
+  }, [showCitiesList]);
   
     return (
       <>
@@ -160,15 +212,64 @@ export default function RegisterUser() {
         
       })}
         </div>
-        <div className="col-md-6">
-        <label htmlFor="city">الموقع(المدينة) :</label>
+        <div className="col-md-6 ul-box">
+        {/* <label htmlFor="city">الموقع(المدينة) :</label>
         <input onChange={getUserData} type="text" className='my-input my-2 form-control' name='city' id='city' />
         {errorList.map((err,index)=>{
         if(err.context.label ==='city'){
           return <div key={index} className="alert alert-danger my-2">يجب ملىء جميع البيانات</div>
         }
         
-      })}
+      })} */}
+      <label htmlFor="">  الموقع( المدينة)<span className="star-requered">*</span></label>
+                <input type="text" className="form-control" name='city'
+                onChange={(e)=>{ 
+                  openCitiesList()
+                  const searchValue = e.target.value;
+                  setSearch(searchValue);
+                  getUserData(e)
+                  // const matchingCities = cities.filter((city) => {
+                  //   return searchValue === '' ? true : city.name_ar.includes(searchValue);
+                  // });
+                  // if (matchingCities.length === 0) {
+                  //   openCitiesList();
+                  // } else {
+                  //   openCitiesList();
+                  // }
+                  }}
+                  onFocus={openCitiesList}
+                  onClick={openCitiesList}
+                  />
+                  {showCitiesList && (
+                    <ul  className='ul-cities' ref={citiesListRef}>  
+                    {cities && cities.filter((item)=>{
+                    return search === ''? item : item.name_ar.includes(search);
+                    }).map((item,index) =>{
+                     return(
+                      <li key={index} name='city' 
+                      onClick={(e)=>{ 
+                        const selectedCity = e.target.innerText;
+                        // setItemCity(selectedCity)
+                        getUserData({ target: { name: 'city', value: selectedCity } });
+                        document.querySelector('input[name="city"]').value = selectedCity;
+                        closeCitiesList();
+                    }}
+                      >
+                        {item.name_ar}
+                     </li>
+                     )
+                    }
+                    )}
+                    </ul>
+                  )}
+                 
+                
+                {errorList.map((err,index)=>{
+      if(err.context.label ==='city'){
+        return <div key={index} className="alert alert-danger my-2">يجب ملىء هذه الخانة </div>
+      }
+      
+    })}
       </div>
         <div className="col-md-6">
         <label htmlFor="address">العنوان :</label>

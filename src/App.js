@@ -35,6 +35,7 @@ import ReceiverShipments from './Components/ReceiverShipments/ReceiverShipments'
 import BarcodeScanner from './Components/BarcodeScanner/BarcodeScanner';
 import AdminOrders from './Components/AdminOrders/AdminOrders';
 import StoreKeeperOrders from './Components/StoreKeeperOrders';
+import TrackOrder from './Components/TrackOrder/TrackOrder';
 
 function App() {
   useEffect(() => {
@@ -108,6 +109,7 @@ function App() {
     // {path:'userForgetPass',element:<UserForgetPass/>},
     { path: 'carrierForgetPass', element: <CarrierForgetPass /> },
     { path: 'barcode', element: <BarcodeScanner /> },
+    { path: 'trackOrder', element: <TrackOrder /> },
 
     { path: 'storeKeeperLogin', element: <StoreKeeperLogin saveStorekeeperData={saveStorekeeperData} /> },
     { path: '/store-keepe/set-password-first-time/:id', element: <StoreKeeperFirstPass /> },

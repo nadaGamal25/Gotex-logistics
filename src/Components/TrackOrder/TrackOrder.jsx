@@ -16,6 +16,8 @@ export default function TrackOrder() {
           setVesible(true)
         } catch (error) {
           console.error(error);
+          window.alert(error.response.data.msg)
+          setVesible(false)
         }
       }
     

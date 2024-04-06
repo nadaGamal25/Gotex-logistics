@@ -6,10 +6,12 @@ export default function AdminUsers() {
     getUsersListsAdmin()
     getUsersCarriersAdmin()
     getUsersStorekeepersAdmin()
+    getUsersTrackerAdmin()
   },[])
   const [usersListAdmin,setUsersListsAdmin]=useState([])
   const [carriersListAdmin, setCarriersListsAdmin] = useState([]);
   const [storekeepersListAdmin, setStorekeepersListsAdmin] = useState([]);
+  const [trackerListAdmin, setTrackerListsAdmin] = useState([]);
 
   async function getUsersListsAdmin() {
     try {
@@ -56,8 +58,23 @@ export default function AdminUsers() {
       console.error(error);
     }
   }
+  async function getUsersTrackerAdmin() {
+    try {
+      const response = await axios.get('https://dashboard.go-tex.net/logistics-test/tracker/',
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
+        },
+      });
+      const List = response.data.data;
+      console.log(List)
+      setTrackerListsAdmin(List)
+    } catch (error) {
+      console.error(error);
+    }
+  }
  
-  const combinedList = [...usersListAdmin, ...carriersListAdmin, ...storekeepersListAdmin];
+  const combinedList = [...usersListAdmin, ...carriersListAdmin, ...storekeepersListAdmin, ...trackerListAdmin];
 
   async function userResendEmail(userId){
     try{
@@ -84,6 +101,28 @@ export default function AdminUsers() {
 async function carrierResendEmail(userId){
   try{
   const response= await axios.post(`https://dashboard.go-tex.net/logistics-test/carrier/resend-verify-email/${userId}`,{},
+  {
+      headers: {
+          Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
+      },
+  }
+    );
+  if(response.status == 200){
+    console.log(response)
+    window.alert("تم ارسال الايميل بنجاح")  
+  }
+  else{
+    window.alert(response.data.msg.name)
+  }
+
+}catch(error){
+    console.log(error.response)
+    window.alert(error.response.data.msg.name || error.response.data.msg || "error")
+}
+}
+async function trackerResendEmail(userId){
+  try{
+  const response= await axios.post(`https://dashboard.go-tex.net/logistics-test/tracker/resend-verify-email/${userId}`,{},
   {
       headers: {
           Authorization: `Bearer ${localStorage.getItem('adminToken')}`,

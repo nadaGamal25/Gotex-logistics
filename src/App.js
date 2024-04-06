@@ -36,6 +36,11 @@ import BarcodeScanner from './Components/BarcodeScanner/BarcodeScanner';
 import AdminOrders from './Components/AdminOrders/AdminOrders';
 import StoreKeeperOrders from './Components/StoreKeeperOrders';
 import TrackOrder from './Components/TrackOrder/TrackOrder';
+import TrackerRegister from './Components/TrackerRegister/TrackerRegister';
+import TrackerLayout from './Components/TrackerLayout/TrackerLayout';
+import TrackerOrders from './Components/TrackerOrders/TrackerOrders';
+import TrackerPasswordFirst from './Components/TrackerPasswordFirst/TrackerPasswordFirst';
+import TrackerLogin from './Components/TrackerLogin/TrackerLogin';
 
 function App() {
   useEffect(() => {
@@ -87,6 +92,15 @@ function App() {
     console.log(carrierData)
 
   }
+  const [trackerData, setTrackerData] = useState(null)
+  async function saveTrackerData() {
+    let encodedToken = localStorage.getItem('trackerToken')
+    let decodedToken = jwtDecode(encodedToken);
+    console.log(decodedToken);
+    setTrackerData(decodedToken)
+    console.log(carrierData)
+
+  }
   // useEffect(() => {
   //   const timeout = setTimeout(() => {
   //     window.alert('الجلسة انتهت..قم بتسجيل الدخول مرة اخرى');
@@ -110,6 +124,8 @@ function App() {
     { path: 'carrierForgetPass', element: <CarrierForgetPass /> },
     { path: 'barcode', element: <BarcodeScanner /> },
     { path: 'trackOrder', element: <TrackOrder /> },
+    { path: 'tracker/set-password-first-time/:id', element: <TrackerPasswordFirst /> },
+    { path: 'trackerLogin', element: <TrackerLogin saveTrackerData={saveTrackerData} /> },
 
     { path: 'storeKeeperLogin', element: <StoreKeeperLogin saveStorekeeperData={saveStorekeeperData} /> },
     { path: '/store-keepe/set-password-first-time/:id', element: <StoreKeeperFirstPass /> },
@@ -125,6 +141,7 @@ function App() {
         { path: 'carrierResendEmail', element: <CarrierResendEmail /> },
         { path: 'storeKeeperRegister', element: <StoreKeeperRegister /> },
         { path: 'adminOrders', element: <AdminOrders /> },
+        { path: 'trackerRegister', element: <TrackerRegister /> },
 
 
       ]
@@ -154,6 +171,13 @@ function App() {
         { path: 'collectorShipments', element: <CollectorShipments /> },
         { path: 'receiverShipments', element: <ReceiverShipments /> },
         { path: 'main', element: <Main /> },
+
+
+      ]
+    },
+    {
+      path: '/', element: <TrackerLayout setTrackerData={setTrackerData} trackerData={trackerData} />, children: [
+        { path: 'trackerOrders', element: <TrackerOrders /> },
 
 
       ]

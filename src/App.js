@@ -41,6 +41,7 @@ import TrackerLayout from './Components/TrackerLayout/TrackerLayout';
 import TrackerOrders from './Components/TrackerOrders/TrackerOrders';
 import TrackerPasswordFirst from './Components/TrackerPasswordFirst/TrackerPasswordFirst';
 import TrackerLogin from './Components/TrackerLogin/TrackerLogin';
+import TrackerForgetPassProcess from './Components/TrackerForgetPassProcess/TrackerForgetPassProcess';
 
 function App() {
   useEffect(() => {
@@ -111,7 +112,7 @@ function App() {
 
   //   return () => clearTimeout(timeout);
   // }, [userData]);
-
+ 
   let routers = createBrowserRouter([
     { index: true, element: <AdminLogin saveAdminData={saveAdminData} setAdminData={setAdminData} adminData={adminData} /> },
     { path: 'set-password-first-time/:id', element: <UserPasswordFirst /> },
@@ -120,6 +121,7 @@ function App() {
     { path: 'carrierLogin', element: <CarrierLogin saveCarrierData={saveCarrierData} /> },
     { path: 'forgetPasswordProcess', element: <ForgetPasswordProcess /> },
     { path: 'carrierForgetpassProcess', element: <CarrierForgetpassProcess /> },
+    { path: 'trackerForgetpassProcess', element: <TrackerForgetPassProcess /> },
     // {path:'userForgetPass',element:<UserForgetPass/>},
     { path: 'carrierForgetPass', element: <CarrierForgetPass /> },
     { path: 'barcode', element: <BarcodeScanner /> },
@@ -128,7 +130,7 @@ function App() {
     { path: 'trackerLogin', element: <TrackerLogin saveTrackerData={saveTrackerData} /> },
 
     { path: 'storeKeeperLogin', element: <StoreKeeperLogin saveStorekeeperData={saveStorekeeperData} /> },
-    { path: '/store-keepe/set-password-first-time/:id', element: <StoreKeeperFirstPass /> },
+    { path: 'store-keeper/set-password-first-time/:id', element: <StoreKeeperFirstPass /> },
 
     {
       path: '/', element: <AdminLayout setAdminData={setAdminData} adminData={adminData} />, children: [

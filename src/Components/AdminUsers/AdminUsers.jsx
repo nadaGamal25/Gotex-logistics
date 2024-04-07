@@ -196,6 +196,8 @@ async function trackerResendEmail(userId){
                   <button className="btn-dataentry btn btn-orange" onClick={()=>{userResendEmail(item._id)}}>إعادة إرسال إيميل </button>
                 </td>:item.role == 'collector' || item.role == 'receiver'?<td>
                   <button className="btn-carrier btn btn-orange" onClick={()=>{carrierResendEmail(item._id)}}>إعادة إرسال إيميل </button>
+                </td>:item.role == 'tracker' ?<td>
+                  <button className="btn-dataentry btn btn-orange" onClick={()=>{trackerResendEmail(item._id)}}>إعادة إرسال إيميل </button>
                 </td>:<td></td>}
                 
                 

@@ -58,6 +58,7 @@ export default function AdminOrders() {
                   <th scope="col">الوزن</th>
                   <th scope="col">عدد القطع</th>
                   <th scope="col">حالة الشحنة</th>
+                  <th scope="col">ملف الالغاء</th>
                   <th scope="col">مندوب التجميع</th>
                   <th scope="col">مندوب التسليم</th>
                   <th scope="col"></th>
@@ -77,6 +78,9 @@ export default function AdminOrders() {
                       <td>{item.weight}</td>
                       <td>{item.pieces}</td>
                       <td>{item.status}</td>
+                      {item.images && item.images[0]?<td>
+                  <a href={item.images[0].replace('public', 'https://dashboard.go-tex.net/logistics-test')} target='_blank'>رابط_الملف</a>
+                </td>:<td>_</td>}
                       {item.pickedby && item.pickedby.firstName ? (
   <td>{item.pickedby.firstName} {item.pickedby.lastName}</td>
 ) : (

@@ -104,7 +104,7 @@ export default function TrackerLogin({saveTrackerData}) {
         <button className='btn btn-orange mt-3 mb-2'>
           تسجيل الدخول
         </button><br/>
-        {/* <Link className='pt-2' to="/forgetPasswordProcess">هل نسيت كلمة المرور؟</Link>  */}
+        <Link className='pt-2' to="/trackerForgetpassProcess">هل نسيت كلمة المرور؟</Link> 
         </div>
         
        </form>

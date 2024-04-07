@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-
+import {Modal, Button } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 export default function ReceiverShipments() {
   useEffect(() => {
 
@@ -29,7 +30,56 @@ export default function ReceiverShipments() {
     }
   }
   
- 
+  async function returnOrder(orderid) {
+    try {
+      const response = await axios.put(
+        `https://dashboard.go-tex.net/logistics-test/order/return-order/${orderid}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('carrierToken')}`,
+          },
+        }
+      );
+  
+      console.log(response);
+      getOrders()
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedID, setSelectedID] = useState(null);
+  async function cancelOrder() {
+    const formData = new FormData();
+    formData.append('orderId', selectedID);
+    formData.append('status', 'canceled');
+
+    if (selectedFile) {
+      formData.append('images', selectedFile, selectedFile.name);
+    }
+    try {
+      const response = await axios.put(
+        `https://dashboard.go-tex.net/logistics-test/order/change-status-by-receiver`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('carrierToken')}`,
+          },
+        }
+      );
+  
+      console.log(response);
+      closeModal()
+      getOrders()
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  function handleFileChange(event) {
+    console.log(event.target.files)
+    setSelectedFile(event.target.files[0]);
+  }
  
   const [orders, setOrders] = useState([])
 
@@ -64,7 +114,20 @@ export default function ReceiverShipments() {
       console.error(error);
     }
   }
+
+  const [showModal, setShowModal] = useState(false);
+
+  const openModal = (orderid) => {
+    setShowModal(true);
+    setSelectedID(orderid)
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
   return (
+    <>
     <div className='p-5' id='content'>
 
       <div className="my-table p-4 ">
@@ -81,6 +144,8 @@ export default function ReceiverShipments() {
               <th scope="col">الوزن</th>
               <th scope="col">عدد القطع</th>
               <th scope="col">حالة الشحنة</th>
+              <th scope="col"></th>
+              <th scope="col"></th>
               <th scope="col"></th>
               <th scope="col"></th>
             </tr>
@@ -105,6 +170,12 @@ export default function ReceiverShipments() {
                       changeStatus(item._id)
                     }
                   }}>تأكيد تسليم الشنحة</button></td>
+                  <td><button className="btn btn-secondary" onClick={()=>{
+                    if(window.confirm('سوف يتم إرجاع الشنحة')){
+                      returnOrder(item._id)
+                    }
+                  }}>إرجاع الشنحة</button></td>
+                  <td><button className="btn btn-danger" onClick={()=>{openModal(item._id)}}> الغاء الشحنة</button></td>
                 </tr>
               );
             })}
@@ -113,5 +184,36 @@ export default function ReceiverShipments() {
 
         </table>
       </div>
-    </div>)
+    </div>
+    <Modal show={showModal} onHide={closeModal}>
+        <Modal.Header >
+          <Modal.Title>قم بتأكيد الغاء الشحنة 
+             </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className=''>
+          <label htmlFor="">إرفق ملف الإلغاء (اختيارى) </label>
+      <input
+        type="file"
+        className="my-2 my-input form-control"
+        name="images"
+        onChange={(e) => {
+          handleFileChange(e);
+        }}
+    
+      /> 
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <div className="text-center">
+        <Button className='m-1' variant="danger" onClick={cancelOrder}>
+          تأكيد الغاء الشحنة
+          </Button>
+          <Button className='m-1' variant="secondary" onClick={closeModal}>
+          إغلاق
+          </Button>
+          </div>
+        </Modal.Footer>
+      </Modal>
+    </>)
 }

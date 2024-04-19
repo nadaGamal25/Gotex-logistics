@@ -2,20 +2,31 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import logo from '../../assets/logo.png'
 import { useNavigate } from 'react-router-dom';
-// import { io } from 'socket.io-client';
-// const URL = 'http://localhost:4000';
-// const socket = io(URL);
+import axios from 'axios';
+
+import { io } from 'socket.io-client';
+const URL = 'https://dashboard.go-tex.net/logistics-test';
+const socket = io(URL);
 
 export default function CarrierNav({ carrierData, logout }) {
   let navigate = useNavigate();
 
   const [sideToggle, setSideToggle] = useState(false);
 
-  // useEffect(() => {
-  //   socket.on('create-order', function (data) {
-  //     console.log(data)
-  //   })
-  // }, [socket])
+  useEffect(() => {
+    socket.on('create-order', function (data) {
+      if (carrierData.id == data.carrier) {
+        // when carrier online can receive this data of order when it created 
+        // this notification for this carrier need to show it in ui
+        console.log(data)
+        axios.delete(`https://dashboard.go-tex.net/logistics-test/notifications/${data._id}`).then(res => {
+          console.log(res)
+        }).catch(err => {
+          console.log(err)
+        })
+      }
+    })
+  }, [socket])
 
   useEffect(() => {
     console.log(carrierData)
@@ -35,6 +46,12 @@ export default function CarrierNav({ carrierData, logout }) {
     allSideMenu.forEach((item) => {
       item.addEventListener('click', handleClick);
     });
+    // when carrier offline and back online receive this array of all orders to him need to show in ui
+    axios.get(`https://dashboard.go-tex.net/logistics-test/notifications/${carrierData.id}`).then(res => {
+      console.log(res.data.results)
+    }).catch(err => {
+      console.log(err)
+    })
 
     return () => {
       allSideMenu.forEach((item) => {

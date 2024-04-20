@@ -10,8 +10,9 @@ const socket = io(URL);
 
 export default function CarrierNav({ carrierData, logout }) {
   let navigate = useNavigate();
-
+  const [ordersNotification ,setOrdersNotification]= useState(null)
   const [sideToggle, setSideToggle] = useState(false);
+  const [notificationToggle, setNotificationToggle] = useState(false);
 
   useEffect(() => {
     socket.on('create-order', function (data) {
@@ -19,6 +20,7 @@ export default function CarrierNav({ carrierData, logout }) {
         // when carrier online can receive this data of order when it created 
         // this notification for this carrier need to show it in ui
         console.log(data)
+        setOrdersNotification(data)
         axios.delete(`https://dashboard.go-tex.net/logistics-test/notifications/${data._id}`).then(res => {
           console.log(res)
         }).catch(err => {
@@ -49,6 +51,7 @@ export default function CarrierNav({ carrierData, logout }) {
     // when carrier offline and back online receive this array of all orders to him need to show in ui
     axios.get(`https://dashboard.go-tex.net/logistics-test/notifications/${carrierData.id}`).then(res => {
       console.log(res.data.results)
+      setOrdersNotification(res.data.results)
     }).catch(err => {
       console.log(err)
     })
@@ -59,6 +62,19 @@ export default function CarrierNav({ carrierData, logout }) {
       });
     };
   }, []);
+
+  const handleShowOrderNotification = (item) => {
+    const Data = encodeURIComponent(JSON.stringify(item));
+    window.open(`/carrierOrderNTFpreview?Data=${Data}`, '_blank');
+  };
+  async function readNotification(orderid) {
+    try {
+      const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/notifications/${orderid}`);
+      console.log(response)
+    } catch (error) {
+      console.error(error);
+    }
+  }
   return (
     <>
       {/* <!-- start side navbar --> */}
@@ -118,7 +134,33 @@ export default function CarrierNav({ carrierData, logout }) {
             <div>
               <h4 >لوحة تحكم المندوب </h4>
             </div>
-            <img src={logo} alt="" />
+            <div className="notifications-box position-relative" dir='ltr'>
+            <div className={ordersNotification ? "msg-count" : "msg-count d-none"}>
+             {ordersNotification && ordersNotification.length}</div>              
+              <i class="fa-solid fa-bell" onClick={() => setNotificationToggle(!notificationToggle)}></i>
+              <div class={`msg-box ${notificationToggle ? 'd-block' : ''}`}  dir='rtl'>
+              <p className='fw-bold'>الإشعارات</p>
+              {ordersNotification && ordersNotification.map((item,index) =>{
+            return(
+              <div class='msg-list' key={item._id} onClick={()=>handleShowOrderNotification(item)}>
+              <div class="msg-txt" >
+                <span className="text-primary">شحنة جديدة</span>
+                <div className="d-flex align-content-center align-items-center">
+                  <img src={logo} alt="logo" />
+                  <p dir='ltr'>{item.data.ordernumber} ,<br/> from : {item.data.sendername},{item.data.sendercity} , 
+                  to : {item.data.recivername},{item.data.recivercity}</p>
+                  </div>
+                  
+              </div>
+          </div>
+            )
+          }
+          )}
+
+                    
+                   
+                </div>
+            </div>
           </div>
         </nav>
       </section>

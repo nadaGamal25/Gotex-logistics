@@ -42,6 +42,7 @@ import TrackerOrders from './Components/TrackerOrders/TrackerOrders';
 import TrackerPasswordFirst from './Components/TrackerPasswordFirst/TrackerPasswordFirst';
 import TrackerLogin from './Components/TrackerLogin/TrackerLogin';
 import TrackerForgetPassProcess from './Components/TrackerForgetPassProcess/TrackerForgetPassProcess';
+import CarrierOrderNTFpreview from './Components/CarrierOrderNTFpreview/CarrierOrderNTFpreview';
 
 function App() {
   useEffect(() => {
@@ -131,6 +132,7 @@ function App() {
 
     { path: 'storeKeeperLogin', element: <StoreKeeperLogin saveStorekeeperData={saveStorekeeperData} /> },
     { path: 'store-keeper/set-password-first-time/:id', element: <StoreKeeperFirstPass /> },
+    { path: 'carrierOrderNTFpreview', element: <CarrierOrderNTFpreview /> },
 
     {
       path: '/', element: <AdminLayout setAdminData={setAdminData} adminData={adminData} />, children: [

@@ -16,7 +16,7 @@ export default function CarrierNav({ carrierData, logout }) {
 
   useEffect(() => {
     socket.on('create-order', function (data) {
-      if (carrierData.id == data.carrier) {
+      // if (carrierData.id == data.carrier) {
         // when carrier online can receive this data of order when it created 
         // this notification for this carrier need to show it in ui
         console.log(data)
@@ -26,7 +26,7 @@ export default function CarrierNav({ carrierData, logout }) {
         }).catch(err => {
           console.log(err)
         })
-      }
+      // }
     })
   }, [socket])
 

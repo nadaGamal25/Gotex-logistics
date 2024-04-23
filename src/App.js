@@ -127,11 +127,11 @@ function App() {
     { path: 'carrierForgetPass', element: <CarrierForgetPass /> },
     { path: 'barcode', element: <BarcodeScanner /> },
     { path: 'trackOrder', element: <TrackOrder /> },
-    { path: 'tracker/set-password-first-time/:id', element: <TrackerPasswordFirst /> },
+    { path: 'tracker/set-password/:id', element: <TrackerPasswordFirst /> },
     { path: 'trackerLogin', element: <TrackerLogin saveTrackerData={saveTrackerData} /> },
 
     { path: 'storeKeeperLogin', element: <StoreKeeperLogin saveStorekeeperData={saveStorekeeperData} /> },
-    { path: 'store-keeper/set-password-first-time/:id', element: <StoreKeeperFirstPass /> },
+    { path: 'store-keeper/set-password/:id', element: <StoreKeeperFirstPass /> },
     { path: 'carrierOrderNTFpreview', element: <CarrierOrderNTFpreview /> },
 
     {

@@ -166,7 +166,7 @@ const [dateFilter, setDateFilter] = useState(false);
           const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-all`, {
             params: {
                 page: currentPage +1,
-                limit: 30,
+                limit: 100,
                 
               },
             headers: {

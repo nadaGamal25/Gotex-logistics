@@ -43,6 +43,7 @@ import TrackerPasswordFirst from './Components/TrackerPasswordFirst/TrackerPassw
 import TrackerLogin from './Components/TrackerLogin/TrackerLogin';
 import TrackerForgetPassProcess from './Components/TrackerForgetPassProcess/TrackerForgetPassProcess';
 import CarrierOrderNTFpreview from './Components/CarrierOrderNTFpreview/CarrierOrderNTFpreview';
+import AdminOrdersWithoutCarrier from './Components/AdminOrdersWithoutCarrier/AdminOrdersWithoutCarrier';
 
 function App() {
   useEffect(() => {
@@ -146,6 +147,7 @@ function App() {
         { path: 'storeKeeperRegister', element: <StoreKeeperRegister /> },
         { path: 'adminOrders', element: <AdminOrders /> },
         { path: 'trackerRegister', element: <TrackerRegister /> },
+        { path: 'adminOrdersWithoutCarrier', element: <AdminOrdersWithoutCarrier /> },
 
 
       ]

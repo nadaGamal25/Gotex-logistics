@@ -81,9 +81,9 @@ export default function AdminNav({logout}) {
               </Link>
             </li>
             <li className=''>
-              <Link to="#">
+              <Link to="/adminOrdersWithoutCarrier">
                 <i class="fa-solid fa-box-open bx"></i>
-                <span class="text"></span>
+                <span class="text">شحنات بدون مندوب</span>
               </Link>
             </li>
             {/* <li >

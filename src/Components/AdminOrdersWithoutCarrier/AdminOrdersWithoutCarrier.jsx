@@ -9,7 +9,8 @@ export default function AdminOrdersWithoutCarrier() {
     const [currentPage, setCurrentPage] = useState(Number(1));
     const [numberOfPages, setNumberOfPages] = useState(1);
     const [loading, setLoading] = useState(false);
-    const [carriersListAdmin, setCarriersListsAdmin] = useState([]);
+    const [carrierCollector, setCarriersCollector] = useState([]);
+    const [carrierReciver, setCarriersReciever] = useState([]);
 
     const [currentPage2, setCurrentPage2] = useState(Number(1));
     const [numberOfPages2, setNumberOfPages2] = useState(1);
@@ -17,12 +18,13 @@ export default function AdminOrdersWithoutCarrier() {
     const [carrierId, setCarrierId] = useState('');
 
     useEffect(() => {
-        getUsersCarriersAdmin()
+      getCollectorCarriers()
+      getRecieverCarriers()
         getShipmentsAdmin()
       }, [])
-      async function getUsersCarriersAdmin() {
+      async function getCollectorCarriers() {
         try {
-          const response = await axios.get('https://dashboard.go-tex.net/logistics-test/carrier/',
+          const response = await axios.get('https://dashboard.go-tex.net/logistics-test/carrier/?role=collector',
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -30,7 +32,22 @@ export default function AdminOrdersWithoutCarrier() {
           });
           const List = response.data.data;
           console.log(List)
-          setCarriersListsAdmin(List)
+          setCarriersCollector(List)
+        } catch (error) {
+          console.error(error);
+        }
+      }
+      async function getRecieverCarriers() {
+        try {
+          const response = await axios.get('https://dashboard.go-tex.net/logistics-test/carrier/?role=receiver',
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
+            },
+          });
+          const List = response.data.data;
+          console.log(List)
+          setCarriersReciever(List)
         } catch (error) {
           console.error(error);
         }
@@ -132,6 +149,16 @@ export default function AdminOrdersWithoutCarrier() {
   const closeModal = () => {
     setShowModal(false);
   }
+  const [showModal2, setShowModal2] = useState(false);
+
+  const openModal2 = (orderid) => {
+    setShowModal2(true);
+    setOrderId(orderid)
+  };
+
+  const closeModal2 = () => {
+    setShowModal2(false);
+  }
 
   async function addCollector() {
     
@@ -185,7 +212,7 @@ export default function AdminOrdersWithoutCarrier() {
       if (response.status === 200) {
         console.log(response);
         window.alert('تمت اضافة المندوب بنجاح');
-        closeModal()
+        closeModal2()
         getShipmentsAdmin()
       } else {
         // setError(response.data.msg);
@@ -199,8 +226,16 @@ export default function AdminOrdersWithoutCarrier() {
         // window.alert(error.response?.data?.msg || error.response?.data?.msg?.name || error.response?.data?.errors[0]?.msg|| "error")
     }
   }
-  const handleSelectCarrier = (selectedValue) => {
-    const selectedCarrier = carriersListAdmin.find(carrier =>
+  const handleSelectCarrierCollector = (selectedValue) => {
+    const selectedCarrier = carrierCollector.find(carrier =>
+      `${carrier.firstName} ${carrier.lastName}, ${carrier.mobile}, ${carrier.role}` === selectedValue
+    );
+    if (selectedCarrier) {
+      setCarrierId(selectedCarrier._id);
+    }
+  };
+  const handleSelectCarrierReciever = (selectedValue) => {
+    const selectedCarrier = carrierReciver.find(carrier =>
       `${carrier.firstName} ${carrier.lastName}, ${carrier.mobile}, ${carrier.role}` === selectedValue
     );
     if (selectedCarrier) {
@@ -275,9 +310,11 @@ export default function AdminOrdersWithoutCarrier() {
 ) : (
 <td></td>
 )}  
-   <td><button className="btn btn-success" onClick={()=>{
+   {item.status == 'pending'?<td><button className="btn btn-success" onClick={()=>{
     openModal(item._id)
-   }}>إضافة مندوب</button></td>                 
+   }}>إضافة مندوب</button></td>:item.status=='in store'?<td><button className="btn btn-success" onClick={()=>{
+    openModal2(item._id)
+   }}>إضافة مندوب</button></td>:null}                 
  
                  
    </>
@@ -307,12 +344,12 @@ export default function AdminOrdersWithoutCarrier() {
         <Modal.Body>
           <div className='text-center'>
           <input list='myData'
-          onChange={(e) => handleSelectCarrier(e.target.value)}
+          onChange={(e) => handleSelectCarrierCollector(e.target.value)}
                                             type="text"
                                             className='my-input my-2 form-control' placeholder='اسم المندوب'
                                         />
                                      <datalist id='myData'>
-  {carriersListAdmin && carriersListAdmin.map((carrier, ciIndex) => (
+  {carrierCollector && carrierCollector.map((carrier, ciIndex) => (
     <option key={ciIndex} value={`${carrier.firstName} ${carrier.lastName}, ${carrier.mobile}, ${carrier.role}`}  
       onClick={() => {
         setCarrierId(carrier._id);
@@ -327,10 +364,41 @@ export default function AdminOrdersWithoutCarrier() {
           <Button variant="primary" onClick={()=>{addCollector()}}>
            إضافة مندوب تجميع
           </Button>
+          
+          <Button variant="secondary" onClick={closeModal}>
+          إغلاق
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal show={showModal2} onHide={closeModal2}>
+        <Modal.Header >
+          <Modal.Title> قم باختيار مندوب
+             </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className='text-center'>
+          <input list='myData'
+          onChange={(e) => handleSelectCarrierReciever(e.target.value)}
+                                            type="text"
+                                            className='my-input my-2 form-control' placeholder='اسم المندوب'
+                                        />
+                                     <datalist id='myData'>
+  {carrierReciver && carrierReciver.map((carrier, ciIndex) => (
+    <option key={ciIndex} value={`${carrier.firstName} ${carrier.lastName}, ${carrier.mobile}, ${carrier.role}`}  
+      onClick={() => {
+        setCarrierId(carrier._id);
+      }}
+    />
+  ))}
+</datalist>
+           </div>
+        </Modal.Body>
+        <Modal.Footer>
+       
           <Button variant="success" onClick={()=>{addReciever()}}>
           إضافة مندوب تسليم
           </Button>
-          <Button variant="secondary" onClick={closeModal}>
+          <Button variant="secondary" onClick={closeModal2}>
           إغلاق
           </Button>
         </Modal.Footer>

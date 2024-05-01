@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import {Modal, Button } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function StoreKeeperOrders() {
     useEffect(() => {
         getOrders()
+        getUsersCarriersAdmin()
       }, [])
       const [orders, setOrders] = useState([])
-    
+      const [orderId, setOrderId] = useState('');
+      const [carrierId, setCarrierId] = useState('');
+      const [carriersListAdmin, setCarriersListsAdmin] = useState([]);
+
       async function getOrders() {
         try {
           const response = await axios.get('https://dashboard.go-tex.net/logistics-test/order/get-storekeeper-orders',
@@ -38,7 +44,76 @@ export default function StoreKeeperOrders() {
           console.error(error);
         }
       }
+      async function addReciever() {
+    
+        try {
+            const response = await axios.put(
+              `https://dashboard.go-tex.net/logistics-test/order/add-order-to-receiver`,
+              {
+                orderId: orderId,
+                carrierId: carrierId,
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem('storekeeperToken')}`,
+                },
+              }
+            );
+      
+          if (response.status === 200) {
+            console.log(response);
+            window.alert('تمت اضافة المندوب بنجاح');
+            closeModal()
+            getOrders()
+          } else {
+            // setError(response.data.msg);
+          }
+        } catch (error) {
+            // setError(error.response.data.msg)
+            console.log(error.response)
+            console.log(carrierId)
+            console.log(orderId)
+            window.alert(error.response.data.msg)
+            // window.alert(error.response?.data?.msg || error.response?.data?.msg?.name || error.response?.data?.errors[0]?.msg|| "error")
+        }
+      }
+      const handleSelectCarrier = (selectedValue) => {
+        const selectedCarrier = carriersListAdmin.find(carrier =>
+          `${carrier.firstName} ${carrier.lastName}, ${carrier.mobile}, ${carrier.role}` === selectedValue
+        );
+        if (selectedCarrier) {
+          setCarrierId(selectedCarrier._id);
+        }
+      };
+      const [showModal, setShowModal] = useState(false);
+
+      const openModal = (orderid) => {
+        setShowModal(true);
+        setOrderId(orderid)
+      };
+    
+      const closeModal = () => {
+        setShowModal(false);
+      }
+      
+      async function getUsersCarriersAdmin() {
+        try {
+          const response = await axios.get('https://dashboard.go-tex.net/logistics-test/carrier/get-receivers'
+          ,{
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('storekeeperToken')}`,
+            },
+          }
+        );
+          const List = response.data.data;
+          console.log(List)
+          setCarriersListsAdmin(List)
+        } catch (error) {
+          console.error(error);
+        }
+      }
       return (
+        <>
         <div className='p-5' id='content'>
     
           <div className="my-table p-4 ">
@@ -55,6 +130,7 @@ export default function StoreKeeperOrders() {
                   <th scope="col">الوزن</th>
                   <th scope="col">عدد القطع</th>
                   <th scope="col">حالة الشحنة</th>
+                  <th scope="col"></th>
                   <th scope="col"></th>
                 </tr>
               </thead>
@@ -73,7 +149,9 @@ export default function StoreKeeperOrders() {
                       <td>{item.pieces}</td>
                       <td>{item.status}</td>
                       <td><button className="btn btn-success" onClick={() => { getSticker(item._id) }}>عرض الاستيكر</button></td>
-    
+                      <td><button className="btn btn-orange" onClick={()=>{
+    openModal(item._id)
+   }}>إضافة مندوب </button></td>  
                     </tr>
                   );
                 })}
@@ -82,7 +160,43 @@ export default function StoreKeeperOrders() {
     
             </table>
           </div>
+        
         </div>
+         <Modal show={showModal} onHide={closeModal}>
+         <Modal.Header >
+           <Modal.Title> قم باختيار مندوب
+              </Modal.Title>
+         </Modal.Header>
+         <Modal.Body>
+           <div className='text-center'>
+           <input list='myData'
+           onChange={(e) => handleSelectCarrier(e.target.value)}
+                                             type="text"
+                                             className='my-input my-2 form-control' placeholder='اسم المندوب'
+                                         />
+                                      <datalist id='myData'>
+   {carriersListAdmin && carriersListAdmin.map((carrier, ciIndex) => (
+     <option key={ciIndex} value={`${carrier.firstName} ${carrier.lastName}, ${carrier.mobile}, ${carrier.role}`}  
+       onClick={() => {
+         setCarrierId(carrier._id);
+       }}
+     />
+   ))}
+ </datalist>
+            </div>
+         </Modal.Body>
+         <Modal.Footer>
+           
+           
+           <Button variant="success" onClick={()=>{addReciever()}}>
+           إضافة مندوب تسليم
+           </Button>
+           <Button variant="secondary" onClick={closeModal}>
+           إغلاق
+           </Button>
+         </Modal.Footer>
+       </Modal>
+       </>
       )
     }
     

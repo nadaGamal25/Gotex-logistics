@@ -133,11 +133,11 @@ export default function AdminOrdersWithoutCarrier() {
     setShowModal(false);
   }
 
-  async function addCarrier(carrierRole) {
+  async function addCollector() {
     
     try {
         const response = await axios.put(
-          `https://dashboard.go-tex.net/logistics-test/order/add-order-to-carrier?carrierType=${carrierRole}`,
+          `https://dashboard.go-tex.net/logistics-test/order/add-order-to-collector`,
           {
             orderId: orderId,
             carrierId: carrierId,
@@ -162,6 +162,40 @@ export default function AdminOrdersWithoutCarrier() {
         console.log(error.response)
         console.log(carrierId)
         console.log(orderId)
+        window.alert(error.response.data.msg)
+        // window.alert(error.response?.data?.msg || error.response?.data?.msg?.name || error.response?.data?.errors[0]?.msg|| "error")
+    }
+  }
+  async function addReciever() {
+    
+    try {
+        const response = await axios.put(
+          `https://dashboard.go-tex.net/logistics-test/order/add-order-to-receiver`,
+          {
+            orderId: orderId,
+            carrierId: carrierId,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
+            },
+          }
+        );
+  
+      if (response.status === 200) {
+        console.log(response);
+        window.alert('تمت اضافة المندوب بنجاح');
+        closeModal()
+        getShipmentsAdmin()
+      } else {
+        // setError(response.data.msg);
+      }
+    } catch (error) {
+        // setError(error.response.data.msg)
+        console.log(error.response)
+        console.log(carrierId)
+        console.log(orderId)
+        window.alert(error.response.data.msg)
         // window.alert(error.response?.data?.msg || error.response?.data?.msg?.name || error.response?.data?.errors[0]?.msg|| "error")
     }
   }
@@ -290,10 +324,10 @@ export default function AdminOrdersWithoutCarrier() {
         </Modal.Body>
         <Modal.Footer>
           
-          <Button variant="primary" onClick={()=>{addCarrier('collector')}}>
+          <Button variant="primary" onClick={()=>{addCollector()}}>
            إضافة مندوب تجميع
           </Button>
-          <Button variant="success" onClick={()=>{addCarrier('receiver')}}>
+          <Button variant="success" onClick={()=>{addReciever()}}>
           إضافة مندوب تسليم
           </Button>
           <Button variant="secondary" onClick={closeModal}>

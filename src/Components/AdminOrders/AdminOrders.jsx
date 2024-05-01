@@ -397,7 +397,7 @@ const exportToExcel = async () => {
         
         <div className="col-md-4">
           <input className='form-control m-1' 
-          type="search" placeholder=" المدخل , الهاتف ,اخرى"
+          type="search" placeholder=" اسم المستخدم , الهاتف ,اخرى"
           // value={clientFilter}
           onChange={(e) => setClientFilter(e.target.value)}
           />
@@ -412,18 +412,31 @@ const exportToExcel = async () => {
         </div>
         
         <div className="col-md-4">
-          <input className='form-control m-1' type="search" 
+          <select className='form-control m-1'  
           
           placeholder="طريقة الدفع"
         //   value={searchPaytype}
-          onChange={(e) => setSearchPaytype(e.target.value)} />
+          onChange={(e) => setSearchPaytype(e.target.value)}>
+            <option value="">طريقة الدفع</option>
+            <option value="cc">الدفع اونلاين (cc)</option>
+            <option value="cod">الدفع عند الاستلام(cod)</option>
+            <option value="">كلاهما</option>
+            </select>
         </div>
         <div className="col-md-4">
-          <input className='form-control m-1' type="search" 
+          <select className='form-control m-1'
           
           placeholder="حالة الشحنة"
         //   value={searchPaytype}
-          onChange={(e) => setSearchStatus(e.target.value)} />
+          onChange={(e) => setSearchStatus(e.target.value)} >
+            <option value="">حالة الشحنة</option>
+            <option value="pending">pending</option>
+            <option value="pick to store">pick to store</option>
+            <option value="in store">in store</option>
+            <option value="pick to client">pick to client</option>
+            <option value="delivered">delivered</option>
+            <option value="canceled">canceled</option>
+            </select>
         </div>
         
         <div className="col-md-8 p-1">
@@ -478,9 +491,9 @@ const exportToExcel = async () => {
                   <th scope="col">الوزن</th>
                   <th scope="col">عدد القطع</th>
                   <th scope="col">حالة الشحنة</th>
-                  <th scope="col">ملف الالغاء</th>
-                  <th scope="col">مندوب التجميع</th>
-                  <th scope="col">مندوب التسليم</th>
+                  {/* <th scope="col">ملف الالغاء</th> */}
+                  <th scope="col">مندوب الشحنة</th>
+                  {/* <th scope="col">مندوب التسليم</th> */}
                   <th scope="col">المدخل</th>
                   <th scope="col"></th>
                 </tr>
@@ -506,20 +519,22 @@ const exportToExcel = async () => {
                       <td>{item.price}</td>
                       <td>{item.weight}</td>
                       <td>{item.pieces}</td>
-                      <td>{item.status}</td>
-                      {item.images && item.images[0]?<td>
+                      <td>{item.status}<br/>
+                      {item.images && item.images[0]?
                   <a href={item.images[0].replace('public', 'https://dashboard.go-tex.net/logistics-test')} target='_blank'>رابط_الملف</a>
-                </td>:<td>_</td>}
+                :null}</td>
+                     
                       {item.collector && item.collector.length > 0 && item.collector[0].firstName ? (
-  <td>{item.collector[0].firstName} {item.collector[0].lastName}</td>
+  <td>collector:{item.collector[0].firstName} {item.collector[0].lastName}<br/>
+  {item.receiver&& item.receiver.length > 0 && item.receiver[0].firstName ? (
+  <span>reciever:{item.receiver[0].firstName} {item.receiver[0].lastName}</span>
+) : (
+  null
+)} </td>
 ) : (
   <td></td>
 )}
-{item.receiver&& item.receiver.length > 0 && item.receiver[0].firstName ? (
-  <td>{item.receiver[0].firstName} {item.receiver[0].lastName}</td>
-) : (
-  <td></td>
-)}  
+ 
 {item.user&& item.user.length > 0 && item.user[0].firstName ? (
   <td>{item.user[0].firstName} {item.user[0].lastName}</td>
 ) : (

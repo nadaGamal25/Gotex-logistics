@@ -430,12 +430,12 @@ const exportToExcel = async () => {
         //   value={searchPaytype}
           onChange={(e) => setSearchStatus(e.target.value)} >
             <option value="">حالة الشحنة</option>
-            <option value="pending">pending</option>
-            <option value="pick to store">pick to store</option>
-            <option value="in store">in store</option>
-            <option value="pick to client">pick to client</option>
-            <option value="delivered">delivered</option>
-            <option value="canceled">canceled</option>
+            <option value="pending">pending (معلقة)</option>
+            <option value="pick to store">pick to store(ف الطريق للمخزن)</option>
+            <option value="in store">in store(فى المخزن)</option>
+            <option value="pick to client">pick to client(ف الطريق للعميل)</option>
+            <option value="delivered">delivered(تم تسليمها)</option>
+            <option value="canceled">canceled(تم الغائها)</option>
             </select>
         </div>
         

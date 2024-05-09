@@ -39,13 +39,34 @@ export default function CollectorShipments() {
     }
   }
 
-  async function changeStatus(orderid) {
+  // async function changeStatus(orderid) {
+  //   try {
+  //     const response = await axios.put(
+  //       `https://dashboard.go-tex.net/logistics-test/order/change-status-by-collector`,
+  //       {
+  //         orderId: orderid,
+  //         status: "pick to store"
+  //       },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${localStorage.getItem('carrierToken')}`,
+  //         },
+  //       }
+  //     );
+  
+  //     console.log(response);
+  //     getOrders()
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
+
+  async function changeStatusPicked(orderid) {
     try {
       const response = await axios.put(
-        `https://dashboard.go-tex.net/logistics-test/order/change-status-by-collector`,
+        `https://dashboard.go-tex.net/logistics-test/order/picked-by-collector`,
         {
           orderId: orderid,
-          status: "pick to store"
         },
         {
           headers: {
@@ -58,6 +79,50 @@ export default function CollectorShipments() {
       getOrders()
     } catch (error) {
       console.error(error);
+      alert(error.response.data.message)
+
+    }
+  }
+  async function changeStatusDelivered(orderid) {
+    try {
+      const response = await axios.put(
+        `https://dashboard.go-tex.net/logistics-test/order/delivered-by-collector`,
+        {
+          orderId: orderid,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('carrierToken')}`,
+          },
+        }
+      );
+  
+      console.log(response);
+      getOrders()
+    } catch (error) {
+      console.error(error);
+      alert(error.response.data.message)
+    }
+  }
+  async function sendRequestStore(orderid) {
+    try {
+      const response = await axios.put(
+        `https://dashboard.go-tex.net/logistics-test/order/in-store-request`,
+        {
+          orderId: orderid,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('carrierToken')}`,
+          },
+        }
+      );
+      window.alert("تم تبليغ امين المخزن")
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+      alert(error.response.data.msg)
+
     }
   }
   return (
@@ -79,6 +144,7 @@ export default function CollectorShipments() {
               <th scope="col">حالة الشحنة</th>
               <th scope="col"></th>
               <th scope="col"></th>
+              <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
@@ -96,11 +162,24 @@ export default function CollectorShipments() {
                   <td>{item.pieces}</td>
                   <td>{item.status}</td>
                   <td><button className="btn btn-success" onClick={() => { getSticker(item._id) }}>عرض الاستيكر</button></td>
+                  {item.status == 'pending'?
                   <td><button className="btn btn-orange" onClick={()=>{
-                    if(window.confirm('هل انت بالتأكيد قمت باستلام الشحنة وتوصيلها للمخزن')){
-                      changeStatus(item._id)
+                    if(window.confirm('هل انت بالتأكيد قمت باستلام الشحنة من العميل')){
+                      changeStatusPicked(item._id)
                     }
-                  }}>تأكيد استلام الشنحة</button></td>
+                  }}>تأكيد استلام الشنحة</button></td>:null}
+                  {item.status == 'pick to store' ?
+                  <td><button className="btn btn-primary" onClick={()=>{
+                    if(window.confirm('هل انت بالتأكيد قمت بتوصيل الشخنة للمخزن')){
+                      changeStatusDelivered(item._id)
+                    }
+                  }}>تأكيد توصيل الشنحة</button></td>:null}
+                  {item.status == 'delivered by collector'?
+                   <td><button className="btn btn-secondary" onClick={()=>{
+                    if(window.confirm('هل قمت بتوصيل الشحنة وتريد ابلاغ امين المخزن')){
+                      sendRequestStore(item._id)
+                    }
+                  }}>تبليغ امين المخزن</button></td>:null}
                 </tr>
               );
             })}

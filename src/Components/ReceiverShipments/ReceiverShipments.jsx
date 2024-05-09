@@ -8,13 +8,33 @@ export default function ReceiverShipments() {
     getOrders()
   }, [])
 
-  async function changeStatus(orderid) {
+  // async function changeStatus(orderid) {
+  //   try {
+  //     const response = await axios.put(
+  //       `https://dashboard.go-tex.net/logistics-test/order/change-status-by-receiver`,
+  //       {
+  //         orderId: orderid,
+  //         status: "pick to client"
+  //       },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${localStorage.getItem('carrierToken')}`,
+  //         },
+  //       }
+  //     );
+  
+  //     console.log(response);
+  //     getOrders()
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
+  async function changeStatusPicked(orderid) {
     try {
       const response = await axios.put(
-        `https://dashboard.go-tex.net/logistics-test/order/change-status-by-receiver`,
+        `https://dashboard.go-tex.net/logistics-test/order/picked-by-receiver`,
         {
           orderId: orderid,
-          status: "pick to client"
         },
         {
           headers: {
@@ -27,6 +47,51 @@ export default function ReceiverShipments() {
       getOrders()
     } catch (error) {
       console.error(error);
+      alert(error.response.data.message)
+    }
+  }
+  async function changeStatusDelivered(orderid) {
+    try {
+      const response = await axios.put(
+        `https://dashboard.go-tex.net/logistics-test/order/delivered-by-receiver`,
+        {
+          orderId: orderid,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('carrierToken')}`,
+          },
+        }
+      );
+  
+      console.log(response);
+      getOrders()
+    } catch (error) {
+      console.error(error);
+      alert(error.response.data.message)
+
+    }
+  }
+  async function changeStatusRecieved(orderid) {
+    try {
+      const response = await axios.put(
+        `https://dashboard.go-tex.net/logistics-test/order/order-received`,
+        {
+          orderId: orderid,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('carrierToken')}`,
+          },
+        }
+      );
+  
+      console.log(response);
+      getOrders()
+    } catch (error) {
+      console.error(error);
+      alert(error.response.data.message)
+
     }
   }
   
@@ -53,14 +118,13 @@ export default function ReceiverShipments() {
   async function cancelOrder() {
     const formData = new FormData();
     formData.append('orderId', selectedID);
-    formData.append('status', 'canceled');
 
     if (selectedFile) {
       formData.append('images', selectedFile, selectedFile.name);
     }
     try {
       const response = await axios.put(
-        `https://dashboard.go-tex.net/logistics-test/order/change-status-by-receiver`,
+        `https://dashboard.go-tex.net/logistics-test/order/cancel-order-by-receiver`,
         formData,
         {
           headers: {
@@ -74,6 +138,7 @@ export default function ReceiverShipments() {
       getOrders()
     } catch (error) {
       console.error(error);
+      alert(error.response.data.msg)
     }
   }
   function handleFileChange(event) {
@@ -165,11 +230,24 @@ export default function ReceiverShipments() {
                   <td>{item.pieces}</td>
                   <td>{item.status}</td>
                   <td><button className="btn btn-success" onClick={() => { getSticker(item._id) }}>عرض الاستيكر</button></td>
+                  {item.status == "in store"?
                   <td><button className="btn btn-orange" onClick={()=>{
-                    if(window.confirm('هل انت بالتأكيد قمت بتسليم الشحنة للعميل')){
-                      changeStatus(item._id)
+                    if(window.confirm('هل انت بالتأكيد قمت باستلام الشحنة من المخزن')){
+                      changeStatusPicked(item._id)
                     }
-                  }}>تأكيد تسليم الشنحة</button></td>
+                  }}>تأكيد الاستلام من المخزن</button></td>:null}
+                  {item.status =="pick to client"?
+                  <td><button className="btn btn-primary" onClick={()=>{
+                    if(window.confirm('هل انت فى الطريق لتسليم الشحنة')){
+                      changeStatusDelivered(item._id)
+                    }
+                  }}>فى الطريق للتسليم</button></td>:null}
+                  {item.status =='delivered by receiver'?
+                  <td><button className="btn btn-primary" onClick={()=>{
+                    if(window.confirm('هل انت بالتأكيد قمت بتسليم الشحنة للعميل')){
+                      changeStatusRecieved(item._id)
+                    }
+                  }}>تأكيد استلام العميل</button></td>:null}
                   <td><button className="btn btn-secondary" onClick={()=>{
                     if(window.confirm('سوف يتم إرجاع الشنحة')){
                       returnOrder(item._id)

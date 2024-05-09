@@ -112,6 +112,65 @@ export default function StoreKeeperOrders() {
           console.error(error);
         }
       }
+
+      const [showModal2, setShowModal2] = useState(false);
+
+      const openModal2 = (orderid) => {
+        setShowModal2(true);
+        setOrderId(orderid)
+      };
+    
+      const closeModal2 = () => {
+       setShowModal2(false);
+      }
+      async function acceptOrder(orderid) {
+    try {
+      const response = await axios.put(
+        `https://dashboard.go-tex.net/logistics-test/order/in-store-request-status`,
+        {
+          orderId: orderid,
+          requestStatus: "accepted"
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('storekeeperToken')}`,
+          },
+        }
+      );
+      alert('تم الموافقة على استلام الشحنة')     
+      closeModal2()  
+      console.log(response);
+      getOrders()
+    } catch (error) {
+      console.error(error);
+      alert(error.response.data.err)
+    }
+  }
+
+  async function rejectOrder(orderid) {
+    try {
+      const response = await axios.put(
+        `https://dashboard.go-tex.net/logistics-test/order/in-store-request-status`,
+        {
+          orderId: orderid,
+          requestStatus: "rejected"
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('storekeeperToken')}`,
+          },
+        }
+      );
+      alert('تم رفض استلام الشحنة')
+      closeModal2()
+      console.log(response);
+      getOrders()
+    } catch (error) {
+      console.error(error);
+      alert(error.response.data.err)
+
+    }
+  }
       return (
         <>
         <div className='p-5' id='content'>
@@ -152,6 +211,9 @@ export default function StoreKeeperOrders() {
                       <td><button className="btn btn-orange" onClick={()=>{
     openModal(item._id)
    }}>إضافة مندوب </button></td>  
+   <td><button className="btn btn-primary" onClick={()=>{
+    openModal2(item._id)
+   }}>تأكيد استلام الشحنة </button></td>  
                     </tr>
                   );
                 })}
@@ -192,6 +254,31 @@ export default function StoreKeeperOrders() {
            إضافة مندوب تسليم
            </Button>
            <Button variant="secondary" onClick={closeModal}>
+           إغلاق
+           </Button>
+         </Modal.Footer>
+       </Modal>
+       <Modal show={showModal2} onHide={closeModal2}>
+         <Modal.Header >
+           <Modal.Title> هل قمت باستلام هذه الشحنة من مندوب التجميع بالفعل؟ 
+              </Modal.Title>
+         </Modal.Header>
+         <Modal.Body>
+           <div className='text-center'>
+           <Button className='m-1' variant="success" onClick={()=>{acceptOrder(orderId)}}>
+      تأكيد
+           </Button>
+           <Button className='m-1' variant="danger" onClick={()=>{rejectOrder(orderId)}}>
+      رفض
+           </Button>
+           
+            </div>
+         </Modal.Body>
+         <Modal.Footer>
+           
+           
+           
+           <Button variant="secondary" onClick={closeModal2}>
            إغلاق
            </Button>
          </Modal.Footer>

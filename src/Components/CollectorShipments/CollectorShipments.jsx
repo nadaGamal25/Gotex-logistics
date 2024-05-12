@@ -31,7 +31,7 @@ export default function CollectorShipments() {
         },
       });
       console.log(response)
-      const stickerUrl = `${response.data.url.replace('upload', 'https://dashboard.go-tex.net/logistics-test')}`;
+      const stickerUrl = `${response.data.url.replace('upload', 'https://dashboard.go-tex.net/logistics-test/upload')}`;
       const newTab = window.open();
       newTab.location.href = stickerUrl;
     } catch (error) {
@@ -64,7 +64,7 @@ export default function CollectorShipments() {
   async function changeStatusPicked(orderid) {
     try {
       const response = await axios.put(
-        `https://dashboard.go-tex.net/logistics-test/order/picked-by-collector`,
+        `https://dashboard.go-tex.net/logistics-test/order/picked-to-store`,
         {
           orderId: orderid,
         },
@@ -168,13 +168,13 @@ export default function CollectorShipments() {
                       changeStatusPicked(item._id)
                     }
                   }}>تأكيد استلام الشنحة</button></td>:null}
-                  {item.status == 'pick to store' ?
+                  {/* {item.status == 'pick to store' ?
                   <td><button className="btn btn-primary" onClick={()=>{
                     if(window.confirm('هل انت بالتأكيد قمت بتوصيل الشخنة للمخزن')){
                       changeStatusDelivered(item._id)
                     }
-                  }}>تأكيد توصيل الشنحة</button></td>:null}
-                  {item.status == 'delivered by collector'?
+                  }}>تأكيد توصيل الشنحة</button></td>:null} */}
+                  {item.status == 'pick to store'?
                    <td><button className="btn btn-secondary" onClick={()=>{
                     if(window.confirm('هل قمت بتوصيل الشحنة وتريد ابلاغ امين المخزن')){
                       sendRequestStore(item._id)

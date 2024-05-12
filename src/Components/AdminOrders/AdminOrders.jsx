@@ -56,7 +56,7 @@ const [dateFilter, setDateFilter] = useState(false);
             },
           });
           console.log(response)
-          const stickerUrl = `${response.data.url.replace('upload', 'https://dashboard.go-tex.net/logistics-test')}`;
+          const stickerUrl = `${response.data.url.replace('upload', 'https://dashboard.go-tex.net/logistics-test/upload')}`;
           const newTab = window.open();
           newTab.location.href = stickerUrl;
         } catch (error) {

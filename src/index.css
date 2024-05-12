@@ -500,6 +500,12 @@ nav form .form-input button{
 .bg-lightblue{
   background-color: #f2f2f2;
 }
+.w-20{
+  width: 20%;
+}
+.status-box span{
+  font-size: 12px;
+}
 /* notifications-box */
 .notifications-box{
   

@@ -41,16 +41,16 @@ export default function TrackOrder() {
         <div className="bg-lightblue mt-4">
             <div className="text-center">
                 <img className='location-icon' src={locationIcon} alt="icon" />
-            <h2 className='fw-bold'>Track Your Order</h2>
+            <h2 className='fw-bold'>تتبع شحنتك الان</h2>
             </div>
             <div className="m-auto track-box">
-              <div className="row py-3" dir='ltr'>
+              <div className="row py-3" dir='rtl'>
                 <div className="col-md-10 my-1">
-                  <input type="text" className="form-control" placeholder="Tracking Number " 
+                  <input type="text" className="form-control" placeholder="رقم التتبع" 
                   onChange={(e)=>{setTrackNumber(e.target.value)}}/>
                 </div>
                 <div className="col-md-2 px-0 my-1">
-                <button className="btn btn-orange" onClick={trackOrder}>Track</button>
+                <button className="btn btn-orange" onClick={trackOrder}>تتبع</button>
                 </div>
               </div>
             </div>
@@ -58,54 +58,71 @@ export default function TrackOrder() {
         </div>
         <div className={visible?"bg-lightblue p-4 m-5 details-box d-block":"d-none bg-lightblue p-4 m-5 details-box"}>
           <div className="bg-white">
-          <div className="row" dir='ltr'>
+          <div className="row " dir='rtl'>
             <div className="col-md-4">
               <div className="p-4">
-              <h5> <i class="fa-solid fa-truck-fast"></i> Order Number</h5>
+              <h5> <i class="fa-solid fa-truck-fast"></i>رقم الشحنة</h5>
               <span className='fw-bold'> {orderDetails.ordernumber}</span>
               </div>
               </div>
             <div className="col-md-4">
               <div className="p-4">
-                <h5><i class="fa-regular fa-chart-bar"></i>  Status</h5>
-                <span className='fw-bold'> {orderDetails.status}</span>
+                <h5><i class="fa-regular fa-chart-bar"></i>  حالة الشحنة </h5>
+                {orderDetails.status=='pending'?
+                <span className='fw-bold'>قيد الانتظار</span>:
+                orderDetails.status=='pick to store'?
+                <span className='fw-bold'>فى الطريق للمخزن</span>:
+                orderDetails.status=='in store'?
+                <span className='fw-bold'> فى المخزن</span>:
+                orderDetails.status=='pick to client'?
+                <span className='fw-bold'>فى الطريق للعميل</span>:
+                orderDetails.status=='received'?
+                <span className='fw-bold'>تم تسليمها</span>:
+                null}
               </div>
             </div>
             <div className="col-md-4">
               <div className="p-4">
-                <h5><i class="fa-solid fa-user"></i> Carrier</h5>
-                {orderDetails.pickedby?<span className='fw-bold'>collector: {orderDetails.pickedby.firstName}{orderDetails.pickedby.lastName}</span>:
-                <span></span>}
-                <br />
-                {orderDetails.deliveredby?<span className='fw-bold'>reciever: {orderDetails.deliveredby.firstName}{orderDetails.deliveredby.lastName}</span>:
-                <span></span>}
+                <h5><i class="fa-solid fa-user"></i> المندوب</h5>
+                {orderDetails.status == 'pick to store'?
+                <span className='fw-bold'>{orderDetails.pickedby.firstName}{orderDetails.pickedby.lastName}</span>:null}
+                {orderDetails.status == 'pick to client'?
+                <span className='fw-bold'> {orderDetails.deliveredby.firstName}{orderDetails.deliveredby.lastName}</span>:
+                null}
+                {orderDetails.status == 'in store'?
+                <span className='fw-bold'> {orderDetails.storekeeper.firstName}{orderDetails.storekeeper.lastName}</span>:
+                null}
               </div>
             </div>
             </div>
             <div className="p-2 my-3">
-            <div dir='ltr' className="progress my-4" role="progressbar" aria-label="Success example"  aria-valuemin={0} aria-valuemax={100}>
+            <div dir='rtl' className="progress my-4" role="progressbar" aria-label="Success example"  aria-valuemin={0} aria-valuemax={100}>
             <div className="progress-bar" style={{
-  width: orderDetails.status === 'pending' ? '25%' :
-         orderDetails.status === 'pick to store' ? '50%' :
-         orderDetails.status === 'in store' ? `75%` :
-         orderDetails.status === 'pick to client' ? `100%` :
+  width: orderDetails.status === 'pending' ? '20%' :
+         orderDetails.status === 'pick to store' ? '40%' :
+         orderDetails.status === 'in store' ? `60%` :
+         orderDetails.status === 'pick to client' ? `80%` :
+         orderDetails.status === 'received' ? `100%` :
          `0%`
 }}>    {/* <i class="fa-solid fa-truck-arrow-right truck-icon"></i> */}
     </div>
   
             </div>
-            <div className="d-flex" dir='ltr'>
-  <div className="w-25 text-center">
-    <span>pending</span>
+            <div className="d-flex status-box" dir='rtl'>
+  <div className="w-20 text-center">
+    <span>قيد الانتظار</span>
   </div>
-  <div className="w-25 text-center">
-    <span>pick to store</span>
+  <div className="w-20 text-center">
+    <span>فى الطريق للمخزن</span>
   </div>
-  <div className="w-25 text-center">
-    <span>in store</span>
+  <div className="w-20 text-center">
+    <span>فى المخزن</span>
   </div>
-  <div className="w-25 text-center">
-    delivered
+  <div className="w-20 text-center">
+  <span>فى الطريق للعميل</span>
+  </div>
+  <div className="w-20 text-center">
+  <span> تم تسليمها</span>
   </div>
   </div>
             </div>

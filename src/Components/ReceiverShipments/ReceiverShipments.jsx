@@ -32,7 +32,7 @@ export default function ReceiverShipments() {
   async function changeStatusPicked(orderid) {
     try {
       const response = await axios.put(
-        `https://dashboard.go-tex.net/logistics-test/order/picked-by-receiver`,
+        `https://dashboard.go-tex.net/logistics-test/order/picked-to-client`,
         {
           orderId: orderid,
         },
@@ -172,7 +172,7 @@ export default function ReceiverShipments() {
         },
       });
       console.log(response)
-      const stickerUrl = `${response.data.url.replace('upload', 'https://dashboard.go-tex.net/logistics-test')}`;
+      const stickerUrl = `${response.data.url.replace('upload', 'https://dashboard.go-tex.net/logistics-test/upload')}`;
       const newTab = window.open();
       newTab.location.href = stickerUrl;
     } catch (error) {
@@ -236,23 +236,24 @@ export default function ReceiverShipments() {
                       changeStatusPicked(item._id)
                     }
                   }}>تأكيد الاستلام من المخزن</button></td>:null}
-                  {item.status =="pick to client"?
+                  {/* {item.status =="pick to client"?
                   <td><button className="btn btn-primary" onClick={()=>{
                     if(window.confirm('هل انت فى الطريق لتسليم الشحنة')){
                       changeStatusDelivered(item._id)
                     }
-                  }}>فى الطريق للتسليم</button></td>:null}
-                  {item.status =='delivered by receiver'?
+                  }}>فى الطريق للتسليم</button></td>:null} */}
+                  {item.status =='pick to client'?
                   <td><button className="btn btn-primary" onClick={()=>{
                     if(window.confirm('هل انت بالتأكيد قمت بتسليم الشحنة للعميل')){
                       changeStatusRecieved(item._id)
                     }
                   }}>تأكيد استلام العميل</button></td>:null}
+                  {item.status =="pick to client"?
                   <td><button className="btn btn-secondary" onClick={()=>{
                     if(window.confirm('سوف يتم إرجاع الشنحة')){
                       returnOrder(item._id)
                     }
-                  }}>إرجاع الشنحة</button></td>
+                  }}>إرجاع الشنحة</button></td>:null}
                   <td><button className="btn btn-danger" onClick={()=>{openModal(item._id)}}> الغاء الشحنة</button></td>
                 </tr>
               );

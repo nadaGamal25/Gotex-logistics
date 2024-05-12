@@ -37,7 +37,7 @@ export default function StoreKeeperOrders() {
             },
           });
           console.log(response)
-          const stickerUrl = `${response.data.url.replace('upload', 'https://dashboard.go-tex.net/logistics-test')}`;
+          const stickerUrl = `${response.data.url.replace('upload', 'https://dashboard.go-tex.net/logistics-test/upload')}`;
           const newTab = window.open();
           newTab.location.href = stickerUrl;
         } catch (error) {
@@ -208,12 +208,14 @@ export default function StoreKeeperOrders() {
                       <td>{item.pieces}</td>
                       <td>{item.status}</td>
                       <td><button className="btn btn-success" onClick={() => { getSticker(item._id) }}>عرض الاستيكر</button></td>
+                      {item.status == 'in store'?
                       <td><button className="btn btn-orange" onClick={()=>{
     openModal(item._id)
-   }}>إضافة مندوب </button></td>  
+   }}>إضافة مندوب </button></td>  :null}
+   {item.status=='pick to store'?
    <td><button className="btn btn-primary" onClick={()=>{
     openModal2(item._id)
-   }}>تأكيد استلام الشحنة </button></td>  
+   }}>تأكيد استلام الشحنة </button></td>  :null}
                     </tr>
                   );
                 })}

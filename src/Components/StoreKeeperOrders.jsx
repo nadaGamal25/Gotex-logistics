@@ -208,7 +208,7 @@ export default function StoreKeeperOrders() {
                       <td>{item.pieces}</td>
                       <td>{item.status}</td>
                       <td><button className="btn btn-success" onClick={() => { getSticker(item._id) }}>عرض الاستيكر</button></td>
-                      {item.status == 'in store'?
+                      {item.status == 'in store' && !item.deliveredby ?
                       <td><button className="btn btn-orange" onClick={()=>{
     openModal(item._id)
    }}>إضافة مندوب </button></td>  :null}

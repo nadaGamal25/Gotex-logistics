@@ -212,7 +212,6 @@ export default function ReceiverShipments() {
               <th scope="col"></th>
               <th scope="col"></th>
               <th scope="col"></th>
-              <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
@@ -254,7 +253,7 @@ export default function ReceiverShipments() {
                       returnOrder(item._id)
                     }
                   }}>إرجاع الشنحة</button></td>:null}
-                  <td><button className="btn btn-danger" onClick={()=>{openModal(item._id)}}> الغاء الشحنة</button></td>
+                  {/* <td><button className="btn btn-danger" onClick={()=>{openModal(item._id)}}> الغاء الشحنة</button></td> */}
                 </tr>
               );
             })}

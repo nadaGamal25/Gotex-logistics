@@ -11,6 +11,9 @@ export default function UserCreateOrder() {
 
   const [phoneValue, setPhoneValue] = useState()
   const [phone2, setPhone2] = useState()
+  const [cityIdSender, setCityIdSender] = useState(null)
+  const [cityIdReciever, setCityIdReciever] = useState(null)
+
 
   const [errorList, seterrorList] = useState([]);
 
@@ -18,10 +21,12 @@ export default function UserCreateOrder() {
     recivername: "",
     reciveraddress: "",
     recivercity: "",
+    reciverdistrict:"",
     reciverphone: "",
     sendername: "",
     senderaddress: "",
     sendercity: "",
+    senderdistrict:"",
     senderphone: "",
     paytype: "",
     price: "",
@@ -105,7 +110,6 @@ export default function UserCreateOrder() {
 
     setOrderData(myOrderData);
     console.log(myOrderData);
-    console.log(myOrderData.cod);
   }
 
   // function getOrderData(e){
@@ -132,6 +136,8 @@ export default function UserCreateOrder() {
       description: Joi.string().required(),
       paytype: Joi.string().required(),
       price: Joi.number().required(),
+      senderdistrict: Joi.string().required(),
+      reciverdistrict: Joi.string().required(),
 
     });
     return scheme.validate(orderData, { abortEarly: false });
@@ -154,6 +160,7 @@ export default function UserCreateOrder() {
     }
     useEffect(() => {
       getCities()
+      getDistricts()
     }, [])
   const [search, setSearch] = useState('')
   const [search2, setSearch2] = useState('')
@@ -235,7 +242,21 @@ export default function UserCreateOrder() {
     };
   }, [showCitiesList2]);
 
-
+  const [districts,setDistricts]=useState()
+  async function getDistricts() {
+    try {
+      const response = await axios.get('https://dashboard.go-tex.net/logistics-test/cities/districts',
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+      });
+      setDistricts(response.data.districts)
+      console.log(response)
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
 
   return (
@@ -321,6 +342,7 @@ export default function UserCreateOrder() {
                       <li key={index} name='sendercity' 
                       onClick={(e)=>{ 
                         const selectedCity = e.target.innerText;
+                        setCityIdSender(item.city_id)
                         // setItemCity(selectedCity)
                         getOrderData({ target: { name: 'sendercity', value: selectedCity } });
                         document.querySelector('input[name="sendercity"]').value = selectedCity;
@@ -343,6 +365,28 @@ export default function UserCreateOrder() {
       
     })}
             </div>
+            <div className="pb-3">
+                                <label htmlFor="senderdistrict">المنطقة : <span className="star-requered">*</span></label>
+                                  
+                                        <input list='s-district'
+                                            type="text"
+                                            className='my-input my-2 form-control'
+                                            name='senderdistrict'
+                                            onChange={(e) => {getOrderData(e)}}
+                                        />
+                                        <datalist id='s-district'>
+                                          {districts && districts.filter((district)=> district.city_id == cityIdSender).map((district,ciIndex)=>(
+                                              <option key={ciIndex} value={district.name_ar} />
+                                          ))}
+                                        </datalist>
+                                
+                                {errorList.map((err, index) => {
+                                    if (err.context.label === 'senderdistrict') {
+                                        return <div key={index} className="alert alert-danger my-2">يجب ملىء جميع البيانات</div>
+                                    }
+
+                                })}
+    </div>
                 {/* <div className='pb-3'>
                   <label htmlFor=""> المدينة <span className="star-requered">*</span></label>
                   <input type="text" className="form-control" name='sendercity' onChange={(e) => {
@@ -527,6 +571,7 @@ export default function UserCreateOrder() {
                      return(
                       <li key={index} name='recivercity' 
                       onClick={(e)=>{ 
+                        setCityIdReciever(item.city_id)
                         const selectedCity = e.target.innerText;
                         getOrderData({ target: { name: 'recivercity', value: selectedCity } });
                         document.querySelector('input[name="recivercity"]').value = selectedCity;
@@ -548,6 +593,28 @@ export default function UserCreateOrder() {
       
     })}
             </div>
+            <div className="pb-3">
+                                <label htmlFor="reciverdistrict">المنطقة : <span className="star-requered">*</span></label>
+                                  
+                                        <input list='r-district'
+                                            type="text"
+                                            className='my-input my-2 form-control'
+                                            name='reciverdistrict'
+                                            onChange={(e) => {getOrderData(e)}}
+                                        />
+                                        <datalist id='r-district'>
+                                          {districts && districts.filter((district)=> district.city_id == cityIdReciever).map((district,ciIndex)=>(
+                                              <option key={ciIndex} value={district.name_ar} />
+                                          ))}
+                                        </datalist>
+                                
+                                {errorList.map((err, index) => {
+                                    if (err.context.label === 'reciverdistrict') {
+                                        return <div key={index} className="alert alert-danger my-2">يجب ملىء جميع البيانات</div>
+                                    }
+
+                                })}
+    </div>
 
                 {/* <div className='pb-3'>
                   <label htmlFor=""> المدينة<span className="star-requered">*</span></label>

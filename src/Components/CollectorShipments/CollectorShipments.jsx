@@ -125,6 +125,28 @@ export default function CollectorShipments() {
 
     }
   }
+  async function cancelOrder(orderid) {
+    try {
+      const response = await axios.put(
+        `https://dashboard.go-tex.net/logistics-test/order/cancel-order`,
+        {
+          orderId: orderid,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('carrierToken')}`,
+          },
+        }
+      );
+  
+      console.log(response);
+      getOrders()
+    } catch (error) {
+      console.error(error);
+      alert(error.response.data.message)
+
+    }
+  }
   return (
     <div className='p-5' id='content'>
 
@@ -180,6 +202,12 @@ export default function CollectorShipments() {
                       sendRequestStore(item._id)
                     }
                   }}>تبليغ امين المخزن</button></td>:null}
+                  {item.status =="pick to store" || item.status == "pending" ?
+                  <td><button className="btn btn-danger" onClick={()=>{
+                    if(window.confirm('سوف يتم إلغاء الشنحة')){
+                      cancelOrder(item._id)
+                    }
+                  }}>إلغاء الشنحة</button></td>:null}
                 </tr>
               );
             })}

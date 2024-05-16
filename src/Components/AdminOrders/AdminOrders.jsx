@@ -390,6 +390,29 @@ const exportToExcel = async () => {
     setLoading(false);
   }
 };
+
+async function cancelOrder(orderid) {
+  try {
+    const response = await axios.put(
+      `https://dashboard.go-tex.net/logistics-test/order/cancel-order`,
+      {
+        orderId: orderid,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
+        },
+      }
+    );
+
+    console.log(response);
+    getSearchShipmentsAdmin()
+  } catch (error) {
+    console.error(error);
+    alert(error.response.data.message)
+
+  }
+}
       return (
         <div className='p-5' id='content'>
           <div className="my-table p-4 mb-4">
@@ -496,6 +519,7 @@ const exportToExcel = async () => {
                   {/* <th scope="col">مندوب التسليم</th> */}
                   <th scope="col">المدخل</th>
                   <th scope="col"></th>
+                  <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
@@ -544,6 +568,12 @@ const exportToExcel = async () => {
                     
       </>
     )}
+    {item.status =="pick to store" || item.status == "pending" ?
+                  <td><button className="btn btn-danger" onClick={()=>{
+                    if(window.confirm('سوف يتم إلغاء الشنحة')){
+                      cancelOrder(item._id)
+                    }
+                  }}>إلغاء الشنحة</button></td>:null}
   </tr>
 ))}         
         </tbody>

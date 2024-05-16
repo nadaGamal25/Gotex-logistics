@@ -38,6 +38,28 @@ export default function UserOrders() {
       console.error(error);
     }
   }
+  async function cancelOrder(orderid) {
+    try {
+      const response = await axios.put(
+        `https://dashboard.go-tex.net/logistics-test/order/cancel-order`,
+        {
+          orderId: orderid,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+          },
+        }
+      );
+  
+      console.log(response);
+      getOrders()
+    } catch (error) {
+      console.error(error);
+      alert(error.response.data.message)
+
+    }
+  }
   return (
     <div className='p-5' id='content'>
 
@@ -56,6 +78,7 @@ export default function UserOrders() {
               <th scope="col">عدد القطع</th>
               <th scope="col">حالة الشحنة</th>
               <th scope="col"></th>
+              <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
@@ -73,7 +96,12 @@ export default function UserOrders() {
                   <td>{item.pieces}</td>
                   <td>{item.status}</td>
                   <td><button className="btn btn-success" onClick={() => { getSticker(item._id) }}>عرض الاستيكر</button></td>
-
+                  {item.status =="pick to store" || item.status == "pending" ?
+                  <td><button className="btn btn-danger" onClick={()=>{
+                    if(window.confirm('سوف يتم إلغاء الشنحة')){
+                      cancelOrder(item._id)
+                    }
+                  }}>إلغاء الشنحة</button></td>:null}
                 </tr>
               );
             })}

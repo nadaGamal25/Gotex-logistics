@@ -12,6 +12,7 @@ export default function CarrierRegister() {
     const [selectedPhoto, setSelectedPhoto] = useState(null);
     const [selectedNid, setSelectedNid] = useState(null);
     const [carrierRole, setCarrierrole] = useState(null)
+    const [cityId, setCityId] = useState(null)
   const [visible , setVisible] =useState(false);  
   let navigate= useNavigate(); 
   const [errorList, seterrorList]= useState([]); 
@@ -28,7 +29,8 @@ export default function CarrierRegister() {
     address: "",
     photo:"",
     papers:"",
-    area:[''],
+    deliveryCity:"",
+    deliveryDistricts:[''],
   })
   async function sendRegisterDataToApi(carrierRole) {
     const formData = new FormData();
@@ -39,12 +41,13 @@ export default function CarrierRegister() {
     formData.append('address', theUser.address);
     formData.append('city', theUser.city);
     formData.append('nid', theUser.nid);
+    formData.append('deliveryCity', theUser.deliveryCity);
   //   theUser.area.forEach((area, index) => {
   //     formData.append(`area[${index}]`, area);
   // });
-  const filteredAreas = theUser.area.filter(area => area.trim() !== '');
-    filteredAreas.forEach((area, index) => {
-        formData.append(`area[${index}]`, area);
+  const filteredAreas = theUser.deliveryDistricts.filter(deliveryDistricts => deliveryDistricts.trim() !== '');
+    filteredAreas.forEach((deliveryDistricts, index) => {
+        formData.append(`deliveryDistricts[${index}]`, deliveryDistricts);
     });
     if (selectedFile) {
       formData.append('papers', selectedFile, selectedFile.name);
@@ -82,8 +85,8 @@ export default function CarrierRegister() {
 
   useEffect(() => {
       // Check if at least one area is entered
-      setIsFormValid(theUser.area.some(area => area.trim() !== ''));
-  }, [theUser.area]);
+      setIsFormValid(theUser.deliveryDistricts.some(deliveryDistricts => deliveryDistricts.trim() !== ''));
+  }, [theUser.deliveryDistricts]);
 
   function handleFileChange(event) {
     console.log(event.target.files)
@@ -142,12 +145,13 @@ function submitRegisterForm(carrierRole) {
   // }
 
   function getUserData(e) {
+    console.log(cityId)
     const { name, value } = e.target;
-    if (name === 'area') {
+    if (name === 'deliveryDistricts') {
         const index = parseInt(e.target.dataset.index);
-        const updatedAreas = [...theUser.area];
+        const updatedAreas = [...theUser.deliveryDistricts];
         updatedAreas[index] = value;
-        setUser({ ...theUser, area: updatedAreas });
+        setUser({ ...theUser, deliveryDistricts: updatedAreas });
     } else {
         setUser({ ...theUser, [name]: value });
     }
@@ -159,8 +163,8 @@ function submitRegisterForm(carrierRole) {
 // }
 
 function addAreaInput() {
-  const updatedAreas = [...theUser.area, '']; 
-  setUser({ ...theUser, area: updatedAreas });
+  const updatedAreas = [...theUser.deliveryDistricts, '']; 
+  setUser({ ...theUser, deliveryDistricts: updatedAreas });
 }
   function validateRegisterForm(){
     let scheme= Joi.object({
@@ -173,7 +177,8 @@ function addAreaInput() {
         nid:Joi.required(),
         photo:Joi.allow(null, ''),
         papers:Joi.allow(null, ''),
-        area: Joi.array().min(0).items(Joi.string().trim().allow('') )      
+        deliveryCity:Joi.string().required(),
+        deliveryDistricts: Joi.array().min(0).items(Joi.string().trim().allow('') )      
         // :Joi.allow(null, ''),
     });
 
@@ -184,12 +189,12 @@ function addAreaInput() {
 
   const [cities,setCities]=useState()
     async function getCities() {
-      console.log(localStorage.getItem('userToken'))
+      console.log(localStorage.getItem('adminToken'))
       try {
         const response = await axios.get('https://dashboard.go-tex.net/logistics-test/cities',
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+            Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
           },
         });
         setCities(response.data.cities)
@@ -198,8 +203,25 @@ function addAreaInput() {
         console.error(error);
       }
     }
+    const [districts,setDistricts]=useState()
+    async function getDistricts() {
+      console.log(localStorage.getItem('adminToken'))
+      try {
+        const response = await axios.get('https://dashboard.go-tex.net/logistics-test/cities/districts',
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
+          },
+        });
+        setDistricts(response.data.districts)
+        console.log(response)
+      } catch (error) {
+        console.error(error);
+      }
+    }
     useEffect(() => {
       getCities()
+      getDistricts()
     }, [])
   const [search1, setSearch1] = useState('')
   // const [search2, setSearch2] = useState('')
@@ -221,7 +243,7 @@ function addAreaInput() {
         !citiesListRef1.current.contains(e.target) &&
         e.target.getAttribute('name') !== 'city'
       ) {
-        closeCitiesList();
+        closeCitiesList1();
       }
     };
 
@@ -234,25 +256,25 @@ function addAreaInput() {
     };
   }, [showCitiesList1]);
 
-  const [showCitiesList, setShowCitiesList] = useState(Array(theUser.area.length).fill(false));
-  const [searchCities, setSearchCities] = useState(Array(theUser.area.length).fill(''));
-  const citiesListRef = useRef(Array(theUser.area.length).map(() => createRef()));
+  // const [showCitiesList, setShowCitiesList] = useState(Array(theUser.area.length).fill(false));
+  // const [searchCities, setSearchCities] = useState(Array(theUser.area.length).fill(''));
+  // const citiesListRef = useRef(Array(theUser.area.length).map(() => createRef()));
   
-  const openCitiesList = (index) => {
-    setShowCitiesList((prev) => {
-      const newState = [...prev];
-      newState[index] = true;
-      return newState;
-    });
-  };
+  // const openCitiesList = (index) => {
+  //   setShowCitiesList((prev) => {
+  //     const newState = [...prev];
+  //     newState[index] = true;
+  //     return newState;
+  //   });
+  // };
   
-  const closeCitiesList = (index) => {
-    setShowCitiesList((prev) => {
-      const newState = [...prev];
-      newState[index] = false;
-      return newState;
-    });
-  };
+  // const closeCitiesList = (index) => {
+  //   setShowCitiesList((prev) => {
+  //     const newState = [...prev];
+  //     newState[index] = false;
+  //     return newState;
+  //   });
+  // };
   return (
     <>
     <div className='py-5 px-4' id='content'>
@@ -438,23 +460,51 @@ function addAreaInput() {
     })}
     </div>
     <div className="col-md-6">
-                                <label htmlFor="area">مناطق المندوب : <span className="star-requered">*</span></label>
+                                <label htmlFor="deliveryCity">مدينة عمل المندوب : <span className="star-requered">*</span></label>
+                                  
+                                        <input list='mCities'
+                                            type="text"
+                                            className='my-input my-2 form-control'
+                                            name='deliveryCity'
+                                            onChange={(e) => {
+                                              getUserData(e);
+                                              const selectedCity = cities.find(city => city.name_ar === e.target.value);
+                                              if (selectedCity) {
+                                                  setCityId(selectedCity.city_id);
+                                              }
+                                          }}
+                                        />
+                                        <datalist id='mCities'>
+                                          {cities && cities.map((city,ciIndex)=>(
+                                              <option key={ciIndex} value={city.name_ar} />
+                                          ))}
+                                        </datalist>
+                                
+                                {errorList.map((err, index) => {
+                                    if (err.context.label === 'deliveryCity') {
+                                        return <div key={index} className="alert alert-danger my-2">يجب ملىء جميع البيانات</div>
+                                    }
+
+                                })}
+    </div>
+    <div className="col-md-6">
+                                <label htmlFor="deliveryDistricts">مناطق المندوب : <span className="star-requered">*</span></label>
                                 <div className="row">
-                                {theUser.area.map((area, index) => (
+                                {theUser.deliveryDistricts.map((deliveryDistricts, index) => (
                                   
                                     <div key={index} className="mb-2 col-11">
                                         <input list='myCities'
                                             type="text"
                                             className='my-input my-2 form-control'
-                                            name='area'
-                                            id={`area-${index}`}
-                                            value={area}
+                                            name='deliveryDistricts'
+                                            id={`deliveryDistricts-${index}`}
+                                            value={deliveryDistricts}
                                             data-index={index}
                                             onChange={getUserData}
                                         />
                                         <datalist id='myCities'>
-                                          {cities && cities.map((city,ciIndex)=>(
-                                              <option key={ciIndex} value={city.name_ar} />
+                                          {districts && districts.filter((district)=> district.city_id == cityId).map((district,ciIndex)=>(
+                                              <option key={ciIndex} value={district.name_ar} />
                                           ))}
                                         </datalist>
                                     </div>
@@ -464,7 +514,7 @@ function addAreaInput() {
                                 </div>
                                 </div>
                                 {errorList.map((err, index) => {
-                                    if (err.context.label === 'area') {
+                                    if (err.context.label === 'deliveryDistricts') {
                                         return <div key={index} className="alert alert-danger my-2">يجب ملىء جميع البيانات</div>
                                     }
 

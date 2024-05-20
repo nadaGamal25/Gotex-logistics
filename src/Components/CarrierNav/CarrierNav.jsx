@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState,useRef } from 'react'
 import { Link } from 'react-router-dom';
 import logo from '../../assets/logo.png'
 import { useNavigate } from 'react-router-dom';
@@ -75,6 +75,21 @@ export default function CarrierNav({ carrierData, logout }) {
       console.error(error);
     }
   }
+  
+  const notificationBoxRef = useRef(null);
+
+  const handleClickOutside = (event) => {
+    if (notificationBoxRef.current && !notificationBoxRef.current.contains(event.target)) {
+      setNotificationToggle(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
   return (
     <>
       {/* <!-- start side navbar --> */}
@@ -136,9 +151,9 @@ export default function CarrierNav({ carrierData, logout }) {
             </div>
             <div className="notifications-box position-relative" dir='ltr'>
             <div className={ordersNotification ? "msg-count" : "msg-count d-none"}>
-             {ordersNotification && ordersNotification.length}</div>              
+             {ordersNotification && ordersNotification.length}</div>               
               <i class="fa-solid fa-bell" onClick={() => setNotificationToggle(!notificationToggle)}></i>
-              <div class={`msg-box ${notificationToggle ? 'd-block' : ''}`}  dir='rtl'>
+              <div ref={notificationBoxRef} class={`msg-box ${notificationToggle ? 'd-block' : ''}`}  dir='rtl'>
               <p className='fw-bold'>الإشعارات</p>
               {ordersNotification && ordersNotification.map((item,index) =>{
             return(

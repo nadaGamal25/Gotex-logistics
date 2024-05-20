@@ -332,13 +332,14 @@ const exportToExcel = async () => {
         item.status || '_',
         item.collector && item.collector.length > 0 && item.collector[0].firstName ? `${item.collector[0].firstName} ${item.collector[0].lastName}` : '_',
         item.receiver && item.receiver.length > 0  && item.receiver[0].firstName ? `${item.receiver[0].firstName} ${item.receiver[0].lastName}` : '_',
+        item.storekeeper && item.storekeeper.length > 0  && item.storekeeper[0].firstName ? `${item.storekeeper[0].firstName} ${item.storekeeper[0].lastName}` : '_',
         item.user && item.user.length > 0  && item.user[0].firstName ? `${item.user[0].firstName} ${item.user[0].lastName}` : '_',
 
       ];
     });
 
     // Create a worksheet
-    const ws = XLSX.utils.aoa_to_sheet([[ 'التاريخ', 'اسم المرسل','جوال المرسل','اسم المستلم','جوال المستلم', 'رقم الشحنة', 'طريقة الدفع', 'السعر', 'الوزن','عدد القطع','حالة الشحنة',' مندوب التجميع','مندوب التسليم ','المدخل'], ...dataToExport]);
+    const ws = XLSX.utils.aoa_to_sheet([[ 'التاريخ', 'اسم المرسل','جوال المرسل','اسم المستلم','جوال المستلم', 'رقم الشحنة', 'طريقة الدفع', 'السعر', 'الوزن','عدد القطع','حالة الشحنة',' مندوب التجميع','مندوب التسليم ','امين المخزن','المدخل'], ...dataToExport]);
 
     // Set column styles
     ws['!cols'] = [
@@ -516,7 +517,7 @@ async function cancelOrder(orderid) {
                   <th scope="col">حالة الشحنة</th>
                   {/* <th scope="col">ملف الالغاء</th> */}
                   <th scope="col">مندوب الشحنة</th>
-                  {/* <th scope="col">مندوب التسليم</th> */}
+                  <th scope="col">امين المخزن</th>
                   <th scope="col">المدخل</th>
                   <th scope="col"></th>
                   <th scope="col"></th>
@@ -549,21 +550,26 @@ async function cancelOrder(orderid) {
                 :null}</td>
                      
                       {item.collector && item.collector.length > 0 && item.collector[0].firstName ? (
-  <td>collector:{item.collector[0].firstName} {item.collector[0].lastName}<br/>
+  <td>تجميع:{item.collector[0].firstName} {item.collector[0].lastName}<br/>
   {item.receiver&& item.receiver.length > 0 && item.receiver[0].firstName ? (
-  <span>reciever:{item.receiver[0].firstName} {item.receiver[0].lastName}</span>
+  <span>تسليم:{item.receiver[0].firstName} {item.receiver[0].lastName}</span>
 ) : (
   null
 )} </td>
 ) : (
   <td></td>
 )}
- 
-{item.user&& item.user.length > 0 && item.user[0].firstName ? (
+{item.storekeeper&& item.storekeeper.length > 0 && item.storekeeper[0].firstName ? (
+  <td>{item.storekeeper[0].firstName} {item.storekeeper[0].lastName}</td>
+) : (
+  <td></td>
+)} 
+ {item.user&& item.user.length > 0 && item.user[0].firstName ? (
   <td>{item.user[0].firstName} {item.user[0].lastName}</td>
 ) : (
   <td></td>
-)}                    <td><button className="btn btn-success" onClick={() => { getSticker(item._id) }}>عرض الاستيكر</button></td>
+)} 
+                   <td><button className="btn btn-success" onClick={() => { getSticker(item._id) }}>عرض الاستيكر</button></td>
     
                     
       </>

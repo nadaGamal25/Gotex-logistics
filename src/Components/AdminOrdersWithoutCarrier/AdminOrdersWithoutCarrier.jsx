@@ -266,6 +266,7 @@ export default function AdminOrdersWithoutCarrier() {
                <th scope="col">ملف الالغاء</th>
                <th scope="col">مندوب التجميع</th>
                <th scope="col">مندوب التسليم</th>
+               <th scope="col">امين المخزن</th>
                <th scope="col">المدخل</th>
                <th scope="col"></th>
              </tr>
@@ -305,6 +306,11 @@ export default function AdminOrdersWithoutCarrier() {
 ) : (
 <td></td>
 )}  
+{item.storekeeper&& item.storekeeper.length > 0 && item.storekeeper[0].firstName ? (
+  <td>{item.storekeeper[0].firstName} {item.storekeeper[0].lastName}</td>
+) : (
+  <td></td>
+)} 
 {item.user&& item.user.length > 0 && item.user[0].firstName ? (
 <td>{item.user[0].firstName} {item.user[0].lastName}</td>
 ) : (

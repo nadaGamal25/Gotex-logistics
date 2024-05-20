@@ -110,19 +110,26 @@ export default function TrackOrder() {
             </div>
             <div className="d-flex status-box" dir='rtl'>
   <div className="w-20 text-center">
-    <span>قيد الانتظار</span>
+    <span className={orderDetails.status === 'pending' ||orderDetails.status === 'pick to store'
+    ||orderDetails.status === 'in store'||orderDetails.status === 'pick to client'
+   || orderDetails.status === 'received'  ? 'text-orange' : ''}>قيد الانتظار</span>
+
   </div>
   <div className="w-20 text-center">
-    <span>فى الطريق للمخزن</span>
+    <span className={orderDetails.status === 'pick to store'
+    ||orderDetails.status === 'in store'||orderDetails.status === 'pick to client'
+   || orderDetails.status === 'received'  ? 'text-orange' : ''}>فى الطريق للمخزن</span>
   </div>
   <div className="w-20 text-center">
-    <span>فى المخزن</span>
+    <span className={orderDetails.status === 'in store'||orderDetails.status === 'pick to client'
+   || orderDetails.status === 'received'  ? 'text-orange' : ''}>فى المخزن</span>
   </div>
   <div className="w-20 text-center">
-  <span>فى الطريق للعميل</span>
+  <span className={orderDetails.status === 'pick to client'
+   || orderDetails.status === 'received'  ? 'text-orange' : ''}>فى الطريق للعميل</span>
   </div>
   <div className="w-20 text-center">
-  <span> تم تسليمها</span>
+  <span className={orderDetails.status === 'received'  ? 'text-orange' : ''}> تم تسليمها</span>
   </div>
   </div>
             </div>

@@ -504,7 +504,10 @@ nav form .form-input button{
   width: 20%;
 }
 .status-box span{
-  font-size: 12px;
+  font-size: 13px;
+}
+.text-orange{
+  color: #fa4c03 !important;
 }
 /* notifications-box */
 .notifications-box{
@@ -532,8 +535,8 @@ nav form .form-input button{
 .notifications-box .msg-box{
   background-color: #fcfcef !important ;
   width: 280px;
-  /* height: 500px;
-  overflow-y: auto; */
+  height: 420px;
+  overflow-y: auto;
   position: absolute;
   left:5%;
   top: 39px;
@@ -546,6 +549,17 @@ nav form .form-input button{
   -ms-border-radius: 5px !important;
   -o-border-radius: 5px !important;
 }
+.notifications-box .msg-box::-webkit-scrollbar{
+  width: 5px;
+  /* background-color: #fcfcef; */
+}
+.notifications-box .msg-box::-webkit-scrollbar-thumb{
+  background-color: #f36426;
+  border-radius: 20px;
+}
+/* .notifications-box .msg-box::-webkit-scrollbar-track{
+  background-color: #fcfcef;
+} */
 @media only screen and (max-width: 368px){
   .notifications-box .msg-box{
     width: 220px;

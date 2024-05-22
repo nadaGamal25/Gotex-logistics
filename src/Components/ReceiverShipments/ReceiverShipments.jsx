@@ -95,36 +95,35 @@ export default function ReceiverShipments() {
     }
   }
   
-  async function returnOrder(orderid) {
-    try {
-      const response = await axios.put(
-        `https://dashboard.go-tex.net/logistics-test/order/return-order/${orderid}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('carrierToken')}`,
-          },
-        }
-      );
+  // async function returnOrder(orderid) {
+  //   try {
+  //     const response = await axios.put(
+  //       `https://dashboard.go-tex.net/logistics-test/order/return-order/${orderid}`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${localStorage.getItem('carrierToken')}`,
+  //         },
+  //       }
+  //     );
   
-      console.log(response);
-      getOrders()
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  //     console.log(response);
+  //     getOrders()
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedID, setSelectedID] = useState(null);
-  async function cancelOrder() {
-    const formData = new FormData();
-    formData.append('orderId', selectedID);
 
+  async function returnOrder(orderid) {
+    const formData = new FormData();
     if (selectedFile) {
       formData.append('images', selectedFile, selectedFile.name);
     }
     try {
       const response = await axios.put(
-        `https://dashboard.go-tex.net/logistics-test/order/cancel-order-by-receiver`,
+        `https://dashboard.go-tex.net/logistics-test/order/return-order/${orderid}`,
         formData,
         {
           headers: {
@@ -249,9 +248,7 @@ export default function ReceiverShipments() {
                   }}>تأكيد استلام العميل</button></td>:null}
                   {item.status =="pick to client"?
                   <td><button className="btn btn-secondary" onClick={()=>{
-                    if(window.confirm('سوف يتم إرجاع الشنحة')){
-                      returnOrder(item._id)
-                    }
+                      openModal(item._id)
                   }}>إرجاع الشنحة</button></td>:null}
                   {/* <td><button className="btn btn-danger" onClick={()=>{openModal(item._id)}}> الغاء الشحنة</button></td> */}
                 </tr>
@@ -265,12 +262,12 @@ export default function ReceiverShipments() {
     </div>
     <Modal show={showModal} onHide={closeModal}>
         <Modal.Header >
-          <Modal.Title>قم بتأكيد الغاء الشحنة 
+          <Modal.Title>سوف يتم ارجاع الشحنة 
              </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className=''>
-          <label htmlFor="">إرفق ملف الإلغاء (اختيارى) </label>
+          <label htmlFor="">إرفق ملف  () </label>
       <input
         type="file"
         className="my-2 my-input form-control"
@@ -284,8 +281,8 @@ export default function ReceiverShipments() {
         </Modal.Body>
         <Modal.Footer>
           <div className="text-center">
-        <Button className='m-1' variant="danger" onClick={cancelOrder}>
-          تأكيد الغاء الشحنة
+        <Button className='m-1' variant="danger" onClick={()=>{returnOrder(selectedID)}}>
+          تأكيد ارجاع الشحنة
           </Button>
           <Button className='m-1' variant="secondary" onClick={closeModal}>
           إغلاق

@@ -78,7 +78,9 @@ export default function TrackOrder() {
                 <span className='fw-bold'>فى الطريق للعميل</span>:
                 orderDetails.status=='received'?
                 <span className='fw-bold'>تم تسليمها</span>:
-                null}
+                orderDetails.status=='canceled'?
+                <span className='fw-bold'>تم إلغائها</span>:
+                <span>{orderDetails.status}</span>}
               </div>
             </div>
             <div className="col-md-4">

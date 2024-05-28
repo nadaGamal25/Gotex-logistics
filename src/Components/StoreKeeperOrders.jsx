@@ -185,7 +185,7 @@ export default function StoreKeeperOrders() {
                   <th scope="col"> billcode</th>
                   <th scope="col">رقم الشحنة</th>
                   <th scope="col">طريقة الدفع</th>
-                  <th scope="col">السعر </th>
+                  {/* <th scope="col">السعر </th> */}
                   <th scope="col">الوزن</th>
                   <th scope="col">عدد القطع</th>
                   <th scope="col">حالة الشحنة</th>
@@ -203,7 +203,7 @@ export default function StoreKeeperOrders() {
                       <td>{item.billcode}</td>
                       <td>{item.ordernumber}</td>
                       <td>{item.paytype}</td>
-                      <td>{item.price}</td>
+                      {/* <td>{item.price}</td> */}
                       <td>{item.weight}</td>
                       <td>{item.pieces}</td>
                       <td>{item.status}</td>

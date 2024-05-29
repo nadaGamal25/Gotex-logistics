@@ -42,53 +42,9 @@ export default function CollectorShipments() {
     }
   }
 
-  // async function changeStatus(orderid) {
-  //   try {
-  //     const response = await axios.put(
-  //       `https://dashboard.go-tex.net/logistics-test/order/change-status-by-collector`,
-  //       {
-  //         orderId: orderid,
-  //         status: "pick to store"
-  //       },
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${localStorage.getItem('carrierToken')}`,
-  //         },
-  //       }
-  //     );
-  
-  //     console.log(response);
-  //     getOrders()
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
-
-  // async function changeStatusPicked(orderid) {
-  //   try {
-  //     const response = await axios.put(
-  //       `https://dashboard.go-tex.net/logistics-test/order/picked-to-store`,
-  //       {
-  //         orderId: orderid,
-  //       },
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${localStorage.getItem('carrierToken')}`,
-  //         },
-  //       }
-  //     );
-  
-  //     console.log(response);
-  //     getOrders()
-  //   } catch (error) {
-  //     console.error(error);
-  //     alert(error.response.data.message)
-
-  //   }
-  // }
-
   const [selectedID, setSelectedID] = useState(null);
 
+  // picked to store request
   const [selectedFiles, setSelectedFiles] = useState([]);
   async function changeStatusPicked(orderid) {
     console.log(selectedFiles)
@@ -97,7 +53,9 @@ export default function CollectorShipments() {
     selectedFiles.forEach((file, index) => {
       formData.append(`images.pickedToStore[${index}]`, file, file.name);
     });
-  
+    for (let pair of formData.entries()) {
+      console.log(pair[0], pair[1]);
+    }  
     try {
       const response = await axios.put(
         `https://dashboard.go-tex.net/logistics-test/order/picked-to-store`,
@@ -118,6 +76,7 @@ export default function CollectorShipments() {
       alert(error.response.data.msg);
     }
   }
+
   
   function handleFileChange(event) {
     const files = Array.from(event.target.files);
@@ -312,9 +271,7 @@ export default function CollectorShipments() {
                   <td><button className="btn btn-success" onClick={() => { getSticker(item._id) }}>عرض الاستيكر</button></td>
                   {item.status == 'pending'?
                   <td><button className="btn btn-orange" onClick={()=>{
-                    // if(window.confirm('هل انت بالتأكيد قمت باستلام الشحنة من العميل')){
-                    //   changeStatusPicked(item._id)
-                    // }
+                   
                     openModal(item._id)
                   }}>تأكيد استلام الشنحة</button></td>:null}
                   {/* {item.status == 'pick to store' ?

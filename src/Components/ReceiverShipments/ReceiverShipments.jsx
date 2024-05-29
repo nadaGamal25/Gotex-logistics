@@ -121,6 +121,9 @@ export default function ReceiverShipments() {
     if (selectedFile) {
       formData.append('images', selectedFile, selectedFile.name);
     }
+    for (let pair of formData.entries()) {
+      console.log(pair[0], pair[1]);
+    }
     try {
       const response = await axios.put(
         `https://dashboard.go-tex.net/logistics-test/order/return-order/${orderid}`,
@@ -131,7 +134,7 @@ export default function ReceiverShipments() {
           },
         }
       );
-  
+     
       console.log(response);
       closeModal()
       getOrders()

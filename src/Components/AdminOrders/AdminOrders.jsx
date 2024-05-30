@@ -393,29 +393,107 @@ const exportToExcel = async () => {
     setLoading(false);
   }
 };
+const [selectedID, setSelectedID] = useState(null);
+ // change status pending
+ const [selectedFilesPending, setSelectedFilesPending] = useState([]);
+ async function changeStatusPending(orderid) {
+   console.log(selectedFilesPending)
+   const formData = new FormData();
+   formData.append('orderId', orderid);
+ 
+   selectedFilesPending.forEach((file) => {
+     formData.append('images.pending', file);
+   });
+   for (let pair of formData.entries()) {
+     console.log(pair[0], pair[1]);
+   } 
+ 
+   try {
+     const response = await axios.put(
+       `https://dashboard.go-tex.net/logistics-test/order/change-status-to-pending`,
+       formData,
+       {
+         headers: {
+           Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
+         },
+       }
+     );
+ 
+     console.log(response);
+     closeModalPending();
+     setSelectedFilesPending([]);
+     getShipmentsAdmin();
+   } catch (error) {
+     console.error(error);
+     alert(error.response.data.msg);
+   }
+ }
+ 
+ function handleFileChangePending(event) {
+   const files = Array.from(event.target.files);
+   setSelectedFilesPending((prevFiles) => [...prevFiles, ...files]);
+ }
+ 
+ const [showModalPending, setShowModalPending] = useState(false);
 
-async function cancelOrder(orderid) {
-  try {
-    const response = await axios.put(
-      `https://dashboard.go-tex.net/logistics-test/order/cancel-order`,
-      {
-        orderId: orderid,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
-        },
-      }
-    );
+ const openModalPending = (orderid) => {
+   setShowModalPending(true);
+   setSelectedID(orderid)
+ };
 
-    console.log(response);
-    getSearchShipmentsAdmin()
-  } catch (error) {
-    console.error(error);
-    alert(error.response.data.message)
+ const closeModalPending = () => {
+   setShowModalPending(false);
+   setSelectedFilesPending([])
+ };
 
+//cancel order
+const [selectedFilesCancel, setSelectedFilesCancel] = useState([]);
+  async function cancelOrder(orderid) {
+    console.log(selectedFilesCancel)
+    const formData = new FormData();
+    formData.append('orderId', orderid);
+    
+    selectedFilesCancel.forEach((file) => {
+      formData.append('images.canceled', file);
+    });
+  
+    try {
+      const response = await axios.put(
+        `https://dashboard.go-tex.net/logistics-test/order/cancel-order`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
+          },
+        }
+      );
+  
+      console.log(response);
+      closeModalCancel();
+      setSelectedFilesCancel([]);
+      getShipmentsAdmin();
+    } catch (error) {
+      console.error(error);
+      alert(error.response.data.msg);
+    }
   }
-}
+  
+  function handleFileChangeCancel(event) {
+    const files = Array.from(event.target.files);
+    setSelectedFilesCancel((prevFiles) => [...prevFiles, ...files]);
+  }
+  
+  const [showModalCancel, setShowModalCancel] = useState(false);
+
+  const openModalCancel = (orderid) => {
+    setShowModalCancel(true);
+    setSelectedID(orderid)
+  };
+
+  const closeModalCancel = () => {
+    setShowModalCancel(false);
+    setSelectedFilesCancel([])
+  };
 
 //edit order
 const [isModalOpen, setIsModalOpen] = useState(false);
@@ -587,6 +665,7 @@ const handleEditSubmit = async (event) => {
                   <th scope="col">المدخل</th>
                   <th scope="col"></th>
                   <th scope="col"></th>
+                  <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
@@ -643,11 +722,14 @@ const handleEditSubmit = async (event) => {
      <td>
                   <button className="btn btn-secondary" onClick={() => handleEditClick(item)}>تعديل البيانات</button>
                   </td>
+                  <td><button className="btn btn-orange" onClick={()=>{
+                      openModalPending(item._id)
+                  }}>تعليق الشنحة</button></td>
     {item.status == "pending" ?
                   <td><button className="btn btn-danger" onClick={()=>{
-                    if(window.confirm('سوف يتم إلغاء الشنحة')){
-                      cancelOrder(item._id)
-                    }
+                    // if(window.confirm('سوف يتم إلغاء الشنحة')){
+                      openModalCancel(item._id)
+                    // }
                   }}>إلغاء الشنحة</button></td>:null}
   </tr>
 ))}         
@@ -857,6 +939,63 @@ onChange={(e) => setCurrentPage2(e.target.value)} />
           </Button>
         </Modal.Footer>
       </Modal>)}
+      <Modal show={showModalCancel} onHide={closeModalCancel}>
+        <Modal.Header >
+        <Modal.Title> هل انت بالتأكيد تريد الغاء الشحنة  
+             </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className=''>
+          <label htmlFor="">إرفق ملف  () </label>
+          <input
+  type="file"
+  className="my-2 my-input"
+  name="images.canceled"
+  multiple
+  onChange={handleFileChangeCancel}
+/>
+ 
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <div className="text-center">
+        <Button className='m-1' variant="danger" onClick={()=>{cancelOrder(selectedID)}}>
+          تأكيد الغاء الشحنة
+          </Button>
+          <Button className='m-1' variant="secondary" onClick={closeModalCancel}>
+          إغلاق
+          </Button>
+          </div>
+        </Modal.Footer>
+      </Modal>
+      <Modal show={showModalPending} onHide={closeModalPending}>
+        <Modal.Header >
+        <Modal.Title> هل تريد تغيير حالة الشحنة وجعلها معلقة (pending)مرة اخرى 
+             </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className=''>
+          <label htmlFor="">إرفق ملف  () </label>
+          <input
+  type="file"
+  className="my-2 my-input"
+  multiple
+  onChange={handleFileChangePending}
+/>
+ 
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <div className="text-center">
+        <Button className='m-1' variant="danger" onClick={()=>{changeStatusPending(selectedID)}}>
+     تعليق الشحنة
+          </Button>
+          <Button className='m-1' variant="secondary" onClick={closeModalPending}>
+          إغلاق
+          </Button>
+          </div>
+        </Modal.Footer>
+      </Modal>
         </>)
     }
     

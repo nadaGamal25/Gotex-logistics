@@ -123,14 +123,29 @@ export default function StoreKeeperOrders() {
       const closeModal2 = () => {
        setShowModal2(false);
       }
+
+      const [selectedFiles, setSelectedFiles] = useState([]);
+      function handleFileChange(event) {
+        const files = Array.from(event.target.files);
+        setSelectedFiles((prevFiles) => [...prevFiles, ...files]);
+      }
+
       async function acceptOrder(orderid) {
+        console.log(selectedFiles)
+    const formData = new FormData();
+    formData.append('orderId', orderid);
+    formData.append('requestStatus', "accepted");
+    selectedFiles.forEach((file) => {
+      formData.append('images.inStoreRequestStatus', file);
+    });
+    
+    for (let pair of formData.entries()) {
+      console.log(pair[0], pair[1]);
+    }
     try {
       const response = await axios.put(
         `https://dashboard.go-tex.net/logistics-test/order/in-store-request-status`,
-        {
-          orderId: orderid,
-          requestStatus: "accepted"
-        },
+         formData,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('storekeeperToken')}`,
@@ -140,10 +155,11 @@ export default function StoreKeeperOrders() {
       alert('تم الموافقة على استلام الشحنة')     
       closeModal2()  
       console.log(response);
+      setSelectedFiles([]);
       getOrders()
     } catch (error) {
       console.error(error);
-      alert(error.response.data.err)
+      alert(error.response.data.msg)
     }
   }
 
@@ -167,7 +183,7 @@ export default function StoreKeeperOrders() {
       getOrders()
     } catch (error) {
       console.error(error);
-      alert(error.response.data.err)
+      alert(error.response.data.msg)
 
     }
   }
@@ -215,7 +231,8 @@ export default function StoreKeeperOrders() {
    {item.status=='pick to store'?
    <td><button className="btn btn-primary" onClick={()=>{
     openModal2(item._id)
-   }}>تأكيد استلام الشحنة </button></td>  :null}
+   }}>تأكيد استلام الشحنة </button></td>  
+   :null}
                     </tr>
                   );
                 })}
@@ -266,23 +283,33 @@ export default function StoreKeeperOrders() {
               </Modal.Title>
          </Modal.Header>
          <Modal.Body>
-           <div className='text-center'>
+         <div className=''>
+          <label htmlFor="">إرفق ملف  (اختياري) </label>
+          <input
+  type="file"
+  className="my-2 my-input form-control"
+  multiple
+  onChange={handleFileChange}
+/>
+ 
+          </div>
+           
+         </Modal.Body>
+         <Modal.Footer>
+         <div className='text-center'>
            <Button className='m-1' variant="success" onClick={()=>{acceptOrder(orderId)}}>
       تأكيد
            </Button>
            <Button className='m-1' variant="danger" onClick={()=>{rejectOrder(orderId)}}>
       رفض
            </Button>
-           
-            </div>
-         </Modal.Body>
-         <Modal.Footer>
-           
-           
-           
            <Button variant="secondary" onClick={closeModal2}>
            إغلاق
            </Button>
+            </div>
+           
+           
+        
          </Modal.Footer>
        </Modal>
        </>

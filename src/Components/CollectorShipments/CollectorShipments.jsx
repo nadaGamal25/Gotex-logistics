@@ -50,9 +50,10 @@ export default function CollectorShipments() {
     console.log(selectedFiles)
     const formData = new FormData();
     formData.append('orderId', orderid);
-    selectedFiles.forEach((file, index) => {
-      formData.append(`images.pickedToStore[${index}]`, file, file.name);
+    selectedFiles.forEach((file) => {
+      formData.append('images.pickedToStore', file);
     });
+    
     for (let pair of formData.entries()) {
       console.log(pair[0], pair[1]);
     }  
@@ -63,6 +64,7 @@ export default function CollectorShipments() {
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('carrierToken')}`,
+            'Content-Type': 'multipart/form-data'
           },
         }
       );
@@ -100,9 +102,13 @@ export default function CollectorShipments() {
     console.log(selectedFilesInStore)
     const formData = new FormData();
     formData.append('orderId', orderid);
-    selectedFilesInStore.forEach((file, index) => {
-      formData.append(`images.inStoreRequest[${index}]`, file, file.name);
+  
+    selectedFilesInStore.forEach((file) => {
+      formData.append('images.inStoreRequest', file);
     });
+    for (let pair of formData.entries()) {
+      console.log(pair[0], pair[1]);
+    } 
   
     try {
       const response = await axios.put(
@@ -116,7 +122,7 @@ export default function CollectorShipments() {
       );
   
       console.log(response);
-      closeModal();
+      closeModalInStore();
       setSelectedFilesInStore([]);
       getOrders();
     } catch (error) {
@@ -147,13 +153,14 @@ export default function CollectorShipments() {
     console.log(selectedFilesCancel)
     const formData = new FormData();
     formData.append('orderId', orderid);
-    selectedFilesCancel.forEach((file, index) => {
-      formData.append(`images.canceled[${index}]`, file, file.name);
+    
+    selectedFilesCancel.forEach((file) => {
+      formData.append('images.canceled', file);
     });
   
     try {
       const response = await axios.put(
-        `https://dashboard.go-tex.net/logistics-test/order/cancel-order`,
+        `https://dashboard.go-tex.net/logistics-test/order/cancel-order-by-collector`,
         formData,
         {
           headers: {
@@ -163,7 +170,7 @@ export default function CollectorShipments() {
       );
   
       console.log(response);
-      closeModal();
+      closeModalCancel();
       setSelectedFilesCancel([]);
       getOrders();
     } catch (error) {
@@ -313,7 +320,7 @@ export default function CollectorShipments() {
           <input
   type="file"
   className="my-2 my-input"
-  name="images.pickedToStore"
+  // name="images.pickedToStore"
   multiple
   onChange={handleFileChange}
 />

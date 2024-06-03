@@ -557,6 +557,15 @@ const handleEditSubmit = async (event) => {
     alert(error.response.data.msg)
   }
 }   
+
+      const [selectedImages, setSelectedImages] = useState([]);
+      const [showModal, setShowModal] = useState(false);
+      function openCarousel(images) {
+        const formattedImages = images.map(img => img.replace('public', 'https://dashboard.go-tex.net/logistics-test'));
+        setSelectedImages(formattedImages);
+        setShowModal(true);
+      }
+      
       return (
         <>
         <div className='p-5' id='content'>
@@ -690,9 +699,20 @@ const handleEditSubmit = async (event) => {
                       <td>{item.weight}</td>
                       <td>{item.pieces}</td>
                       <td>{item.status}<br/>
-                      {item.images && item.images[0]?
-                  <a href={item.images[0].replace('public', 'https://dashboard.go-tex.net/logistics-test')} target='_blank'>رابط_الملف</a>
-                :null}</td>
+                      {item.status=='pending'?
+                    <a className="text-primary" onClick={() => openCarousel(item.images.pending)}>الصور</a>:
+                item.status=='pick to store'?
+                <a className="text-primary" onClick={() => openCarousel(item.images.pickedToStore)}>الصور</a>:
+                item.status=='in store'?
+                <a className="text-primary" onClick={() => openCarousel(item.images.inStore)}>الصور</a>:
+                item.status=='pick to client'?
+                <a className="text-primary" onClick={() => openCarousel(item.images.pickedToClient)}>الصور</a>:
+                item.status=='received'?
+                <a className="text-primary" onClick={() => openCarousel(item.images.received)}>الصور</a>:
+                item.status=='canceled'?
+                <a className="text-primary" onClick={() => openCarousel(item.images.canceled)}>الصور</a>:
+                <span></span>}
+                </td>
                      
                       {item.collector && item.collector.length > 0 && item.collector[0].firstName ? (
   <td>تجميع:{item.collector[0].firstName} {item.collector[0].lastName}<br/>
@@ -995,6 +1015,35 @@ onChange={(e) => setCurrentPage2(e.target.value)} />
           </Button>
           </div>
         </Modal.Footer>
+      </Modal>
+      <Modal show={showModal} onHide={() => setShowModal(false)} size="lg" centered>
+        <Modal.Header closeButton >
+          <Modal.Title> </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-inner">
+  {selectedImages.map((img, index)=>{
+            return(
+                <div key={index} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
+                <img src={img} class="d-block w-100" alt="..."/>
+              </div>
+            )
+        })}
+   
+    
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon bg-dark" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+    <span class="carousel-control-next-icon bg-dark" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+          
+        </Modal.Body>
       </Modal>
         </>)
     }

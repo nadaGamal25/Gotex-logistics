@@ -53,7 +53,12 @@ export default function TrackerNav({logout}) {
                     <span class="text">الشحنات</span>
                 </Link>
             </li>
-            
+            <li className=''>
+              <Link to="/trackerOrdersProblems">
+              <i class="fa-solid fa-truck-ramp-box bx"></i>
+              <span class="text"> شحنات بها مشكلة </span>
+              </Link>
+            </li>
             
             
             

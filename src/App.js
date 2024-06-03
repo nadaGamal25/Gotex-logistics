@@ -44,6 +44,8 @@ import TrackerLogin from './Components/TrackerLogin/TrackerLogin';
 import TrackerForgetPassProcess from './Components/TrackerForgetPassProcess/TrackerForgetPassProcess';
 import CarrierOrderNTFpreview from './Components/CarrierOrderNTFpreview/CarrierOrderNTFpreview';
 import AdminOrdersWithoutCarrier from './Components/AdminOrdersWithoutCarrier/AdminOrdersWithoutCarrier';
+import AdminOrdersProblems from './Components/AdminOrdersProblems/AdminOrdersProblems';
+import TrackerOrdersProblems from './Components/TrackerOrdersProblems/TrackerOrdersProblems';
 
 function App() {
   useEffect(() => {
@@ -148,6 +150,7 @@ function App() {
         { path: 'adminOrders', element: <AdminOrders /> },
         { path: 'trackerRegister', element: <TrackerRegister /> },
         { path: 'adminOrdersWithoutCarrier', element: <AdminOrdersWithoutCarrier /> },
+        { path: 'adminOrdersProblems', element: <AdminOrdersProblems/> },
 
 
       ]
@@ -184,6 +187,7 @@ function App() {
     {
       path: '/', element: <TrackerLayout setTrackerData={setTrackerData} trackerData={trackerData} />, children: [
         { path: 'trackerOrders', element: <TrackerOrders /> },
+        { path: 'trackerOrdersProblems', element: <TrackerOrdersProblems /> },
 
 
       ]

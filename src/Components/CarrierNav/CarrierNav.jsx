@@ -63,14 +63,19 @@ export default function CarrierNav({ carrierData, logout }) {
     };
   }, []);
 
-  const handleShowOrderNotification = (item) => {
+  const handleShowOrderNotification = (item,itemid) => {
     const Data = encodeURIComponent(JSON.stringify(item));
     window.open(`/carrierOrderNTFpreview?Data=${Data}`, '_blank');
+    readNotification(itemid)
   };
   async function readNotification(orderid) {
     try {
-      const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/notifications/${orderid}`);
+      const response = await axios.delete(`https://dashboard.go-tex.net/logistics-test/notifications/${orderid}`);
       console.log(response)
+      axios.get(`https://dashboard.go-tex.net/logistics-test/notifications/${carrierData.id}`).then(res => {
+        console.log(res.data.results)
+        setOrdersNotification(res.data.results)
+      })
     } catch (error) {
       console.error(error);
     }
@@ -157,7 +162,7 @@ export default function CarrierNav({ carrierData, logout }) {
               <p className='fw-bold'>الإشعارات</p>
               {ordersNotification && ordersNotification.map((item,index) =>{
             return(
-              <div class='msg-list' key={item._id} onClick={()=>handleShowOrderNotification(item)}>
+              <div class='msg-list' key={item._id} onClick={()=>handleShowOrderNotification(item,item._id)}>
               <div class="msg-txt" >
                 <span className="text-primary">شحنة جديدة</span>
                 <div className="d-flex align-content-center align-items-center">

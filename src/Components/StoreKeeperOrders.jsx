@@ -187,6 +187,58 @@ export default function StoreKeeperOrders() {
 
     }
   }
+
+  // problem order
+  const [selectedFilesProblem, setSelectedFilesProblem] = useState([]);
+  const [selectedID, setSelectedID] = useState(null);
+  const [descProblem , setDescProblem]=useState([]);
+  async function problemOrder(orderid) {
+    console.log(selectedFilesProblem)
+    const formData = new FormData();
+    formData.append('orderId', orderid);
+    formData.append('description', descProblem);
+    
+    selectedFilesProblem.forEach((file) => {
+      formData.append('problem.images', file);
+    });
+  
+    try {
+      const response = await axios.put(
+        `https://dashboard.go-tex.net/logistics-test/order/problem-request`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('storekeeperToken')}`,
+          },
+        }
+      );
+  
+      console.log(response);
+      closeModalProblem();
+      setSelectedFilesProblem([]);
+      window.alert('تم الابلاغ عن المشكلة')
+    } catch (error) {
+      console.error(error);
+      alert(error.response.data.msg);
+    }
+  }
+  
+  function handleFileChangeProblem(event) {
+    const files = Array.from(event.target.files);
+    setSelectedFilesProblem((prevFiles) => [...prevFiles, ...files]);
+  }
+  
+  const [showModalProblem, setShowModalProblem] = useState(false);
+
+  const openModalProblem = (orderid) => {
+    setShowModalProblem(true);
+    setSelectedID(orderid)
+  };
+
+  const closeModalProblem = () => {
+    setShowModalProblem(false);
+    setSelectedFilesProblem([])
+  };
       return (
         <>
         <div className='p-5' id='content'>
@@ -205,6 +257,7 @@ export default function StoreKeeperOrders() {
                   <th scope="col">الوزن</th>
                   <th scope="col">عدد القطع</th>
                   <th scope="col">حالة الشحنة</th>
+                  <th scope="col"></th>
                   <th scope="col"></th>
                   <th scope="col"></th>
                 </tr>
@@ -233,6 +286,9 @@ export default function StoreKeeperOrders() {
     openModal2(item._id)
    }}>تأكيد استلام الشحنة </button></td>  
    :null}
+                   <td>
+                    <button className="btn btn-danger" onClick={() => { openModalProblem(item._id) }}>تبليغ مشكلة</button>
+                   </td>
                     </tr>
                   );
                 })}
@@ -312,6 +368,42 @@ export default function StoreKeeperOrders() {
         
          </Modal.Footer>
        </Modal>
+       <Modal show={showModalProblem} onHide={closeModalProblem}>
+        <Modal.Header >
+        <Modal.Title> هل تريد الابلاغ عن مشكلة فى هذه الشحنة؟  
+             </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+        <div className=''>
+          <label htmlFor="">وصف المشكلة</label>
+          <input
+  type="text"
+  className="my-2 my-input form-control"
+  
+  onChange={(e)=>{setDescProblem(e.target.value)}}
+/>
+          </div>
+          <div className=''>
+          <label htmlFor="">إرفق ملف  () </label>
+          <input
+  type="file"
+  className="my-2 my-input form-control"
+  multiple
+  onChange={handleFileChangeProblem}
+/>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <div className="text-center">
+        <Button className='m-1' variant="danger" onClick={()=>{problemOrder(selectedID)}}>
+          ابلاغ  
+          </Button>
+          <Button className='m-1' variant="secondary" onClick={closeModalProblem}>
+          إغلاق
+          </Button>
+          </div>
+        </Modal.Footer>
+      </Modal>
        </>
       )
     }

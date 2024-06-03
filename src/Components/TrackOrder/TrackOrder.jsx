@@ -2,6 +2,8 @@ import React, { useState ,useEffect} from 'react'
 import axios from 'axios'
 import logo from '../../assets/logo.png'
 import locationIcon from '../../assets/ivo-removebg-preview.png'
+import {Modal} from 'react-bootstrap';
+
 export default function TrackOrder() {
     const [trackNumber ,setTrackNumber] =useState('')
     const [visible, setVesible] = useState(false)
@@ -19,6 +21,13 @@ export default function TrackOrder() {
           window.alert(error.response.data.msg)
           setVesible(false)
         }
+      }
+      const [selectedImages, setSelectedImages] = useState([]);
+      const [showModal, setShowModal] = useState(false);
+      function openCarousel(images) {
+        const formattedImages = images.map(img => img.replace('public', 'https://dashboard.go-tex.net/logistics-test'));
+        setSelectedImages(formattedImages);
+        setShowModal(true);
       }
     
   return (
@@ -139,6 +148,35 @@ export default function TrackOrder() {
            
 
            </div>
+           <Modal show={showModal} onHide={() => setShowModal(false)} size="lg" centered>
+        <Modal.Header closeButton >
+          <Modal.Title> </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-inner">
+  {selectedImages.map((img, index)=>{
+            return(
+                <div key={index} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
+                <img src={img} class="d-block w-100" alt="..."/>
+              </div>
+            )
+        })}
+   
+    
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon bg-dark" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+    <span class="carousel-control-next-icon bg-dark" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+          
+        </Modal.Body>
+      </Modal>
     </>
   )
 }

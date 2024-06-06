@@ -699,19 +699,24 @@ const handleEditSubmit = async (event) => {
                       <td>{item.weight}</td>
                       <td>{item.pieces}</td>
                       <td>{item.status}<br/>
-                      {item.status=='pending'?
-                    <a className="text-primary" onClick={() => openCarousel(item.images.pending)}>الصور</a>:
-                item.status=='pick to store'?
-                <a className="text-primary" onClick={() => openCarousel(item.images.pickedToStore)}>الصور</a>:
-                item.status=='in store'?
-                <a className="text-primary" onClick={() => openCarousel(item.images.inStore)}>الصور</a>:
-                item.status=='pick to client'?
-                <a className="text-primary" onClick={() => openCarousel(item.images.pickedToClient)}>الصور</a>:
-                item.status=='received'?
-                <a className="text-primary" onClick={() => openCarousel(item.images.received)}>الصور</a>:
-                item.status=='canceled'?
-                <a className="text-primary" onClick={() => openCarousel(item.images.canceled)}>الصور</a>:
-                <span></span>}
+                      {item.status === 'pending' && item.images?.pending?.length !== 0 ? (
+                      <a className="text-primary" onClick={() => openCarousel(item.images.pending)}>الصور</a>
+                    ) : item.status === 'pick to store' && item.images?.pickedToStore?.length !== 0 ? (
+                      <a className="text-primary" onClick={() => openCarousel(item.images.pickedToStore)}>الصور</a>
+                    ) : item.status === 'in store' && item.images?.inStore?.length !== 0 ? (
+                      <a className="text-primary" onClick={() => openCarousel(item.images.inStore)}>الصور</a>
+                    ) : item.status === 'pick to client' ? (
+                      <a className="text-primary" onClick={() => openCarousel([
+                        ...(item.images.pickedToClient || []),
+                        ...(item.images.return || [])
+                      ])}>الصور</a>
+                    ) : item.status === 'received' && item.images?.received?.length !== 0 ? (
+                      <a className="text-primary" onClick={() => openCarousel(item.images.received)}>الصور</a>
+                    ) : item.status === 'canceled' && item.images?.canceled?.length !== 0 ? (
+                      <a className="text-primary" onClick={() => openCarousel(item.images.canceled)}>الصور</a>
+                    ) : (
+                      <span></span>
+                    )}
                 </td>
                      
                       {item.collector && item.collector.length > 0 && item.collector[0].firstName ? (

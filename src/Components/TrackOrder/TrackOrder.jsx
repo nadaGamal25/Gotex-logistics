@@ -67,6 +67,17 @@ export default function TrackOrder() {
         </div>
         <div className={visible?"bg-lightblue p-4 m-5 details-box d-block":"d-none bg-lightblue p-4 m-5 details-box"}>
           <div className="bg-white">
+            <div className='pt-2' dir='ltr'>
+              <a className="text-primary m-3" onClick={() => openCarousel([
+                        ...orderDetails.images.pending,
+                        ...orderDetails.images.pickedToStore,
+                        ...orderDetails.images.inStore,
+                        ...orderDetails.images.pickedToClient,
+                        ...orderDetails.images.received,
+                        ...orderDetails.images.canceled,
+                        ...orderDetails.images.return
+                      ])}>عرض_الصور</a>
+            </div>
           <div className="row " dir='rtl'>
             <div className="col-md-4">
               <div className="p-4">

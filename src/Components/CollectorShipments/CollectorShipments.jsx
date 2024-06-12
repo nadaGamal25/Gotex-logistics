@@ -293,7 +293,7 @@ export default function CollectorShipments() {
                       openModalInStore(item._id)
                     // }
                   }}>تبليغ امين المخزن</button></td>:null}
-                  {item.status =="pick to store" || item.status == "pending" ?
+                  {item.status == "pending" ?
                   <td><button className="btn btn-danger" onClick={()=>{
                     // if(window.confirm('سوف يتم إلغاء الشنحة')){
                       openModalCancel(item._id)

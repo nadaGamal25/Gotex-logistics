@@ -747,9 +747,10 @@ const handleEditSubmit = async (event) => {
      <td>
                   <button className="btn btn-secondary" onClick={() => handleEditClick(item)}>تعديل البيانات</button>
                   </td>
+                  {item.status == "canceled" ?
                   <td><button className="btn btn-orange" onClick={()=>{
                       openModalPending(item._id)
-                  }}>تعليق الشنحة</button></td>
+                  }}>تعليق الشنحة</button></td>:null}
     {item.status == "pending" ?
                   <td><button className="btn btn-danger" onClick={()=>{
                     // if(window.confirm('سوف يتم إلغاء الشنحة')){

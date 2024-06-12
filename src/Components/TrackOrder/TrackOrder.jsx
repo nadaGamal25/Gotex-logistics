@@ -68,7 +68,7 @@ export default function TrackOrder() {
         <div className={visible?"bg-lightblue p-4 m-5 details-box d-block":"d-none bg-lightblue p-4 m-5 details-box"}>
           <div className="bg-white">
             <div className='pt-2' dir='ltr'>
-              <a className="text-primary m-3" onClick={() => openCarousel([
+              {/* <a className="text-primary m-3" onClick={() => openCarousel([
                         ...orderDetails.images.pending,
                         ...orderDetails.images.pickedToStore,
                         ...orderDetails.images.inStore,
@@ -76,7 +76,10 @@ export default function TrackOrder() {
                         ...orderDetails.images.received,
                         ...orderDetails.images.canceled,
                         ...orderDetails.images.return
-                      ])}>عرض_الصور</a>
+                      ])}>عرض_الصور</a> */}
+                {orderDetails.images?.canceled?.length !== 0 ? (
+                     <a className="text-primary m-3" onClick={() => openCarousel(orderDetails.images.canceled)}>الصور</a>
+                   ):null}      
             </div>
           <div className="row " dir='rtl'>
             <div className="col-md-4">
@@ -134,24 +137,47 @@ export default function TrackOrder() {
   <div className="w-20 text-center">
     <span className={orderDetails.status === 'pending' ||orderDetails.status === 'pick to store'
     ||orderDetails.status === 'in store'||orderDetails.status === 'pick to client'
-   || orderDetails.status === 'received'  ? 'text-orange' : ''}>قيد الانتظار</span>
+   || orderDetails.status === 'received'  ? 'text-orange' : ''}>قيد الانتظار <br/>
+    {orderDetails.images?.pending?.length !== 0 ? (
+                      <a className="text-primary" onClick={() => openCarousel(orderDetails.images.pending)}>الصور</a>
+                    ):null}
+    </span>
 
   </div>
   <div className="w-20 text-center">
     <span className={orderDetails.status === 'pick to store'
     ||orderDetails.status === 'in store'||orderDetails.status === 'pick to client'
-   || orderDetails.status === 'received'  ? 'text-orange' : ''}>فى الطريق للمخزن</span>
+   || orderDetails.status === 'received'  ? 'text-orange' : ''}>فى الطريق للمخزن <br/>
+   {orderDetails.images?.pickedToStore?.length !== 0 ? (
+                     <a className="text-primary" onClick={() => openCarousel(orderDetails.images.pickedToStore)}>الصور</a>
+                   ):null}
+                   </span>
   </div>
   <div className="w-20 text-center">
     <span className={orderDetails.status === 'in store'||orderDetails.status === 'pick to client'
-   || orderDetails.status === 'received'  ? 'text-orange' : ''}>فى المخزن</span>
+   || orderDetails.status === 'received'  ? 'text-orange' : ''}>فى المخزن <br/>
+   {orderDetails.images?.inStore?.length !== 0 ? (
+                     <a className="text-primary" onClick={() => openCarousel(orderDetails.images.inStore)}>الصور</a>
+                   ):null}
+                   </span>
   </div>
   <div className="w-20 text-center">
   <span className={orderDetails.status === 'pick to client'
-   || orderDetails.status === 'received'  ? 'text-orange' : ''}>فى الطريق للعميل</span>
+   || orderDetails.status === 'received'  ? 'text-orange' : ''}>فى الطريق للعميل <br/>
+   {orderDetails.images?.pickedToClient?.length !== 0 || orderDetails.images?.return?.length !== 0 ? (
+                     <a className="text-primary"  onClick={() => openCarousel([
+                      ...(orderDetails.images.pickedToClient || []),
+                      ...(orderDetails.images.return || [])
+                    ])}>الصور</a>
+                   ):null}
+                   </span>
   </div>
   <div className="w-20 text-center">
-  <span className={orderDetails.status === 'received'  ? 'text-orange' : ''}> تم تسليمها</span>
+  <span className={orderDetails.status === 'received'  ? 'text-orange' : ''}> تم تسليمها <br/>
+   {orderDetails.images?.received?.length !== 0 ? (
+                     <a className="text-primary" onClick={() => openCarousel(orderDetails.images.received)}>الصور</a>
+                   ):null}
+                   </span>
   </div>
   </div>
             </div>

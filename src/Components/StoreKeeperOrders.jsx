@@ -242,8 +242,11 @@ export default function StoreKeeperOrders() {
       return (
         <>
         <div className='p-5' id='content'>
+          <div className="p-2 count-box">
+            <span>عدد الشحنات : {orders.filter((order)=> order.status == 'in store').length}</span>
+          </div>
     
-          <div className="my-table p-4 ">
+          <div className="my-table p-4 mt-3">
             <table className="table">
               <thead>
                 <tr>

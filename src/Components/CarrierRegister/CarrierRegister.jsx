@@ -158,6 +158,26 @@ function submitRegisterForm(carrierRole) {
     console.log(theUser);
 }
 
+// function getUserData(e) {
+//   const { name, value } = e.target;
+//   if (name === 'deliveryDistricts') {
+//       const index = parseInt(e.target.dataset.index);
+//       if (value === "All Districts") {
+//           const allDistricts = districts.filter((district) => district.city_id === cityId).map(district => district.name_ar);
+//           setUser({ ...theUser, deliveryDistricts: allDistricts });
+//       } else {
+//           const updatedAreas = [...theUser.deliveryDistricts];
+//           updatedAreas[index] = value;
+//           setUser({ ...theUser, deliveryDistricts: updatedAreas });
+//       }
+//   } else {
+//       setUser({ ...theUser, [name]: value });
+//   }
+//   console.log(theUser);
+// }
+
+
+
 // function addAreaInput() {
 //     setUser({ ...theUser, area: [...theUser.area, ''] });
 // }
@@ -503,7 +523,8 @@ function addAreaInput() {
                                             onChange={getUserData}
                                         />
                                         <datalist id='myCities'>
-                                          {districts && districts.filter((district)=> district.city_id == cityId).map((district,ciIndex)=>(
+                                        {/* <option value="All Districts" /> */}
+                                        {districts && districts.filter((district)=> district.city_id == cityId).map((district,ciIndex)=>(
                                               <option key={ciIndex} value={district.name_ar} />
                                           ))}
                                         </datalist>
@@ -520,6 +541,39 @@ function addAreaInput() {
 
                                 })}
     </div>
+    {/* <div className="col-md-6">
+    <label htmlFor="deliveryDistricts">مناطق المندوب : <span className="star-requered">*</span></label>
+    <div className="row">
+        {theUser.deliveryDistricts.map((deliveryDistricts, index) => (
+            <div key={index} className="mb-2 col-11">
+                <input list={`myCities-${index}`}
+                    type="text"
+                    className='my-input my-2 form-control'
+                    name='deliveryDistricts'
+                    id={`deliveryDistricts-${index}`}
+                    value={deliveryDistricts}
+                    data-index={index}
+                    onChange={getUserData}
+                />
+                <datalist id={`myCities-${index}`}>
+                    <option value="All Districts" />
+                    {districts && districts.filter((district)=> district.city_id === cityId).map((district,ciIndex)=>(
+                        <option key={ciIndex} value={district.name_ar} />
+                    ))}
+                </datalist>
+            </div>
+        ))}
+        <div className="col-1 p-0">
+            <button type="button" className="btn btn-success mt-2" onClick={addAreaInput}> + </button>
+        </div>
+    </div>
+    {errorList.map((err, index) => {
+        if (err.context.label === 'deliveryDistricts') {
+            return <div key={index} className="alert alert-danger my-2">يجب ملىء جميع البيانات</div>
+        }
+    })}
+</div> */}
+
      {/* <div className="col-md-6 ul-box">
         <label htmlFor="area">مناطق المندوب : <span className="star-requered">*</span></label>
         <div className="row">

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { Modal } from 'react-bootstrap';
+import {Modal, Button } from 'react-bootstrap';
 
 export default function AdminOrdersProblems() {
     useEffect(() => {
@@ -41,12 +41,24 @@ export default function AdminOrdersProblems() {
           console.error(error);
         }
       }
+      const [descClose, setDescClose] = useState('');
+      const [showModalClose, setShowModalClose] = useState(false);
+      const [selectedID, setSelectedID] = useState(null);
+      const openModalClose = (orderid) => {
+        setShowModalClose(true);
+        setSelectedID(orderid)
+      };
+    
+      const closeModalClose = () => {
+        setShowModalClose(false);
+      };
       async function closeProblem(orderid) {
         try {
           const response = await axios.put(
             `https://dashboard.go-tex.net/logistics-test/order/close-problem`,
             {
               orderId: orderid,
+              description:descClose,
             },
             {
               headers: {
@@ -59,7 +71,7 @@ export default function AdminOrdersProblems() {
           getOrders()
         } catch (error) {
           console.error(error);
-          alert(error.response.data.msg)
+          alert(error.response.data.msg || error.response.data.message)
     
         }
       }
@@ -110,9 +122,7 @@ export default function AdminOrdersProblems() {
             <td><button className="btn btn-success" onClick={() => { getSticker(item._id) }}>عرض الاستيكر</button></td>
           
             <td><button className="btn btn-danger" onClick={()=>{
-              if(window.confirm('سوف يتم إغلاق المشكلة')){
-                closeProblem(item._id)
-              }
+              openModalClose(item._id)
             }}>إغلاق المشكلة</button></td>
             
           </tr>
@@ -153,6 +163,34 @@ export default function AdminOrdersProblems() {
           
         </Modal.Body>
       </Modal>
+      <Modal show={showModalClose} onHide={closeModalClose}>
+  <Modal.Header>
+    <Modal.Title>هل انت بالتأكيد تريد اغلاق المشكلة </Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    <form onSubmit={(e) => { e.preventDefault(); closeProblem(selectedID); }}>
+      <div className=''>
+        <label htmlFor="">إضافة ملاحظة: </label>
+        <input
+          type="text"
+          className="my-2 my-input form-control"
+          onChange={(e) => { setDescClose(e.target.value); }} required
+        />
+        
+      </div>
+      <Modal.Footer>
+        <div className="text-center">
+          <Button className='m-1' variant="danger" type="submit">
+            تأكيد اغلاق المشكلة 
+          </Button>
+          <Button className='m-1' variant="secondary" type='button' onClick={closeModalClose}>
+            إغلاق
+          </Button>
+        </div>
+      </Modal.Footer>
+    </form>
+  </Modal.Body>
+</Modal>    
     </>
   )
 }

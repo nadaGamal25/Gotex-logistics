@@ -295,33 +295,34 @@ export default function ReceiverShipments() {
         </Modal.Footer>
       </Modal>
       <Modal show={showModalRecieved} onHide={closeModalRecieved}>
-        <Modal.Header >
-        <Modal.Title> هل العميل استلم الشحنة؟
-             </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className=''>
-          <label htmlFor="">إرفق ملف  () </label>
-          <input
-  type="file"
-  className="my-2 my-input"
-  multiple
-  onChange={handleFileChangeRecieved}
-/>
- 
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <div className="text-center">
-        <Button className='m-1' variant="danger" onClick={()=>{changeStatusRecieved(selectedID)}}>
-     تأكيد استلام العميل
+  <Modal.Header>
+    <Modal.Title>هل العميل استلم الشحنة؟</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    <form onSubmit={(e) => { e.preventDefault(); changeStatusRecieved(selectedID); }}>
+      <div className=''>
+        <label htmlFor="">إرفق ملف () </label>
+        <input
+          type="file"
+          className="my-2 my-input form-control"
+          multiple
+          onChange={handleFileChangeRecieved} required
+        />
+      </div>
+      <Modal.Footer>
+        <div className="text-center">
+          <Button className='m-1' variant="danger" type="submit">
+            تأكيد استلام العميل
           </Button>
-          <Button className='m-1' variant="secondary" onClick={closeModalRecieved}>
-          إغلاق
+          <Button className='m-1' variant="secondary" type='button' onClick={closeModalRecieved}>
+            إغلاق
           </Button>
-          </div>
-        </Modal.Footer>
-      </Modal>
+        </div>
+      </Modal.Footer>
+    </form>
+  </Modal.Body>
+</Modal>
+
       <Modal show={showModalReturn} onHide={closeModalReturn}>
         <Modal.Header >
         <Modal.Title> هل انت بالتأكيد تريد ارجاع الشحنة  

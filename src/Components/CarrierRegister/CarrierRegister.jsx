@@ -19,6 +19,10 @@ export default function CarrierRegister() {
   const [value ,setPhoneValue]=useState()
   const [error , setError]= useState('')
   const [isLoading, setisLoading] =useState(false)
+  const [hiddenDeliveryDistricts, setHiddenDeliveryDistricts] = useState([]);
+  const [isDistrict, setIsDistrict] = useState(false);
+
+
   const [theUser,setUser] =useState({
     firstName: "",
     lastName: "",
@@ -45,8 +49,13 @@ export default function CarrierRegister() {
   //   theUser.area.forEach((area, index) => {
   //     formData.append(`area[${index}]`, area);
   // });
-  const filteredAreas = theUser.deliveryDistricts.filter(deliveryDistricts => deliveryDistricts.trim() !== '');
-    filteredAreas.forEach((deliveryDistricts, index) => {
+  // const filteredAreas = theUser.deliveryDistricts.filter(deliveryDistricts => deliveryDistricts.trim() !== '');
+  //   filteredAreas.forEach((deliveryDistricts, index) => {
+  //       formData.append(`deliveryDistricts[${index}]`, deliveryDistricts);
+  //   });
+  const deliveryDistrictsToSend = theUser.deliveryDistricts.includes("جميع المناطق") ? hiddenDeliveryDistricts : theUser.deliveryDistricts;
+    
+    deliveryDistrictsToSend.forEach((deliveryDistricts, index) => {
         formData.append(`deliveryDistricts[${index}]`, deliveryDistricts);
     });
     if (selectedFile) {
@@ -144,48 +153,54 @@ function submitRegisterForm(carrierRole) {
   //   console.log(myUser);
   // }
 
-  function getUserData(e) {
-    console.log(cityId)
-    const { name, value } = e.target;
-    if (name === 'deliveryDistricts') {
-        const index = parseInt(e.target.dataset.index);
-        const updatedAreas = [...theUser.deliveryDistricts];
-        updatedAreas[index] = value;
-        setUser({ ...theUser, deliveryDistricts: updatedAreas });
-    } else {
-        setUser({ ...theUser, [name]: value });
-    }
-    console.log(theUser);
-}
-
-// function getUserData(e) {
-//   const { name, value } = e.target;
-//   if (name === 'deliveryDistricts') {
-//       const index = parseInt(e.target.dataset.index);
-//       if (value === "All Districts") {
-//           const allDistricts = districts.filter((district) => district.city_id === cityId).map(district => district.name_ar);
-//           setUser({ ...theUser, deliveryDistricts: allDistricts });
-//       } else {
-//           const updatedAreas = [...theUser.deliveryDistricts];
-//           updatedAreas[index] = value;
-//           setUser({ ...theUser, deliveryDistricts: updatedAreas });
-//       }
-//   } else {
-//       setUser({ ...theUser, [name]: value });
-//   }
-//   console.log(theUser);
+//   function getUserData(e) {
+//     console.log(cityId)
+//     const { name, value } = e.target;
+//     if (name === 'deliveryDistricts') {
+//         const index = parseInt(e.target.dataset.index);
+//         const updatedAreas = [...theUser.deliveryDistricts];
+//         updatedAreas[index] = value;
+//         setUser({ ...theUser, deliveryDistricts: updatedAreas });
+//     } else {
+//         setUser({ ...theUser, [name]: value });
+//     }
+//     console.log(theUser);
 // }
+function getUserData(e) {
+  const { name, value } = e.target;
+  if (name === 'deliveryDistricts') {
+      if (value === "جميع المناطق") {
+          const allDistricts = districts.filter((district) => district.city_id === cityId).map(district => district.name_ar);
+          setUser({ ...theUser, deliveryDistricts: [value] });
+          // Set the actual districts in the hidden state
+          setHiddenDeliveryDistricts(allDistricts);
+      } else {
+          const index = parseInt(e.target.dataset.index);
+          const updatedAreas = [...theUser.deliveryDistricts];
+          updatedAreas[index] = value;
+          setUser({ ...theUser, deliveryDistricts: updatedAreas });
+      }
+  } else {
+      setUser({ ...theUser, [name]: value });
+  }
+  console.log(theUser);
+}
 
 
 
 // function addAreaInput() {
 //     setUser({ ...theUser, area: [...theUser.area, ''] });
 // }
-
 function addAreaInput() {
-  const updatedAreas = [...theUser.deliveryDistricts, '']; 
+  const updatedAreas = [...theUser.deliveryDistricts, ''];
   setUser({ ...theUser, deliveryDistricts: updatedAreas });
 }
+
+
+// function addAreaInput() {
+//   const updatedAreas = [...theUser.deliveryDistricts, '']; 
+//   setUser({ ...theUser, deliveryDistricts: updatedAreas });
+// }
   function validateRegisterForm(){
     let scheme= Joi.object({
         firstName:Joi.string().required(),
@@ -491,6 +506,7 @@ function addAreaInput() {
                                               const selectedCity = cities.find(city => city.name_ar === e.target.value);
                                               if (selectedCity) {
                                                   setCityId(selectedCity.city_id);
+                                                  setIsDistrict(true)
                                               }
                                           }}
                                         />
@@ -507,7 +523,7 @@ function addAreaInput() {
 
                                 })}
     </div>
-    <div className="col-md-6">
+    {/* <div className="col-md-6">
                                 <label htmlFor="deliveryDistricts">مناطق المندوب : <span className="star-requered">*</span></label>
                                 <div className="row">
                                 {theUser.deliveryDistricts.map((deliveryDistricts, index) => (
@@ -523,7 +539,6 @@ function addAreaInput() {
                                             onChange={getUserData}
                                         />
                                         <datalist id='myCities'>
-                                        {/* <option value="All Districts" /> */}
                                         {districts && districts.filter((district)=> district.city_id == cityId).map((district,ciIndex)=>(
                                               <option key={ciIndex} value={district.name_ar} />
                                           ))}
@@ -540,39 +555,55 @@ function addAreaInput() {
                                     }
 
                                 })}
-    </div>
-    {/* <div className="col-md-6">
-    <label htmlFor="deliveryDistricts">مناطق المندوب : <span className="star-requered">*</span></label>
+    </div> */}
+<div className="col-md-6">
+    <label htmlFor="deliveryDistricts">مناطق المندوب <span className='text-danger'>(اختر مدينة العمل أولاً)</span>: <span className="star-requered">*</span></label>
+    
     <div className="row">
-        {theUser.deliveryDistricts.map((deliveryDistricts, index) => (
-            <div key={index} className="mb-2 col-11">
-                <input list={`myCities-${index}`}
+        {theUser.deliveryDistricts.length === 1 && theUser.deliveryDistricts[0] === "جميع المناطق" && isDistrict === true ? (
+            <div className="mb-2 col-11">
+                <input
                     type="text"
                     className='my-input my-2 form-control'
                     name='deliveryDistricts'
-                    id={`deliveryDistricts-${index}`}
-                    value={deliveryDistricts}
-                    data-index={index}
-                    onChange={getUserData}
+                    value="جميع المناطق"
+                    readOnly
                 />
-                <datalist id={`myCities-${index}`}>
-                    <option value="All Districts" />
-                    {districts && districts.filter((district)=> district.city_id === cityId).map((district,ciIndex)=>(
-                        <option key={ciIndex} value={district.name_ar} />
-                    ))}
-                </datalist>
             </div>
-        ))}
-        <div className="col-1 p-0">
-            <button type="button" className="btn btn-success mt-2" onClick={addAreaInput}> + </button>
-        </div>
+        ) : (
+            theUser.deliveryDistricts.map((deliveryDistricts, index) => (
+                <div key={index} className="mb-2 col-11">
+                    <input list={`myCities-${index}`}
+                        type="text"
+                        className='my-input my-2 form-control'
+                        name='deliveryDistricts'
+                        id={`deliveryDistricts-${index}`}
+                        value={deliveryDistricts}
+                        data-index={index}
+                        onChange={getUserData}
+                    />
+                    <datalist id={`myCities-${index}`}>
+                        <option value="جميع المناطق" />
+                        {districts && districts.filter((district) => district.city_id === cityId).map((district, ciIndex) => (
+                            <option key={ciIndex} value={district.name_ar} />
+                        ))}
+                    </datalist>
+                </div>
+            ))
+        )}
+        {!theUser.deliveryDistricts.includes("جميع المناطق") && (
+            <div className="col-1 p-0">
+                <button type="button" className="btn btn-success mt-2" onClick={addAreaInput}>+</button>
+            </div>
+        )}
     </div>
     {errorList.map((err, index) => {
         if (err.context.label === 'deliveryDistricts') {
             return <div key={index} className="alert alert-danger my-2">يجب ملىء جميع البيانات</div>
         }
     })}
-</div> */}
+</div>
+
 
      {/* <div className="col-md-6 ul-box">
         <label htmlFor="area">مناطق المندوب : <span className="star-requered">*</span></label>

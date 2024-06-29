@@ -95,10 +95,12 @@ export default function UserOrders() {
   };
  //cancel order
  const [selectedFilesCancel, setSelectedFilesCancel] = useState([]);
+ const [descCancel, setDescCancel] = useState('');
   async function cancelOrder(orderid) {
     console.log(selectedFilesCancel)
     const formData = new FormData();
     formData.append('orderId', orderid);
+    formData.append('description', descCancel);
     
     selectedFilesCancel.forEach((file) => {
       formData.append('images.canceled', file);
@@ -361,34 +363,41 @@ export default function UserOrders() {
         </Modal.Footer>
       </Modal>)}
       <Modal show={showModalCancel} onHide={closeModalCancel}>
-        <Modal.Header >
-        <Modal.Title> هل انت بالتأكيد تريد الغاء الشحنة  
-             </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className=''>
-          <label htmlFor="">إرفق ملف  () </label>
-          <input
-  type="file"
-  className="my-2 my-input"
-  name="images.canceled"
-  multiple
-  onChange={handleFileChangeCancel}
-/>
- 
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <div className="text-center">
-        <Button className='m-1' variant="danger" onClick={()=>{cancelOrder(selectedID)}}>
-          تأكيد الغاء الشحنة
+  <Modal.Header>
+    <Modal.Title>هل انت بالتأكيد تريد الغاء الشحنة</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    <form onSubmit={(e) => { e.preventDefault(); cancelOrder(selectedID); }}>
+      <div className=''>
+        <label htmlFor="">إضافة ملاحظة: </label>
+        <input
+          type="text"
+          className="my-2 my-input form-control"
+          onChange={(e) => { setDescCancel(e.target.value); }} required
+        />
+        <label htmlFor="">إرفق ملف () </label>
+        <input
+          type="file"
+          className="my-2 my-input form-control"
+          name="images.canceled"
+          multiple
+          onChange={handleFileChangeCancel} required
+        />
+      </div>
+      <Modal.Footer>
+        <div className="text-center">
+          <Button className='m-1' variant="danger" type="submit">
+            تأكيد الغاء الشحنة
           </Button>
-          <Button className='m-1' variant="secondary" onClick={closeModalCancel}>
-          إغلاق
+          <Button className='m-1' variant="secondary" type='button' onClick={closeModalCancel}>
+            إغلاق
           </Button>
-          </div>
-        </Modal.Footer>
-      </Modal>
+        </div>
+      </Modal.Footer>
+    </form>
+  </Modal.Body>
+</Modal>
+
       <Modal show={showModalPending} onHide={closeModalPending}>
         <Modal.Header >
         <Modal.Title> هل تريد تغيير حالة الشحنة وجعلها معلقة (pending)مرة اخرى 

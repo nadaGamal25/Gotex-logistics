@@ -143,7 +143,40 @@ async function trackerResendEmail(userId){
     window.alert(error.response.data.msg.name || error.response.data.msg || "error")
 }
 }
-
+const [cities,setCities]=useState()
+async function getCities() {
+  try {
+    const response = await axios.get('https://dashboard.go-tex.net/logistics-test/cities',
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
+      },
+    });
+    setCities(response.data.cities)
+    console.log(response)
+  } catch (error) {
+    console.error(error);
+  }
+}
+const [districts,setDistricts]=useState()
+async function getDistricts() {
+  try {
+    const response = await axios.get('https://dashboard.go-tex.net/logistics-test/cities/districts',
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
+      },
+    });
+    setDistricts(response.data.districts)
+    console.log(response)
+  } catch (error) {
+    console.error(error);
+  }
+}
+useEffect(() => {
+  getCities()
+  getDistricts()
+}, [])
 //edit user
 const [isModalOpenUser, setIsModalOpenUser] = useState(false);
 const [editedUser, setEditedUser] = useState(null);
@@ -262,7 +295,100 @@ const handleEditSubmitStore = async (event) => {
     alert(error.response.data.msg)
   }
 } 
+//edit carrier
+const [isModalOpenCarrier, setIsModalOpenCarrier] = useState(false);
+const [eCarrier, seteCarrier] = useState(null);
+  const [editedCarrier, setEditedCarrier] = useState({
+    firstName: '',
+    lastName: '',
+    mobile: '',
+    city: '',
+    address: '',
+    nid: '',
+    deliveryCity: '',
+    deliveryDistricts: [],
+  });
+  const [cityId, setCityId] = useState(null);
+  const [isDistrict, setIsDistrict] = useState(false);
+  const [carrierRole,setCarrierRole]=useState('')
+  const handleEditClickCarrier = (carrier,carrierR) => {
+    seteCarrier(carrier)
+    setCarrierRole(carrierR)
+    setEditedCarrier({
+      ...carrier,
+      deliveryDistricts: carrier.deliveryDistricts || [''],
+    });
+    setIsModalOpenCarrier(true);
+  };
 
+  const closeModalCarrier = () => {
+    setIsModalOpenCarrier(false);
+    setEditedCarrier({
+      firstName: '',
+      lastName: '',
+      mobile: '',
+      city: '',
+      address: '',
+      nid: '',
+      deliveryCity: '',
+      deliveryDistricts: [],
+    });
+  };
+
+  const handleInputChangeCarrier = (event) => {
+    const { name, value } = event.target;
+    setEditedCarrier((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    if (name === 'deliveryCity') {
+      const selectedCity = cities.find(city => city.name_ar === value);
+      if (selectedCity) {
+        setCityId(selectedCity.city_id);
+        setIsDistrict(true);
+      }
+    }
+  };
+
+  const handleDistrictChange = (event, index) => {
+    const { value } = event.target;
+    const updatedDistricts = [...editedCarrier.deliveryDistricts];
+    updatedDistricts[index] = value;
+    setEditedCarrier((prev) => ({
+      ...prev,
+      deliveryDistricts: updatedDistricts,
+    }));
+  };
+
+  const addAreaInput = () => {
+    setEditedCarrier((prev) => ({
+      ...prev,
+      deliveryDistricts: [...prev.deliveryDistricts, ''],
+    }));
+  };
+
+  const handleEditSubmitCarrier = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await axios.post(
+        `https://dashboard.go-tex.net/logistics-test/carrier/${eCarrier._id}?role=${carrierRole}`,
+        { ...editedCarrier },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
+          },
+        }
+      );
+      console.log(response);
+      closeModalCarrier();
+      window.alert("تم تعديل بيانات المندوب بنجاح");
+      getUsersCarriersAdmin();
+    } catch (error) {
+      console.error(error);
+      alert(error.response.data.msg);
+    }
+  };
   return (
     <>
     <div className='p-5' id='content'>
@@ -277,10 +403,11 @@ const handleEditSubmitStore = async (event) => {
             <th scope="col">الإيميل </th>
             <th scope="col">المدينة </th>
             <th scope="col">العنوان </th>
+            <th scope="col">مدينة المندوب </th>
             <th scope="col">مناطق المندوب </th>
             <th scope="col"> الهوية </th>
-            <th scope="col">الصورة  </th>
-            <th scope="col">ملف التوثيق  </th>
+            <th scope="col">صورة الهوية  </th>
+            <th scope="col">صورة شخصية</th>
             <th>role</th>
             <th></th>
             <th></th>
@@ -299,6 +426,7 @@ const handleEditSubmitStore = async (event) => {
                 {item.email?<td>{item.email}</td>:<td>_</td>}
                 {item.city?<td>{item.city}</td>:<td>_</td>}
                 {item.address?<td>{item.address}</td>:<td>_</td>}
+                {item.deliveryCity?<td>{item.deliveryCity}</td>:<td>_</td>}
                 {item.deliveryDistricts ? (
           <td>
             {item.deliveryDistricts.join(',')}
@@ -307,19 +435,20 @@ const handleEditSubmitStore = async (event) => {
           <td>_</td>
         )}
                 {item.nid?<td>{item.nid}</td>:<td>_</td>}
-                {item.photo && item.photo?<td>
-                  <a href={item.photo.replace('public', 'https://dashboard.go-tex.net/logistics-test')} target='_blank'>رابط_الصورة</a>
-                </td>:<td>_</td>}
                 {item.papers && item.papers[0]?<td>
                   <a href={item.papers[0].replace('public', 'https://dashboard.go-tex.net/logistics-test')} target='_blank'>رابط_الملف</a>
                 </td>:<td>_</td>}
+                {item.photo && item.photo?<td>
+                  <a href={item.photo.replace('public', 'https://dashboard.go-tex.net/logistics-test')} target='_blank'>رابط_الصورة</a>
+                </td>:<td>_</td>}
+                
                 {item.role?<td>{item.role}</td>:<td>_</td>}
                 {item.role == 'data entry' ?<td>
                   <button className="btn-dataentry btn btn-secondary" onClick={()=>{handleEditClickUser(item)}}>  تعديل البيانات</button>
                 </td>
-                // :item.role == 'collector' || item.role == 'receiver'?<td>
-                //   <button className="btn-carrier btn btn-secondary" onClick={()=>{(item._id)}}>تعديل   </button>
-                // </td>
+                :item.role == 'collector' || item.role == 'receiver'?<td>
+                  <button className="btn-carrier btn btn-secondary" onClick={()=>{handleEditClickCarrier(item,item.role)}}>تعديل   </button>
+                </td>
                 :item.role == 'storekeeper' ?<td>
                   <button className="btn-dataentry btn btn-secondary" onClick={()=>{handleEditClickStore(item)}}>تعديل البيانات </button>
                 </td>:<td></td>}
@@ -463,6 +592,94 @@ const handleEditSubmitStore = async (event) => {
           </Button>
         </Modal.Footer>
       </Modal>)} 
+
+      {isModalOpenCarrier && (
+        <Modal show={isModalOpenCarrier} onHide={closeModalCarrier}>
+          <Modal.Header>
+            <Modal.Title>تعديل بيانات المندوب</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <form onSubmit={handleEditSubmitCarrier}>
+              <div className="row">
+                <div className="col-md-6 pb-1">
+                  <label htmlFor="firstName">الاسم الأول :</label>
+                  <input onChange={handleInputChangeCarrier} value={editedCarrier.firstName} type="text" className='my-input my-2 form-control' name='firstName' />
+                </div>
+                <div className="col-md-6 pb-1">
+                  <label htmlFor="lastName">اسم العائلة :</label>
+                  <input onChange={handleInputChangeCarrier} value={editedCarrier.lastName} type="text" className='my-input my-2 form-control' name='lastName' />
+                </div>
+                
+                <div className="col-md-6 pb-1">
+                  <label htmlFor="mobile">رقم الهاتف :</label>
+                  <input onChange={handleInputChangeCarrier} value={editedCarrier.mobile} type="text" className='my-input my-2 form-control' name='mobile' />
+                </div>
+                <div className="col-md-6 pb-1">
+                  <label htmlFor="city">المدينة :</label>
+                  <input onChange={handleInputChangeCarrier} value={editedCarrier.city} type="text" className='my-input my-2 form-control' name='city' />
+                </div>
+                <div className="col-md-6 pb-1">
+                  <label htmlFor="address">العنوان :</label>
+                  <input onChange={handleInputChangeCarrier} value={editedCarrier.address} type="text" className='my-input my-2 form-control' name='address' />
+                </div>
+                <div className="col-md-6 pb-1">
+                  <label htmlFor="nid">رقم الهوية :</label>
+                  <input onChange={handleInputChangeCarrier} value={editedCarrier.nid} type="text" className='my-input my-2 form-control' name='nid' />
+                </div>
+                <div className="col-md-6 pb-1">
+                  <label htmlFor="deliveryCity">مدينة عمل المندوب :</label>
+                  <input
+                    list='mCities'
+                    type="text"
+                    className='my-input my-2 form-control'
+                    name='deliveryCity'
+                    value={editedCarrier.deliveryCity}
+                    onChange={handleInputChangeCarrier}
+                  />
+                  <datalist id='mCities'>
+                    {cities && cities.map((city, ciIndex) => (
+                      <option key={ciIndex} value={city.name_ar} />
+                    ))}
+                  </datalist>
+                </div>
+                <div className="col-md-12 pb-1">
+                  <label htmlFor="deliveryDistricts">مناطق المندوب :</label>
+                  <div className="row">
+                    {editedCarrier.deliveryDistricts.map((district, index) => (
+                      <div key={index} className="col-11 mb-2">
+                        <input
+                          list={`myCities-${index}`}
+                          type="text"
+                          className='my-input my-2 form-control'
+                          name='deliveryDistricts'
+                          value={district}
+                          data-index={index}
+                          onChange={(e) => handleDistrictChange(e, index)}
+                        />
+                        <datalist id={`myCities-${index}`}>
+                          <option value="جميع المناطق" />
+                          {districts && districts.filter((district) => district.city_id === cityId).map((district, diIndex) => (
+                            <option key={diIndex} value={district.name_ar} />
+                          ))}
+                        </datalist>
+                      </div>
+                    ))}
+                    <div className="col-1 p-0">
+                      <button type="button" className="btn btn-success mt-2" onClick={addAreaInput}>+</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="text-center pt-1">
+                <button className='btn btn-primary'>تعديل</button>
+              </div>
+            </form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={closeModalCarrier}>إغلاق</Button>
+          </Modal.Footer>
+        </Modal>
+      )}
     </>
     )
 }

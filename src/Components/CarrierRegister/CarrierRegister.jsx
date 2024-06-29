@@ -224,7 +224,6 @@ function addAreaInput() {
 
   const [cities,setCities]=useState()
     async function getCities() {
-      console.log(localStorage.getItem('adminToken'))
       try {
         const response = await axios.get('https://dashboard.go-tex.net/logistics-test/cities',
         {
@@ -240,7 +239,6 @@ function addAreaInput() {
     }
     const [districts,setDistricts]=useState()
     async function getDistricts() {
-      console.log(localStorage.getItem('adminToken'))
       try {
         const response = await axios.get('https://dashboard.go-tex.net/logistics-test/cities/districts',
         {
@@ -315,9 +313,7 @@ function addAreaInput() {
     <div className='py-5 px-4' id='content'>
     <div className="register-box m-auto p-4">
     
-    
-    {/* {error.length >0 ?<div className='alert alert-danger my-2'>{error}</div>:''} */}
-    <form onSubmit={submitRegisterForm(carrierRole)} className='my-3' action="">
+      <form onSubmit={submitRegisterForm(carrierRole)} className='my-3' action="">
       <div className="row">
       <div className="col-md-6">
       <label htmlFor="firstName">الاسم الأول : <span className="star-requered">*</span></label>
@@ -366,14 +362,7 @@ function addAreaInput() {
     })}
       </div>
       <div className="col-md-6 ul-box">
-      {/* <label htmlFor="city">الموقع(المدينة) : <span className="star-requered">*</span></label>
-      <input onChange={getUserData} type="text" className='my-input my-2 form-control' name='city' id='city' />
-      {errorList.map((err,index)=>{
-      if(err.context.label ==='city'){
-        return <div key={index} className="alert alert-danger my-2">يجب ملىء جميع البيانات</div>
-      }
-      
-    })} */}
+   
     <label htmlFor="">  الموقع( المدينة)<span className="star-requered">*</span></label>
                 <input type="text" className="form-control" name='city'
                 onChange={(e)=>{ 
@@ -434,16 +423,7 @@ function addAreaInput() {
       
     })}
     </div>
-    {/* <div className="col-md-6">
-      <label htmlFor="area">المناطق : <span className="star-requered">*</span></label>
-      <input onChange={getUserData} type="text" className='my-input my-2 form-control' name='area' id='area' />
-      {errorList.map((err,index)=>{
-      if(err.context.label ==='area'){
-        return <div key={index} className="alert alert-danger my-2">يجب ملىء جميع البيانات</div>
-      }
-      
-    })}
-    </div> */}
+  
     <div className="col-md-6">
       <label htmlFor="nid">رقم الهوية : <span className="star-requered">*</span></label>
       <input onChange={(e) => {
@@ -523,39 +503,7 @@ function addAreaInput() {
 
                                 })}
     </div>
-    {/* <div className="col-md-6">
-                                <label htmlFor="deliveryDistricts">مناطق المندوب : <span className="star-requered">*</span></label>
-                                <div className="row">
-                                {theUser.deliveryDistricts.map((deliveryDistricts, index) => (
-                                  
-                                    <div key={index} className="mb-2 col-11">
-                                        <input list='myCities'
-                                            type="text"
-                                            className='my-input my-2 form-control'
-                                            name='deliveryDistricts'
-                                            id={`deliveryDistricts-${index}`}
-                                            value={deliveryDistricts}
-                                            data-index={index}
-                                            onChange={getUserData}
-                                        />
-                                        <datalist id='myCities'>
-                                        {districts && districts.filter((district)=> district.city_id == cityId).map((district,ciIndex)=>(
-                                              <option key={ciIndex} value={district.name_ar} />
-                                          ))}
-                                        </datalist>
-                                    </div>
-                                ))}
-                                <div className="col-1 p-0">
-                                <button type="button" className="btn btn-success mt-2" onClick={addAreaInput}> + </button>
-                                </div>
-                                </div>
-                                {errorList.map((err, index) => {
-                                    if (err.context.label === 'deliveryDistricts') {
-                                        return <div key={index} className="alert alert-danger my-2">يجب ملىء جميع البيانات</div>
-                                    }
-
-                                })}
-    </div> */}
+   
 <div className="col-md-6">
     <label htmlFor="deliveryDistricts">مناطق المندوب <span className='text-danger'>(اختر مدينة العمل أولاً)</span>: <span className="star-requered">*</span></label>
     
@@ -679,3 +627,37 @@ function addAreaInput() {
     </>
       )
 }
+
+ {/* <div className="col-md-6">
+                                <label htmlFor="deliveryDistricts">مناطق المندوب : <span className="star-requered">*</span></label>
+                                <div className="row">
+                                {theUser.deliveryDistricts.map((deliveryDistricts, index) => (
+                                  
+                                    <div key={index} className="mb-2 col-11">
+                                        <input list='myCities'
+                                            type="text"
+                                            className='my-input my-2 form-control'
+                                            name='deliveryDistricts'
+                                            id={`deliveryDistricts-${index}`}
+                                            value={deliveryDistricts}
+                                            data-index={index}
+                                            onChange={getUserData}
+                                        />
+                                        <datalist id='myCities'>
+                                        {districts && districts.filter((district)=> district.city_id == cityId).map((district,ciIndex)=>(
+                                              <option key={ciIndex} value={district.name_ar} />
+                                          ))}
+                                        </datalist>
+                                    </div>
+                                ))}
+                                <div className="col-1 p-0">
+                                <button type="button" className="btn btn-success mt-2" onClick={addAreaInput}> + </button>
+                                </div>
+                                </div>
+                                {errorList.map((err, index) => {
+                                    if (err.context.label === 'deliveryDistricts') {
+                                        return <div key={index} className="alert alert-danger my-2">يجب ملىء جميع البيانات</div>
+                                    }
+
+                                })}
+    </div> */}

@@ -99,7 +99,9 @@ export default function AdminOrdersProblems() {
         <th scope="col">عدد القطع</th>
         <th scope="col">حالة الشحنة</th>
         <th scope="col">الصور</th>
+        <th scope="col">وصف المشكلة</th>
         <th scope="col">حالة المشكلة</th>
+        <th scope="col">ملاحظة الاغلاق </th>
         <th scope="col"></th>
         <th scope="col"></th>
       </tr>
@@ -118,7 +120,9 @@ export default function AdminOrdersProblems() {
             <td>{item.pieces}</td>
             <td>{item.status}</td>
             <td><a className="text-primary" onClick={() => openCarousel(item.problem.images)}>عرض_الصور</a></td>
+            <td>{item.problem.description}</td>
             <td>{item.problem.status}</td>
+            <td>{item.problem.closedDescription}</td>
             <td><button className="btn btn-success" onClick={() => { getSticker(item._id) }}>عرض الاستيكر</button></td>
           
             <td><button className="btn btn-danger" onClick={()=>{

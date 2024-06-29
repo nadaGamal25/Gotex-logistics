@@ -668,6 +668,7 @@ const handleEditSubmit = async (event) => {
                   <th scope="col">الوزن</th>
                   <th scope="col">عدد القطع</th>
                   <th scope="col">حالة الشحنة</th>
+                  <th scope="col">ملاحظات </th>
                   {/* <th scope="col">ملف الالغاء</th> */}
                   <th scope="col">مندوب الشحنة</th>
                   <th scope="col">امين المخزن</th>
@@ -718,7 +719,9 @@ const handleEditSubmit = async (event) => {
                       <span></span>
                     )}
                 </td>
-                     
+                {item.cancelDescription?.dataEntry || item.cancelDescription?.collector ?
+                <td>{item.cancelDescription?.dataEntry || item.cancelDescription?.collector}</td> : <td></td>}
+                
                       {item.collector && item.collector.length > 0 && item.collector[0].firstName ? (
   <td>تجميع:{item.collector[0].firstName} {item.collector[0].lastName}<br/>
   {item.receiver&& item.receiver.length > 0 && item.receiver[0].firstName ? (

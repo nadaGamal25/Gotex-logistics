@@ -46,6 +46,8 @@ import CarrierOrderNTFpreview from './Components/CarrierOrderNTFpreview/CarrierO
 import AdminOrdersWithoutCarrier from './Components/AdminOrdersWithoutCarrier/AdminOrdersWithoutCarrier';
 import AdminOrdersProblems from './Components/AdminOrdersProblems/AdminOrdersProblems';
 import TrackerOrdersProblems from './Components/TrackerOrdersProblems/TrackerOrdersProblems';
+import AdminLateOrders from './Components/AdminLateOrders/AdminLateOrders'
+import StoreLateOrder from './Components/StoreLateOrders/StoreLateOrders'
 
 function App() {
   useEffect(() => {
@@ -151,6 +153,7 @@ function App() {
         { path: 'trackerRegister', element: <TrackerRegister /> },
         { path: 'adminOrdersWithoutCarrier', element: <AdminOrdersWithoutCarrier /> },
         { path: 'adminOrdersProblems', element: <AdminOrdersProblems/> },
+        { path: 'adminLateOrders', element: <AdminLateOrders/> },
 
 
       ]
@@ -169,6 +172,7 @@ function App() {
       path: '/', element: <StorekeeperLayout setStorekeeperData={setStorekeeperData} storekeeperData={storekeeperData} />, children: [
         { path: 'storeAddOrder', element: <StoreAddOrder /> },
         { path: 'storeShipments', element: <StoreKeeperOrders /> },
+        { path: 'storeLateOrders', element: <StoreLateOrder/> },
 
         // {path:'main',element:<Main/>},
 

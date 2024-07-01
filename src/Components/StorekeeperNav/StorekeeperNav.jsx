@@ -59,6 +59,12 @@ export default function StorekeeperNav({logout}) {
                     <span class="text"> اضافة شحنة للمخزن</span>
                 </Link>
             </li>
+            <li className=''>
+              <Link to="/storeLateOrders">
+              <i class="fa-solid fa-boxes-packing bx"></i>
+              <span class="text"> شحنات متأخرة  </span>
+              </Link>
+            </li>
             
             
             

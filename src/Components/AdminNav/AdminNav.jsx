@@ -92,6 +92,12 @@ export default function AdminNav({logout}) {
               <span class="text"> شحنات بها مشكلة </span>
               </Link>
             </li>
+            <li className=''>
+              <Link to="/adminLateOrders">
+              <i class="fa-solid fa-boxes-packing bx"></i>
+              <span class="text"> شحنات متأخرة  </span>
+              </Link>
+            </li>
             {/* <li >
                 <Link to="/UserResendEmail">
                 <i class="fa-solid fa-envelope-circle-check bx"></i>

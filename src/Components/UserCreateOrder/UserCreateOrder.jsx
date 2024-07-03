@@ -3,7 +3,7 @@ import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css'
 import ar from 'react-phone-number-input/locale/ar'
 import axios from 'axios';
-import Joi from 'joi';
+import Joi, { string } from 'joi';
 import { Link } from 'react-router-dom';
 
 export default function UserCreateOrder() {
@@ -136,8 +136,8 @@ export default function UserCreateOrder() {
       description: Joi.string().required(),
       paytype: Joi.string().required(),
       price: Joi.number().required(),
-      senderdistrict: Joi.string().required(),
-      reciverdistrict: Joi.string().required(),
+      senderdistrict: Joi.required(),
+      reciverdistrict: Joi.required(),
 
     });
     return scheme.validate(orderData, { abortEarly: false });
@@ -160,7 +160,7 @@ export default function UserCreateOrder() {
     }
     useEffect(() => {
       getCities()
-      getDistricts()
+      // getDistricts()
     }, [])
   const [search, setSearch] = useState('')
   const [search2, setSearch2] = useState('')
@@ -243,12 +243,12 @@ export default function UserCreateOrder() {
   }, [showCitiesList2]);
 
   const [districts,setDistricts]=useState()
-  async function getDistricts() {
+  async function getDistricts(districtid) {
     try {
-      const response = await axios.get('https://dashboard.go-tex.net/logistics-test/cities/districts',
+      const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/districts/${districtid}`,
       {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+          Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
         },
       });
       setDistricts(response.data.districts)
@@ -257,6 +257,21 @@ export default function UserCreateOrder() {
       console.error(error);
     }
   }
+  const [districts2,setDistricts2]=useState()
+    async function getDistricts2(districtid) {
+      try {
+        const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/districts/${districtid}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
+          },
+        });
+        setDistricts2(response.data.districts)
+        console.log(response)
+      } catch (error) {
+        console.error(error);
+      }
+    }
 
 
   return (
@@ -343,6 +358,7 @@ export default function UserCreateOrder() {
                       onClick={(e)=>{ 
                         const selectedCity = e.target.innerText;
                         setCityIdSender(item.city_id)
+                        getDistricts(item.city_id)
                         // setItemCity(selectedCity)
                         getOrderData({ target: { name: 'sendercity', value: selectedCity } });
                         document.querySelector('input[name="sendercity"]').value = selectedCity;
@@ -372,10 +388,15 @@ export default function UserCreateOrder() {
                                             type="text"
                                             className='my-input my-2 form-control'
                                             name='senderdistrict'
-                                            onChange={(e) => {getOrderData(e)}}
-                                        />
+                                            onChange={(e) => {
+                                              // getUserData(e)
+                                            const selected = districts.find(district => district.name_ar === e.target.value);
+                                            if (selected) {
+                                                getOrderData({target:{name:'senderdistrict',value:String(selected.district_id)}})
+                                            }
+                                        }}                                        />
                                         <datalist id='s-district'>
-                                          {districts && districts.filter((district)=> district.city_id == cityIdSender).map((district,ciIndex)=>(
+                                          {districts && districts.map((district,ciIndex)=>(
                                               <option key={ciIndex} value={district.name_ar} />
                                           ))}
                                         </datalist>
@@ -551,6 +572,7 @@ export default function UserCreateOrder() {
                   setSearch2(searchValue);
                   getOrderData(e)
                   openCitiesList2()
+                  
                   // const matchingCities = cities.filter((item) => {
                   //   return searchValue === '' ? item : item.toLowerCase().includes(searchValue.toLowerCase());
                   // });
@@ -572,6 +594,7 @@ export default function UserCreateOrder() {
                       <li key={index} name='recivercity' 
                       onClick={(e)=>{ 
                         setCityIdReciever(item.city_id)
+                        getDistricts2(item.city_id)
                         const selectedCity = e.target.innerText;
                         getOrderData({ target: { name: 'recivercity', value: selectedCity } });
                         document.querySelector('input[name="recivercity"]').value = selectedCity;
@@ -600,10 +623,15 @@ export default function UserCreateOrder() {
                                             type="text"
                                             className='my-input my-2 form-control'
                                             name='reciverdistrict'
-                                            onChange={(e) => {getOrderData(e)}}
-                                        />
+                                            onChange={(e) => {
+                                              // getUserData(e)
+                                            const selected = districts2.find(district => district.name_ar === e.target.value);
+                                            if (selected) {
+                                                getOrderData({target:{name:'reciverdistrict',value:String(selected.district_id)}})
+                                            }
+                                        }}                                         />
                                         <datalist id='r-district'>
-                                          {districts && districts.filter((district)=> district.city_id == cityIdReciever).map((district,ciIndex)=>(
+                                          {districts2 && districts2.filter((district)=> district.city_id == cityIdReciever).map((district,ciIndex)=>(
                                               <option key={ciIndex} value={district.name_ar} />
                                           ))}
                                         </datalist>

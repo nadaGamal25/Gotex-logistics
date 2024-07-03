@@ -77,8 +77,12 @@ export default function TrackOrder() {
                         ...orderDetails.images.canceled,
                         ...orderDetails.images.return
                       ])}>عرض_الصور</a> */}
-                {orderDetails.images?.canceled?.length !== 0 ? (
-                     <a className="text-primary m-3" onClick={() => openCarousel(orderDetails.images.canceled)}>الصور</a>
+                {orderDetails.images?.canceled?.admin.length !== 0 && orderDetails.images?.canceled?.collector.length !== 0 &&orderDetails.images?.canceled?.dataEntry.length !== 0 ? (
+                     <a className="text-primary m-3" onClick={() => openCarousel([
+                      ...(orderDetails.images.canceled.admin || []),
+                      ...(orderDetails.images.canceled.collector || []),
+                      ...(orderDetails.images.canceled.dataEntry || [])
+                    ])}>الصور</a>
                    ):null}      
             </div>
           <div className="row " dir='rtl'>
@@ -91,7 +95,9 @@ export default function TrackOrder() {
             <div className="col-md-4">
               <div className="p-4">
                 <h5><i class="fa-regular fa-chart-bar"></i>  حالة الشحنة </h5>
-                {orderDetails.status=='pending'?
+                {orderDetails.isreturn==true?
+                <span className='fw-bold'>سيتم ارجاع الشحنة للمرسل </span>:
+                orderDetails.status=='pending' || orderDetails.status=='late to store'?
                 <span className='fw-bold'>قيد الانتظار</span>:
                 orderDetails.status=='pick to store'?
                 <span className='fw-bold'>فى الطريق للمخزن</span>:
@@ -120,10 +126,57 @@ export default function TrackOrder() {
               </div>
             </div>
             </div>
+            {orderDetails.isreturn ==true?
+            <div className="p-2 my-3">
+            <div dir='ltr' className="progress my-4" role="progressbar" aria-label="Success example"  aria-valuemin={0} aria-valuemax={100}>
+            <div className="progress-bar" style={{
+  width:
+         orderDetails.status === 'in store' ? `30%` :
+         orderDetails.status === 'pick to client' ? `70%` :
+         orderDetails.status === 'received' ? `100%` :
+         `0%`
+}}>    {/* <i class="fa-solid fa-truck-arrow-right truck-icon"></i> */}
+    </div>
+  
+            </div>
+            <div className="d-flex status-box" dir='ltr'>
+ 
+  <div className="w-33 text-center">
+    <span className={orderDetails.status === 'in store'||orderDetails.status === 'pick to client'
+   || orderDetails.status === 'received'  ? 'text-orange' : ''}>فى المخزن <br/>
+    {orderDetails.images?.inStore?.length !== 0 || orderDetails.images?.return?.length !== 0 ? (
+                     <a className="text-primary"  onClick={() => openCarousel([
+                      ...(orderDetails.images.inStore || []),
+                      ...(orderDetails.images.return || [])
+                    ])}>الصور</a>
+                   ):null}
+   {orderDetails.images?.inStore?.length !== 0 ? (
+                     <a className="text-primary" onClick={() => openCarousel(orderDetails.images.inStore)}>الصور</a>
+                   ):null}
+                   </span>
+  </div>
+  <div className="w-33 text-center">
+  <span className={orderDetails.status === 'pick to client'
+   || orderDetails.status === 'received'  ? 'text-orange' : ''}>فى الطريق للمرسل <br/>
+   {orderDetails.images?.pickedToClient?.length !== 0 ? (
+                     <a className="text-primary" onClick={() => openCarousel(orderDetails.images.pickedToClient)}>الصور</a>
+                   ):null}
+                   </span>
+  </div>
+  <div className="w-33 text-center">
+  <span className={orderDetails.status === 'received'  ? 'text-orange' : ''}> تم تسليمها للمرسل<br/>
+   {orderDetails.images?.received?.length !== 0 ? (
+                     <a className="text-primary" onClick={() => openCarousel(orderDetails.images.received)}>الصور</a>
+                   ):null}
+                   </span>
+  </div>
+  </div>
+            </div>
+            :
             <div className="p-2 my-3">
             <div dir='rtl' className="progress my-4" role="progressbar" aria-label="Success example"  aria-valuemin={0} aria-valuemax={100}>
             <div className="progress-bar" style={{
-  width: orderDetails.status === 'pending' ? '20%' :
+  width: orderDetails.status === 'pending'  || orderDetails.status=='late to store'? '20%' :
          orderDetails.status === 'pick to store' ? '40%' :
          orderDetails.status === 'in store' ? `60%` :
          orderDetails.status === 'pick to client' ? `80%` :
@@ -135,7 +188,7 @@ export default function TrackOrder() {
             </div>
             <div className="d-flex status-box" dir='rtl'>
   <div className="w-20 text-center">
-    <span className={orderDetails.status === 'pending' ||orderDetails.status === 'pick to store'
+    <span className={orderDetails.status === 'pending' || orderDetails.status=='late to store' ||orderDetails.status === 'pick to store'
     ||orderDetails.status === 'in store'||orderDetails.status === 'pick to client'
    || orderDetails.status === 'received'  ? 'text-orange' : ''}>قيد الانتظار <br/>
     {orderDetails.images?.pending?.length !== 0 ? (
@@ -181,6 +234,7 @@ export default function TrackOrder() {
   </div>
   </div>
             </div>
+            }
           </div>
            
 

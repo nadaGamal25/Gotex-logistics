@@ -371,7 +371,7 @@ const [eCarrier, seteCarrier] = useState(null);
   const handleEditSubmitCarrier = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post(
+      const response = await axios.put(
         `https://dashboard.go-tex.net/logistics-test/carrier/${eCarrier._id}?role=${carrierRole}`,
         { ...editedCarrier },
         {

@@ -714,7 +714,11 @@ const handleEditSubmit = async (event) => {
                     ) : item.status === 'received' && item.images?.received?.length !== 0 ? (
                       <a className="text-primary" onClick={() => openCarousel(item.images.received)}>الصور</a>
                     ) : item.status === 'canceled' && item.images?.canceled?.length !== 0 ? (
-                      <a className="text-primary" onClick={() => openCarousel(item.images.canceled)}>الصور</a>
+                      <a className="text-primary" onClick={() => openCarousel([
+                        ...(item.images.canceled.admin || []),
+                        ...(item.images.canceled.collector || []),
+                        ...(item.images.canceled.dataEntry || [])
+                      ])}>الصور</a>
                     ) : (
                       <span></span>
                     )}

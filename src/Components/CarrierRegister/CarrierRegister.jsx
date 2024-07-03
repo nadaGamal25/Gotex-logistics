@@ -21,8 +21,133 @@ export default function CarrierRegister() {
   const [isLoading, setisLoading] =useState(false)
   const [hiddenDeliveryDistricts, setHiddenDeliveryDistricts] = useState([]);
   const [isDistrict, setIsDistrict] = useState(false);
+  const [deliveryDistricts, setDeliveryDistricts] = useState([]);
+  const [selectedDistricts, setSelectedDistricts] = useState([]);
+  const [searches, setSearches] = useState(['']); // Initialize search state for each input
+  const [showDistrictsLists, setShowDistrictsLists] = useState([false]); // Initialize state to control dropdown visibility for each input
+  const [showDistrictsList, setShowDistrictsList] = useState(false);
+  const districtsListRefs = useRef([]);
+  const [inputs, setInputs] = useState([{ id: 0, search: '', showList: false }]);
+  useEffect(() => {
+    setUser(prevUser => ({
+      ...prevUser,
+      deliveryDistricts: selectedDistricts,
+    }));
+  }, [selectedDistricts]);
 
+  const handleInputChange = (id, e) => {
+    const { name, value } = e.target;
+    const newInputs = [...inputs];
+    const index = newInputs.findIndex(input => input.id === id);
+    newInputs[index][name] = value;
+    setInputs(newInputs);
+  };
 
+  const handleDistrictChange = (id, e) => {
+    const { value } = e.target;
+    const newInputs = [...inputs];
+    const index = newInputs.findIndex(input => input.id === id);
+    newInputs[index].search = value;
+    if (value === '') {
+      newInputs[index].showList = false;
+    } else {
+      newInputs[index].showList = true;
+    }
+    setInputs(newInputs);
+  };
+
+  const openDistrictsList = (id) => {
+    const newInputs = [...inputs];
+    const index = newInputs.findIndex(input => input.id === id);
+    newInputs[index].showList = true;
+    setInputs(newInputs);
+  };
+
+  const closeDistrictsList = (id) => {
+    const newInputs = [...inputs];
+    const index = newInputs.findIndex(input => input.id === id);
+    newInputs[index].showList = false;
+    setInputs(newInputs);
+  };
+
+  const handleDistrictSelect = (id, item) => {
+    const newSelectedDistricts = [...selectedDistricts];
+    if (!newSelectedDistricts.includes(item.district_id)) {
+      newSelectedDistricts.push(item.district_id);
+    }
+    setSelectedDistricts(newSelectedDistricts);
+
+    const newInputs = [...inputs];
+    const index = newInputs.findIndex(input => input.id === id);
+    newInputs[index].search = item.name_ar; // Update search term to display selected district name
+    newInputs[index].showList = false; // Close the list after selection
+    setInputs(newInputs);
+  };
+
+  const addDistrictInput = () => {
+    setInputs([...inputs, { id: inputs.length, search: '', showList: false }]);
+  };
+  // const handleInputChange = (id, e) => {
+  //   const { name, value } = e.target;
+  //   const newInputs = [...inputs];
+  //   const index = newInputs.findIndex(input => input.id === id);
+  //   newInputs[index][name] = value;
+  //   setInputs(newInputs);
+  // };
+
+  // const handleDistrictChange = (id, e) => {
+  //   const { value } = e.target;
+  //   const newInputs = [...inputs];
+  //   const index = newInputs.findIndex(input => input.id === id);
+  //   newInputs[index].search = value;
+  //   if (value === '') {
+  //     newInputs[index].showList = false;
+  //   } else {
+  //     newInputs[index].showList = true;
+  //   }
+  //   setInputs(newInputs);
+  // };
+
+  // const openDistrictsList = (id) => {
+  //   const newInputs = [...inputs];
+  //   const index = newInputs.findIndex(input => input.id === id);
+  //   newInputs[index].showList = true;
+  //   setInputs(newInputs);
+  // };
+
+  // const closeDistrictsList = (id) => {
+  //   const newInputs = [...inputs];
+  //   const index = newInputs.findIndex(input => input.id === id);
+  //   newInputs[index].showList = false;
+  //   setInputs(newInputs);
+  // };
+
+  // const handleDistrictSelect = (id, item) => {
+  //   const selectedDistricts = [...theUser.deliveryDistricts];
+  //   if (item.name_ar === 'جميع المناطق') {
+  //     selectedDistricts.push(...districts.map(district => district.district_id));
+  //     document.querySelector(`input[name="deliveryDistricts${id}"]`).value = 'جميع المناطق';
+  //   } else {
+  //     selectedDistricts.push(item.district_id);
+  //     const newInputs = [...inputs];
+  //     const index = newInputs.findIndex(input => input.id === id);
+  //     newInputs[index].search = item.name_ar; // Update search term to display selected district name
+  //     setInputs(newInputs);
+  //   }
+  //   setUser({
+  //     ...theUser,
+  //     deliveryDistricts: selectedDistricts,
+  //   });
+
+  //   const newInputs = [...inputs];
+  //   const index = newInputs.findIndex(input => input.id === id);
+  //   newInputs[index].showList = false;
+  //   setInputs(newInputs);
+  // };
+
+  // const addDistrictInput = () => {
+  //   setInputs([...inputs, { id: inputs.length, search: '', showList: false }]);
+  // };
   const [theUser,setUser] =useState({
     firstName: "",
     lastName: "",
@@ -46,18 +171,10 @@ export default function CarrierRegister() {
     formData.append('city', theUser.city);
     formData.append('nid', theUser.nid);
     formData.append('deliveryCity', theUser.deliveryCity);
-  //   theUser.area.forEach((area, index) => {
-  //     formData.append(`area[${index}]`, area);
-  // });
-  // const filteredAreas = theUser.deliveryDistricts.filter(deliveryDistricts => deliveryDistricts.trim() !== '');
-  //   filteredAreas.forEach((deliveryDistricts, index) => {
-  //       formData.append(`deliveryDistricts[${index}]`, deliveryDistricts);
-  //   });
-  const deliveryDistrictsToSend = theUser.deliveryDistricts.includes("جميع المناطق") ? hiddenDeliveryDistricts : theUser.deliveryDistricts;
-    
-    deliveryDistrictsToSend.forEach((deliveryDistricts, index) => {
-        formData.append(`deliveryDistricts[${index}]`, deliveryDistricts);
-    });
+    // formData.append('deliveryDistricts', JSON.stringify(selectedDistricts));
+    // formData.append('deliveryDistricts', theUser.deliveryDistricts);
+    formData.append('deliveryDistricts', JSON.stringify(theUser.deliveryDistricts));
+
     if (selectedFile) {
       formData.append('papers', selectedFile, selectedFile.name);
     }
@@ -80,22 +197,49 @@ export default function CarrierRegister() {
         window.alert('تم التسجيل بنجاح');
       } else {
         setisLoading(true);
-        // setError(response.data.msg);
       }
     } catch (error) {
         setisLoading(true)
-        // setError(error.response.data.msg)
         console.log(error.response)
         window.alert(error.response?.data?.msg || error.response?.data?.msg?.name || error.response?.data?.errors[0]?.msg|| "error")
     }
   }
 
-  const [isFormValid, setIsFormValid] = useState(false);
 
-  useEffect(() => {
-      // Check if at least one area is entered
-      setIsFormValid(theUser.deliveryDistricts.some(deliveryDistricts => deliveryDistricts.trim() !== ''));
-  }, [theUser.deliveryDistricts]);
+  // const handleDistrictSelection = (districtId, districtName) => {
+  //   if (districtId === 'all') {
+  //     const allDistrictIds = districts.map((district) => district.district_id);
+  //     setDeliveryDistricts(allDistrictIds);
+  //     getUserData({ target: { name: 'deliveryDistricts', value: allDistrictIds } });
+  //   } else {
+  //     setDeliveryDistricts([...deliveryDistricts, districtId]);
+  //     getUserData({ target: { name: 'deliveryDistricts', value: [...deliveryDistricts, districtId] } });
+  //   }
+  //   document.querySelector('input[name="deliveryDistricts"]').value = deliveryDistricts.map((id) =>
+  //     districts.find((district) => district.district_id === id)?.name_ar
+  //   ).join(', ');
+  //   closeDistrictsList();
+  // };
+
+ 
+  //   theUser.area.forEach((area, index) => {
+  //     formData.append(`area[${index}]`, area);
+  // });
+  // const filteredAreas = theUser.deliveryDistricts.filter(deliveryDistricts => deliveryDistricts.trim() !== '');
+  //   filteredAreas.forEach((deliveryDistricts, index) => {
+  //       formData.append(`deliveryDistricts[${index}]`, deliveryDistricts);
+  //   });
+  // const deliveryDistrictsToSend = theUser.deliveryDistricts.includes("جميع المناطق") ? hiddenDeliveryDistricts : theUser.deliveryDistricts;
+    
+  //   deliveryDistrictsToSend.forEach((deliveryDistricts, index) => {
+  //       formData.append(`deliveryDistricts[${index}]`, deliveryDistricts);
+  //   });
+  const [isFormValid, setIsFormValid] = useState(true);
+
+  // useEffect(() => {
+  //     // Check if at least one area is entered
+  //     setIsFormValid(theUser.deliveryDistricts.some(deliveryDistricts => deliveryDistricts.trim() !== ''));
+  // }, [theUser.deliveryDistricts]);
 
   function handleFileChange(event) {
     console.log(event.target.files)
@@ -146,12 +290,12 @@ function submitRegisterForm(carrierRole) {
   };
 }
 
-  // function getUserData(e){
-  //   let myUser={...theUser};
-  //   myUser[e.target.name]= e.target.value;
-  //   setUser(myUser);
-  //   console.log(myUser);
-  // }
+  function getUserData(e){
+    let myUser={...theUser};
+    myUser[e.target.name]= e.target.value;
+    setUser(myUser);
+    console.log(myUser);
+  }
 
 //   function getUserData(e) {
 //     console.log(cityId)
@@ -166,27 +310,25 @@ function submitRegisterForm(carrierRole) {
 //     }
 //     console.log(theUser);
 // }
-function getUserData(e) {
-  const { name, value } = e.target;
-  if (name === 'deliveryDistricts') {
-      if (value === "جميع المناطق") {
-          const allDistricts = districts.filter((district) => district.city_id === cityId).map(district => district.name_ar);
-          setUser({ ...theUser, deliveryDistricts: [value] });
-          // Set the actual districts in the hidden state
-          setHiddenDeliveryDistricts(allDistricts);
-      } else {
-          const index = parseInt(e.target.dataset.index);
-          const updatedAreas = [...theUser.deliveryDistricts];
-          updatedAreas[index] = value;
-          setUser({ ...theUser, deliveryDistricts: updatedAreas });
-      }
-  } else {
-      setUser({ ...theUser, [name]: value });
-  }
-  console.log(theUser);
-}
-
-
+// function getUserData(e) {
+//   const { name, value } = e.target;
+//   if (name === 'deliveryDistricts') {
+//       if (value === "جميع المناطق") {
+//           const allDistricts = districts.filter((district) => district.city_id === cityId).map(district => district.name_ar);
+//           setUser({ ...theUser, deliveryDistricts: [value] });
+//           // Set the actual districts in the hidden state
+//           setHiddenDeliveryDistricts(allDistricts);
+//       } else {
+//           const index = parseInt(e.target.dataset.index);
+//           const updatedAreas = [...theUser.deliveryDistricts];
+//           updatedAreas[index] = value;
+//           setUser({ ...theUser, deliveryDistricts: updatedAreas });
+//       }
+//   } else {
+//       setUser({ ...theUser, [name]: value });
+//   }
+//   console.log(theUser);
+// }
 
 // function addAreaInput() {
 //     setUser({ ...theUser, area: [...theUser.area, ''] });
@@ -238,9 +380,9 @@ function addAreaInput() {
       }
     }
     const [districts,setDistricts]=useState()
-    async function getDistricts() {
+    async function getDistricts(districtid) {
       try {
-        const response = await axios.get('https://dashboard.go-tex.net/logistics-test/cities/districts',
+        const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/districts/${districtid}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -254,7 +396,7 @@ function addAreaInput() {
     }
     useEffect(() => {
       getCities()
-      getDistricts()
+      // getDistricts()
     }, [])
   const [search1, setSearch1] = useState('')
   // const [search2, setSearch2] = useState('')
@@ -289,25 +431,38 @@ function addAreaInput() {
     };
   }, [showCitiesList1]);
 
-  // const [showCitiesList, setShowCitiesList] = useState(Array(theUser.area.length).fill(false));
-  // const [searchCities, setSearchCities] = useState(Array(theUser.area.length).fill(''));
-  // const citiesListRef = useRef(Array(theUser.area.length).map(() => createRef()));
-  
-  // const openCitiesList = (index) => {
-  //   setShowCitiesList((prev) => {
-  //     const newState = [...prev];
-  //     newState[index] = true;
-  //     return newState;
-  //   });
+
+  const [search, setSearch]= useState('')
+
+  // const [showDistrictsList, setDistrictsList] = useState(false);
+  // const openDistrictsList = () => {
+  //   setDistrictsList(true);
   // };
-  
-  // const closeCitiesList = (index) => {
-  //   setShowCitiesList((prev) => {
-  //     const newState = [...prev];
-  //     newState[index] = false;
-  //     return newState;
-  //   });
+
+  // const closeDistrictsList = () => {
+  //   setDistrictsList(false);
   // };
+  const districtsListRef = useRef(null);
+
+useEffect(() => {
+  const handleOutsideClick = (e) => {
+    if (
+      districtsListRef.current &&
+      !districtsListRef.current.contains(e.target) &&
+      e.target.getAttribute('name') !== 'deliveryDistricts'
+    ) {
+      closeDistrictsList();
+    }
+  };
+
+  if (showDistrictsList) {
+    window.addEventListener('click', handleOutsideClick);
+  }
+
+  return () => {
+    window.removeEventListener('click', handleOutsideClick);
+  };
+}, [showDistrictsList]);
   return (
     <>
     <div className='py-5 px-4' id='content'>
@@ -395,6 +550,7 @@ function addAreaInput() {
                         getUserData({ target: { name: 'city', value: selectedCity } });
                         document.querySelector('input[name="city"]').value = selectedCity;
                         closeCitiesList1();
+
                     }}
                       >
                         {item.name_ar}
@@ -487,6 +643,8 @@ function addAreaInput() {
                                               if (selectedCity) {
                                                   setCityId(selectedCity.city_id);
                                                   setIsDistrict(true)
+                                                  setDeliveryDistricts('')
+                                                  getDistricts(selectedCity.city_id)
                                               }
                                           }}
                                         />
@@ -503,8 +661,185 @@ function addAreaInput() {
 
                                 })}
     </div>
+    {/* <div>
+      {inputs.map(input => (
+        <div key={input.id} className='col-md-6 ul-box'>
+          <label>
+            مناطق المندوب <span className='text-danger'>(اختر مدينة العمل أولاً)</span>:
+            <span className="star-requered">*</span>
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            name={`deliveryDistricts${input.id}`}
+            value={input.search}
+            onChange={(e) => handleDistrictChange(input.id, e)}
+            onClick={() => openDistrictsList(input.id)}
+          />
+          {input.showList && (
+            <ul className='ul-cities'>
+              <li onClick={() => handleDistrictSelect(input.id, { name_ar: 'جميع المناطق' })}>
+                جميع المناطق
+              </li>
+              {districts
+                .filter((item) =>
+                  input.search === '' ? item : item.name_ar.toLowerCase().includes(input.search.toLowerCase())
+                )
+                .map((item, idx) => (
+                  <li key={idx} onClick={() => handleDistrictSelect(input.id, item)}>
+                    {item.name_ar}
+                  </li>
+                ))}
+            </ul>
+          )}
+        </div>
+      ))}
+      <button type="button" onClick={addDistrictInput}>
+        اضافة منطقة اخرى
+      </button>
+      
+      {errorList.map((err, index) => {
+        if (err.context.label === 'deliveryDistricts') {
+          return <div key={index} className="alert alert-danger my-2">يجب ملىء هذه الخانة </div>;
+        }
+      })}
+    </div> */}
+   <div>
+      {inputs.map(input => (
+        <div key={input.id} className='col-md-6 ul-box'>
+          <label>
+            مناطق المندوب <span className='text-danger'>(اختر مدينة العمل أولاً)</span>:
+            <span className="star-requered">*</span>
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            name={`deliveryDistricts${input.id}`}
+            value={input.search}
+            onChange={(e) => handleDistrictChange(input.id, e)}
+            onClick={() => openDistrictsList(input.id)}
+          />
+          {input.showList && (
+            <ul className='ul-cities'>
+              <li onClick={() => handleDistrictSelect(input.id, { district_id: 'all', name_ar: 'جميع المناطق' })}>
+                جميع المناطق
+              </li>
+              {districts
+                .filter((item) =>
+                  input.search === '' ? item : item.name_ar.toLowerCase().includes(input.search.toLowerCase())
+                )
+                .map((item, idx) => (
+                  <li key={idx} onClick={() => handleDistrictSelect(input.id, item)}>
+                    {item.name_ar}
+                  </li>
+                ))}
+            </ul>
+          )}
+        </div>
+      ))}
+      <button type="button" onClick={addDistrictInput}>
+        اضافة منطقة اخرى
+      </button>
+      {/* Error handling for deliveryDistricts */}
+      {errorList.map((err, index) => {
+        if (err.context.label === 'deliveryDistricts') {
+          return <div key={index} className="alert alert-danger my-2">يجب ملىء هذه الخانة </div>;
+        }
+      })}
+      
+    </div>
+    {/* <div className='col-md-6 ul-box'>
+      <label>مناطق المندوب <span className='text-danger'>(اختر مدينة العمل أولاً)</span>: <span className="star-requered">*</span></label>
+      <input type="text" className="form-control" name='deliveryDistricts'
+        onChange={(e) => {
+          const searchValue = e.target.value;
+          setSearch(searchValue);
+          getUserData(e);
+          const matchingDistricts = districts.filter((item) => {
+            return searchValue === '' ? item : item.name_ar.toLowerCase().includes(searchValue.toLowerCase());
+          });
+
+          if (matchingDistricts.length === 0) {
+            closeDistrictsList();
+          } else {
+            openDistrictsList();
+          }
+        }}
+        onClick={openDistrictsList}
+      />
+      {showDistrictsList && (
+        <ul className='ul-cities' ref={districtsListRef}>
+          <li name='deliveryDistricts' onClick={() => handleDistrictSelection('all', 'جميع المناطق')}>
+            جميع المناطق
+          </li>
+          {districts && districts.filter((item) => {
+            return search === '' ? item : item.name_ar.toLowerCase().includes(search.toLowerCase());
+          }).map((item, index) => (
+            <li key={index} name='deliveryDistricts' onClick={() => handleDistrictSelection(item.district_id, item.name_ar)}>
+              {item.name_ar}
+            </li>
+          ))}
+        </ul>
+      )}
+      {errorList.map((err, index) => {
+        if (err.context.label === 'deliveryDistricts') {
+          return <div key={index} className="alert alert-danger my-2">يجب ملىء هذه الخانة</div>;
+        }
+        return null;
+      })}
+    </div> */}
+    {/* <div className='col-md-6 ul-box'>
+    <label>مناطق المندوب <span className='text-danger'>(اختر مدينة العمل أولاً)</span>: <span className="star-requered">*</span></label>
+              <input type="text" className="form-control" name='deliveryDistricts'
+              onChange={(e)=>{ 
+                const searchValue = e.target.value;
+                setSearch(searchValue);
+                getUserData(e)
+                const matchingDistricts = districts.filter((item) => {
+                  return searchValue === '' ? item : item.name_ar.toLowerCase().includes(searchValue.toLowerCase());
+                });
+            
+                if (matchingDistricts.length === 0) {
+                  closeDistrictsList();
+                } else {
+                  openDistrictsList();
+                }
+                }}
+                onClick={openDistrictsList}
+                />
+                {showDistrictsList && (
+                  <ul  className='ul-cities'ref={districtsListRef}>
+                  {districts && districts.filter((item)=>{
+                  return search === ''? item : item.name_ar.toLowerCase().includes(search.toLowerCase());
+                  }).map((item,index) =>{
+                   return(
+                    <li key={index} name='deliveryDistricts' 
+                    onClick={(e)=>{ 
+                      const selectedDisetrict = item.district_id;
+                      getUserData({ target: { name: 'deliveryDistricts', value: selectedDisetrict } });
+                      
+                      document.querySelector('input[name="deliveryDistricts"]').value = item.name_ar;
+                      closeDistrictsList();
+                  }}
+                    >
+                      {item.name_ar}
+                   </li>
+                   )
+                  }
+                  )}
+                  </ul>
+                )}
+               
+             
+              {errorList.map((err,index)=>{
+    if(err.context.label ==='deliveryDistricts'){
+      return <div key={index} className="alert alert-danger my-2">يجب ملىء هذه الخانة </div>
+    }
+    
+  })}
+          </div> */}
    
-<div className="col-md-6">
+{/* <div className="col-md-6">
     <label htmlFor="deliveryDistricts">مناطق المندوب <span className='text-danger'>(اختر مدينة العمل أولاً)</span>: <span className="star-requered">*</span></label>
     
     <div className="row">
@@ -519,21 +854,25 @@ function addAreaInput() {
                 />
             </div>
         ) : (
-            theUser.deliveryDistricts.map((deliveryDistricts, index) => (
+            theUser.deliveryDistricts.map((district_id, index) => (
                 <div key={index} className="mb-2 col-11">
                     <input list={`myCities-${index}`}
                         type="text"
                         className='my-input my-2 form-control'
                         name='deliveryDistricts'
                         id={`deliveryDistricts-${index}`}
-                        value={deliveryDistricts}
+                        // value={deliveryDistricts}
+                        value={districts.find(d => d.district_id === district_id)?.name_ar || ''}
                         data-index={index}
                         onChange={getUserData}
                     />
                     <datalist id={`myCities-${index}`}>
                         <option value="جميع المناطق" />
+                        {/* {districts && districts.filter((district) => district.city_id === cityId).map((district, ciIndex) => ( */}
+                            {/* <option key={ciIndex} value={district.name_ar} /> *
                         {districts && districts.filter((district) => district.city_id === cityId).map((district, ciIndex) => (
-                            <option key={ciIndex} value={district.name_ar} />
+                        <option key={ciIndex} value={district.district_id} data-name_ar={district.name_ar}>{district.name_ar}</option>
+                           
                         ))}
                     </datalist>
                 </div>
@@ -550,8 +889,7 @@ function addAreaInput() {
             return <div key={index} className="alert alert-danger my-2">يجب ملىء جميع البيانات</div>
         }
     })}
-</div>
-
+</div> */}
 
      {/* <div className="col-md-6 ul-box">
         <label htmlFor="area">مناطق المندوب : <span className="star-requered">*</span></label>

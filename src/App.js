@@ -48,6 +48,7 @@ import AdminOrdersProblems from './Components/AdminOrdersProblems/AdminOrdersPro
 import TrackerOrdersProblems from './Components/TrackerOrdersProblems/TrackerOrdersProblems';
 import AdminLateOrders from './Components/AdminLateOrders/AdminLateOrders'
 import StoreLateOrder from './Components/StoreLateOrders/StoreLateOrders'
+import CarrierRegister2 from './Components/CarrierRegister2/CarrierRegister2';
 
 function App() {
   useEffect(() => {
@@ -146,7 +147,7 @@ function App() {
         { path: 'registerUser', element: <RegisterUser /> },
         { path: 'UserResendEmail', element: <UserResendEmail /> },
         { path: 'adminCarriers', element: <AdminCarriers /> },
-        { path: 'carrierRegister', element: <CarrierRegister /> },
+        { path: 'carrierRegister', element: <CarrierRegister2 /> },
         { path: 'carrierResendEmail', element: <CarrierResendEmail /> },
         { path: 'storeKeeperRegister', element: <StoreKeeperRegister /> },
         { path: 'adminOrders', element: <AdminOrders /> },

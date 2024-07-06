@@ -13,6 +13,8 @@ export default function UserCreateOrder() {
   const [phone2, setPhone2] = useState()
   const [cityIdSender, setCityIdSender] = useState(null)
   const [cityIdReciever, setCityIdReciever] = useState(null)
+  const [districtIdSender, setDistrictIdSender] = useState('')
+  const [districtIdReciever, setDistrictIdReciever] = useState('')
 
 
   const [errorList, seterrorList] = useState([]);
@@ -33,7 +35,8 @@ export default function UserCreateOrder() {
     weight: "",
     pieces: "",
     description: "",
-
+    senderdistrictId:"",
+    reciverdistrictId:""
   })
   const [error, setError] = useState('')
   const [isLoading, setisLoading] = useState(false)
@@ -138,6 +141,8 @@ export default function UserCreateOrder() {
       price: Joi.number().required(),
       senderdistrict: Joi.required(),
       reciverdistrict: Joi.required(),
+      senderdistrictId:Joi.required(),
+      reciverdistrictId:Joi.required(),
 
     });
     return scheme.validate(orderData, { abortEarly: false });
@@ -389,10 +394,19 @@ export default function UserCreateOrder() {
                                             className='my-input my-2 form-control'
                                             name='senderdistrict'
                                             onChange={(e) => {
-                                              // getUserData(e)
+                                              // getOrderData(e)
                                             const selected = districts.find(district => district.name_ar === e.target.value);
                                             if (selected) {
-                                                getOrderData({target:{name:'senderdistrict',value:String(selected.district_id)}})
+                                              // getOrderData({target:{name:'senderdistrictId',value:String(selected.district_id)}})
+                                              getOrderData({target:{name:'senderdistrict',value:selected.name_ar}})
+                                              // setDistrictIdSender(String(selected.district_id))
+                                              setOrderData(prevOrderData => ({
+                                                ...prevOrderData,
+                                                senderdistrictId: String(selected.district_id)
+                                              }));                                           
+
+                                            }else{
+                                              getOrderData(e)
                                             }
                                         }}                                        />
                                         <datalist id='s-district'>
@@ -624,14 +638,23 @@ export default function UserCreateOrder() {
                                             className='my-input my-2 form-control'
                                             name='reciverdistrict'
                                             onChange={(e) => {
-                                              // getUserData(e)
+                                              // getOrderData(e)
                                             const selected = districts2.find(district => district.name_ar === e.target.value);
                                             if (selected) {
-                                                getOrderData({target:{name:'reciverdistrict',value:String(selected.district_id)}})
+                                                // getOrderData({target:{name:'reciverdistrictId',value:String(selected.district_id)}})
+                                                getOrderData({target:{name:'reciverdistrict',value:selected.name_ar}})
+                                                // setDistrictIdReciever(String(selected.district_id))
+                                                setOrderData(prevOrderData => ({
+                                                  ...prevOrderData,
+                                                  reciverdistrictId: String(selected.district_id)
+                                                }));
+
+                                            }else{
+                                              getOrderData(e)
                                             }
                                         }}                                         />
                                         <datalist id='r-district'>
-                                          {districts2 && districts2.filter((district)=> district.city_id == cityIdReciever).map((district,ciIndex)=>(
+                                          {districts2 && districts2.map((district,ciIndex)=>(
                                               <option key={ciIndex} value={district.name_ar} />
                                           ))}
                                         </datalist>

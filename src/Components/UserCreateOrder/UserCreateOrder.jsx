@@ -247,7 +247,7 @@ export default function UserCreateOrder() {
     };
   }, [showCitiesList2]);
 
-  const [districts,setDistricts]=useState()
+  const [districts,setDistricts]=useState([])
   async function getDistricts(districtid) {
     try {
       const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/districts/${districtid}`,
@@ -256,13 +256,14 @@ export default function UserCreateOrder() {
           Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
         },
       });
-      setDistricts(response.data.districts)
+      setDistricts([...response.data.districts])
+      // setDistricts(response.data.districts)
       console.log(response)
     } catch (error) {
       console.error(error);
     }
   }
-  const [districts2,setDistricts2]=useState()
+  const [districts2,setDistricts2]=useState([])
     async function getDistricts2(districtid) {
       try {
         const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/districts/${districtid}`,
@@ -271,7 +272,8 @@ export default function UserCreateOrder() {
             Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
           },
         });
-        setDistricts2(response.data.districts)
+        setDistricts2([...response.data.districts])
+        // setDistricts2(response.data.districts)
         console.log(response)
       } catch (error) {
         console.error(error);

@@ -285,7 +285,37 @@ function addAreaInput() {
     };
   }, [showCitiesList1]);
 
+  const [searchCarrierCity, setSearchCarrierCity] = useState('');
+  const [showCarrierCityList, setCarrierCityList] = useState(false);
+  const openCarrierCityList = () => {
+    setCarrierCityList(true);
+  };
 
+  const closeCarrierCityList = () => {
+    setCarrierCityList(false);
+  };
+
+  const CarrierCityListRef = useRef(null);
+
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (
+        CarrierCityListRef.current &&
+        !CarrierCityListRef.current.contains(e.target) &&
+        e.target.getAttribute('name') !== 'deliveryCity'
+      ) {
+        closeCarrierCityList();
+      }
+    };
+
+    if (showCarrierCityList) {
+      window.addEventListener('click', handleOutsideClick);
+    }
+
+    return () => {
+      window.removeEventListener('click', handleOutsideClick);
+    };
+  }, [showCarrierCityList]);
   return (
     <>
     <div className='py-5 px-4' id='content'>
@@ -444,7 +474,54 @@ function addAreaInput() {
       
     })}
     </div>
-    <div className="col-md-6">
+    <div className="col-md-6 ul-box">
+   
+    <label htmlFor="deliveryCity">مدينة عمل المندوب : <span className="star-requered">*</span></label>
+    <input type="text" className="form-control" name='deliveryCity'
+               onChange={(e)=>{ 
+                 openCarrierCityList()
+                 const searchValue = e.target.value;
+                 setSearchCarrierCity(searchValue);
+                 getUserData(e)
+                 
+                 }}
+                 onFocus={openCarrierCityList}
+                 onClick={openCarrierCityList}
+                 />
+                 {showCarrierCityList && (
+                   <ul  className='ul-cities' ref={CarrierCityListRef}>  
+                   {cities && cities.filter((item)=>{
+                   return searchCarrierCity === ''? item : item.name_ar.includes(searchCarrierCity);
+                   }).map((item,index) =>{
+                    return(
+                     <li key={index} name='deliveryCity' 
+                     onClick={(e)=>{ 
+                       const selectedCity = e.target.innerText;
+                       getUserData({ target: { name: 'deliveryCity', value: selectedCity } });
+                       setCityId(item.city_id);
+                      setIsDistrict(true)
+                      getDistricts(item.city_id)
+                       document.querySelector('input[name="deliveryCity"]').value = selectedCity;
+                       closeCarrierCityList();
+                   }}
+                     >
+                       {item.name_ar}
+                    </li>
+                    )
+                   }
+                   )}
+                   </ul>
+                 )}
+                
+               
+               {errorList.map((err,index)=>{
+     if(err.context.label ==='deliveryCity'){
+       return <div key={index} className="alert alert-danger my-2">يجب ملىء هذه الخانة </div>
+     }
+     
+   })}
+   </div>
+    {/* <div className="col-md-6">
                                 <label htmlFor="deliveryCity">مدينة عمل المندوب : <span className="star-requered">*</span></label>
                                   
                                         <input list='mCities'
@@ -473,7 +550,7 @@ function addAreaInput() {
                                     }
 
                                 })}
-    </div>
+    </div> */}
    
 <div className="col-md-6">
     <label htmlFor="deliveryDistricts">مناطق المندوب <span className='text-danger'>(اختر مدينة العمل أولاً)</span>: <span className="star-requered">*</span></label>

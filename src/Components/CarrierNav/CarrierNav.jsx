@@ -121,13 +121,22 @@ export default function CarrierNav({ carrierData, logout }) {
                 <i class="fa-solid fa-box-open bx"></i>
                 <span class="text">الشحنات</span>
               </Link>
-            </li>) : carrierData?.role === "receiver" ?
-            <li className=''>
+            </li>) : carrierData?.role === "receiver" ?(
+              <>
+              <li className=''>
               <Link to="/receiverShipments">
                 <i class="fa-solid fa-box-open bx"></i>
                 <span class="text">الشحنات</span>
               </Link>
             </li>
+            <li className=''>
+              <Link to="/recieverOrdersRecieved">
+              <i class="fa-solid fa-square-check bx"></i>
+              <span class="text">شحنات تم تسليمها</span>
+              </Link>
+            </li>
+              </>
+            )
             : null}
 
 

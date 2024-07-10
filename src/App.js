@@ -49,6 +49,7 @@ import TrackerOrdersProblems from './Components/TrackerOrdersProblems/TrackerOrd
 import AdminLateOrders from './Components/AdminLateOrders/AdminLateOrders'
 import StoreLateOrder from './Components/StoreLateOrders/StoreLateOrders'
 import CarrierRegister2 from './Components/CarrierRegister2/CarrierRegister2';
+import RecieverOrdersRecieved from './Components/RecieverOrdersRecieved/RecieverOrdersRecieved';
 
 function App() {
   useEffect(() => {
@@ -184,6 +185,7 @@ function App() {
       path: '/', element: <CarrieLayout setCarrierData={setCarrierData} carrierData={carrierData} />, children: [
         { path: 'collectorShipments', element: <CollectorShipments /> },
         { path: 'receiverShipments', element: <ReceiverShipments /> },
+        { path: 'recieverOrdersRecieved', element: <RecieverOrdersRecieved /> },
         { path: 'main', element: <Main /> },
 
 

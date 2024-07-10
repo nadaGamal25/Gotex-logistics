@@ -195,15 +195,36 @@ export default function ReceiverShipments() {
     setSelectedFilesReturn([])
   };
 
+  const [orderStatus, setOrderStatus]=useState('')
+  const filteredOrders = orderStatus
+  ? orders.filter(order => order.status === orderStatus)
+  : orders;
   return (
     <>
     <div className='p-5' id='content'>
-
+    <div className="row">
+    <div className="col-md-3  p-2 mb-2">
+    <select className='form-control m-1'
+          
+          placeholder="اختر حالة الشحنة"
+          onChange={(e) => setOrderStatus(e.target.value)} >
+            <option value="">اختر حالة الشحنة</option>
+            {/* <option value="pending">pending (معلقة)</option>
+            <option value="pick to store">pick to store(ف الطريق للمخزن)</option> */}
+            <option value="in store">in store(فى المخزن)</option>
+            <option value="pick to client">pick to client(ف الطريق للعميل)</option>
+            {/* <option value="delivered">delivered(تم تسليمها)</option> */}
+            <option value="canceled">canceled(تم الغائها)</option>
+            <option value=''>جميع الشحنات</option>
+            </select>
+    </div>
+    </div>
       <div className="my-table p-4 ">
         <table className="table">
           <thead>
             <tr>
               <th scope="col">#</th>
+              <th scope="col"> التاريخ</th>
               <th scope="col"> المرسل</th>
               <th scope="col"> المستلم</th>
               <th scope="col"> billcode</th>
@@ -219,10 +240,11 @@ export default function ReceiverShipments() {
             </tr>
           </thead>
           <tbody>
-            {orders && orders.map((item, index) => {
+            {filteredOrders && filteredOrders.slice().reverse().filter(order=>order.status !='received').map((item, index) => {
               return (
                 <tr key={index}>
                   <td>{index + 1}</td>
+                  <td>{item.createdAt.slice(0, 10)}</td>
                   <td>{item.sendername}</td>
                   <td>{item.recivername}</td>
                   <td>{item.billcode}</td>

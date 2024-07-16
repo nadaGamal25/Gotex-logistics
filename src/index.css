@@ -634,3 +634,17 @@ nav form .form-input button{
   -ms-border-radius: 5px;
   -o-border-radius: 5px;
 }
+
+
+.order-card{
+  background-color: #fff;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
+.order-card span{
+  color: #08354c;
+  font-weight: 700;
+}

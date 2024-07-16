@@ -204,7 +204,7 @@ export default function CollectorShipments() {
 
   return (
     <>
-    <div className='p-5' id='content'>
+    <div className='p-4' id='content'>
     <div className="row">
     <div className="col-md-3  p-2 mb-2">
     <select className='form-control m-1'
@@ -222,7 +222,52 @@ export default function CollectorShipments() {
             </select>
     </div>
     </div>
-      <div className="my-table p-4 ">
+    <div className="row">
+    {filteredOrders && filteredOrders.slice().reverse().map((item, index) => {
+              return (
+                <div className="col-md-4 p-2 " key={index}>
+                  <div className='order-card p-2'>
+                    <p className="text-danger text-center">
+                      {item.ordernumber}
+                    </p>
+                    <span>المرسل : </span>
+                    <h6>{item.sendername}</h6>
+                    <h6>{item.senderphone}</h6>
+                    <h6>{item.sendercity} ,{item.senderdistrict}</h6>
+                    <h6>{item.senderaddress}</h6>
+                    <span>المستلم : </span>
+                    <h6>{item.recivername}</h6>
+                    <h6>{item.reciverphone}</h6>
+                    <h6>{item.recivercity} ,{item.reciverdistrict}</h6>
+                    <h6>{item.reciveraddress}</h6>
+                    <hr className='m-0'/>
+                    <span>الوزن : {item.weight}</span>
+                    <span className='fw-bold text-dark px-2'> | </span>
+                    <span>عدد القطع : {item.pieces}</span>
+                    <hr className='m-0'/>
+                    <span>الدفع : {item.paytype}</span>
+                    <span className='fw-bold text-dark px-2'> | </span>
+                    <span>الحالة : {item.status}</span>
+                    <hr className='m-0'/>
+                    <button className="btn btn-success m-1" onClick={() => { getSticker(item._id) }}>عرض الاستيكر</button>
+                    {item.status == 'pending'?
+                  <button className="btn btn-orange m-1" onClick={()=>{
+                   
+                    openModal(item._id)
+                  }}>تأكيد استلام الشنحة</button>:null}
+                  {item.status == 'pick to store'?
+                   <button className="btn btn-secondary m-1" onClick={()=>{
+                      openModalInStore(item._id)
+                  }}>تبليغ امين المخزن</button>:null}
+                  {item.status == "pending" ?
+                  <button className="btn btn-danger m-1" onClick={()=>{
+                      openModalCancel(item._id)
+                  }}>إلغاء الشنحة</button>:null}
+                  </div>
+                </div>
+              )})}
+    </div>
+      {/* <div className="my-table p-4 ">
         <table className="table">
           <thead>
             <tr>
@@ -233,7 +278,6 @@ export default function CollectorShipments() {
               <th scope="col"> billcode</th>
               <th scope="col">رقم الشحنة</th>
               <th scope="col">طريقة الدفع</th>
-              {/* <th scope="col">السعر </th> */}
               <th scope="col">الوزن</th>
               <th scope="col">عدد القطع</th>
               <th scope="col">حالة الشحنة</th>
@@ -253,7 +297,6 @@ export default function CollectorShipments() {
                   <td>{item.billcode}</td>
                   <td>{item.ordernumber}</td>
                   <td>{item.paytype}</td>
-                  {/* <td>{item.price}</td> */}
                   <td>{item.weight}</td>
                   <td>{item.pieces}</td>
                   <td>{item.status}</td>
@@ -268,7 +311,7 @@ export default function CollectorShipments() {
                     if(window.confirm('هل انت بالتأكيد قمت بتوصيل الشخنة للمخزن')){
                       changeStatusDelivered(item._id)
                     }
-                  }}>تأكيد توصيل الشنحة</button></td>:null} */}
+                  }}>تأكيد توصيل الشنحة</button></td>:null} *
                   {item.status == 'pick to store'?
                    <td><button className="btn btn-secondary" onClick={()=>{
                     // if(window.confirm('هل قمت بتوصيل الشحنة وتريد ابلاغ امين المخزن')){
@@ -288,7 +331,7 @@ export default function CollectorShipments() {
 
 
         </table>
-      </div>
+      </div> */}
 
     </div>
     <Modal show={showModal} onHide={closeModal}>

@@ -201,7 +201,7 @@ export default function ReceiverShipments() {
   : orders;
   return (
     <>
-    <div className='p-5' id='content'>
+    <div className='p-4' id='content'>
     <div className="row">
     <div className="col-md-3  p-2 mb-2">
     <select className='form-control m-1'
@@ -219,7 +219,52 @@ export default function ReceiverShipments() {
             </select>
     </div>
     </div>
-      <div className="my-table p-4 ">
+    <div className="row">
+    {filteredOrders && filteredOrders.slice().reverse().filter(order=>order.status !='received').map((item, index) => {
+              return (
+                <div className="col-md-4 p-2 " key={index}>
+                  <div className='order-card p-2'>
+                    <p className="text-danger text-center">
+                      {item.ordernumber}
+                    </p>
+                    <span>المرسل : </span>
+                    <h6>{item.sendername}</h6>
+                    <h6>{item.senderphone}</h6>
+                    <h6>{item.sendercity} ,{item.senderdistrict}</h6>
+                    <h6>{item.senderaddress}</h6>
+                    <span>المستلم : </span>
+                    <h6>{item.recivername}</h6>
+                    <h6>{item.reciverphone}</h6>
+                    <h6>{item.recivercity} ,{item.reciverdistrict}</h6>
+                    <h6>{item.reciveraddress}</h6>
+                    <hr className='m-0'/>
+                    <span>الوزن : {item.weight}</span>
+                    <span className='fw-bold text-dark px-2'> | </span>
+                    <span>عدد القطع : {item.pieces}</span>
+                    <hr className='m-0'/>
+                    <span>الدفع : {item.paytype}</span>
+                    <span className='fw-bold text-dark px-2'> | </span>
+                    <span>الحالة : {item.status}</span>
+                    <hr className='m-0'/>
+                    <button className="btn btn-success m-1" onClick={() => { getSticker(item._id) }}>عرض الاستيكر</button>
+                    {item.status == "in store"?
+                  <td><button className="btn btn-orange" onClick={()=>{
+                      openModal(item._id)
+                  }}>تأكيد الاستلام من المخزن</button></td>:null}
+                  
+                  {item.status =='pick to client'?
+                  <td><button className="btn btn-primary" onClick={()=>{
+                      openModalRecieved(item._id)
+                  }}>تأكيد استلام العميل</button></td>:null}
+                  {item.status =="pick to client"?
+                  <td><button className="btn btn-secondary" onClick={()=>{
+                      openModalReturn(item._id)
+                  }}>إرجاع الشنحة</button></td>:null}
+                  </div>
+                </div>
+              )})}
+    </div>
+      {/* <div className="my-table p-4 ">
         <table className="table">
           <thead>
             <tr>
@@ -230,7 +275,6 @@ export default function ReceiverShipments() {
               <th scope="col"> billcode</th>
               <th scope="col">رقم الشحنة</th>
               <th scope="col">طريقة الدفع</th>
-              {/* <th scope="col">السعر </th> */}
               <th scope="col">الوزن</th>
               <th scope="col">عدد القطع</th>
               <th scope="col">حالة الشحنة</th>
@@ -250,7 +294,6 @@ export default function ReceiverShipments() {
                   <td>{item.billcode}</td>
                   <td>{item.ordernumber}</td>
                   <td>{item.paytype}</td>
-                  {/* <td>{item.price}</td> */}
                   <td>{item.weight}</td>
                   <td>{item.pieces}</td>
                   <td>{item.status}</td>
@@ -266,7 +309,7 @@ export default function ReceiverShipments() {
                     if(window.confirm('هل انت فى الطريق لتسليم الشحنة')){
                       changeStatusDelivered(item._id)
                     }
-                  }}>فى الطريق للتسليم</button></td>:null} */}
+                  }}>فى الطريق للتسليم</button></td>:null} *
                   {item.status =='pick to client'?
                   <td><button className="btn btn-primary" onClick={()=>{
                     // if(window.confirm('هل انت بالتأكيد قمت بتسليم الشحنة للعميل')){
@@ -277,7 +320,6 @@ export default function ReceiverShipments() {
                   <td><button className="btn btn-secondary" onClick={()=>{
                       openModalReturn(item._id)
                   }}>إرجاع الشنحة</button></td>:null}
-                  {/* <td><button className="btn btn-danger" onClick={()=>{openModal(item._id)}}> الغاء الشحنة</button></td> */}
                 </tr>
               );
             })}
@@ -285,7 +327,7 @@ export default function ReceiverShipments() {
 
 
         </table>
-      </div>
+      </div> */}
     </div>
    
       <Modal show={showModal} onHide={closeModal}>

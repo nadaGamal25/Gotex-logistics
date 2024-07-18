@@ -45,9 +45,42 @@ export default function RecieverOrdersRecieved() {
       
       return (
         <>
-        <div className='p-5' id='content'>
+        <div className='p-4' id='content'>
+        <div className="row">
+    {orders && orders.slice().reverse().filter(order=>order.status =='received').map((item, index) => {
+              return (
+                <div className="col-md-4 p-2 " key={index}>
+                  <div className='order-card p-2'>
+                    <p className="text-danger text-center">
+                      {item.ordernumber}
+                    </p>
+                    <span>المرسل : </span>
+                    <h6>{item.sendername}</h6>
+                    <h6>{item.senderphone}</h6>
+                    <h6>{item.sendercity} ,{item.senderdistrict}</h6>
+                    <h6>{item.senderaddress}</h6>
+                    <span>المستلم : </span>
+                    <h6>{item.recivername}</h6>
+                    <h6>{item.reciverphone}</h6>
+                    <h6>{item.recivercity} ,{item.reciverdistrict}</h6>
+                    <h6>{item.reciveraddress}</h6>
+                    <hr className='m-0'/>
+                    <span>الوزن : {item.weight}</span>
+                    <span className='fw-bold text-dark px-2'> | </span>
+                    <span>عدد القطع : {item.pieces}</span>
+                    <hr className='m-0'/>
+                    <span>الدفع : {item.paytype}</span>
+                    <span className='fw-bold text-dark px-2'> | </span>
+                    <span>الحالة : {item.status}</span>
+                    <hr className='m-0'/>
+                    <button className="btn btn-success m-1" onClick={() => { getSticker(item._id) }}>عرض الاستيكر</button>
+                    
+                  </div>
+                </div>
+              )})}
+    </div>
        
-          <div className="my-table p-4 ">
+          {/* <div className="my-table p-4 ">
             <table className="table">
               <thead>
                 <tr>
@@ -55,10 +88,8 @@ export default function RecieverOrdersRecieved() {
                   <th scope="col"> التاريخ</th>
                   <th scope="col"> المرسل</th>
                   <th scope="col"> المستلم</th>
-                  {/* <th scope="col"> billcode</th> */}
                   <th scope="col">رقم الشحنة</th>
                   <th scope="col">طريقة الدفع</th>
-                  {/* <th scope="col">السعر </th> */}
                   <th scope="col">الوزن</th>
                   <th scope="col">عدد القطع</th>
                   <th scope="col">حالة الشحنة</th>
@@ -74,10 +105,8 @@ export default function RecieverOrdersRecieved() {
                       <td>{item.createdAt.slice(0, 10)}</td>
                       <td>{item.sendername}</td>
                       <td>{item.recivername}</td>
-                      {/* <td>{item.billcode}</td> */}
                       <td>{item.ordernumber}</td>
                       <td>{item.paytype}</td>
-                      {/* <td>{item.price}</td> */}
                       <td>{item.weight}</td>
                       <td>{item.pieces}</td>
                       <td>{item.status}</td>
@@ -90,7 +119,7 @@ export default function RecieverOrdersRecieved() {
     
     
             </table>
-          </div>
+          </div> */}
         </div>
        
         </>)

@@ -50,6 +50,7 @@ import AdminLateOrders from './Components/AdminLateOrders/AdminLateOrders'
 import StoreLateOrder from './Components/StoreLateOrders/StoreLateOrders'
 import CarrierRegister2 from './Components/CarrierRegister2/CarrierRegister2';
 import RecieverOrdersRecieved from './Components/RecieverOrdersRecieved/RecieverOrdersRecieved';
+import StoreRequistsOrders from './Components/StoreRequistsOrders/StoreRequistsOrders';
 
 function App() {
   useEffect(() => {
@@ -175,6 +176,7 @@ function App() {
         { path: 'storeAddOrder', element: <StoreAddOrder /> },
         { path: 'storeShipments', element: <StoreKeeperOrders /> },
         { path: 'storeLateOrders', element: <StoreLateOrder/> },
+        { path: 'storeRequistsOrders', element: <StoreRequistsOrders/> },
 
         // {path:'main',element:<Main/>},
 

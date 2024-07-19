@@ -60,6 +60,12 @@ export default function StorekeeperNav({logout}) {
                 </Link>
             </li>
             <li className=''>
+              <Link to="/storeRequistsOrders">
+              <i class="fa-solid fa-clipboard-check bx"></i>              
+              <span class="text">   تأكيد طلب الاستلام </span>
+              </Link>
+            </li>
+            <li className=''>
               <Link to="/storeLateOrders">
               <i class="fa-solid fa-boxes-packing bx"></i>
               <span class="text"> شحنات متأخرة  </span>

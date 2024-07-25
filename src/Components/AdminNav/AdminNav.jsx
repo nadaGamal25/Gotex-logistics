@@ -98,6 +98,12 @@ export default function AdminNav({logout}) {
               <span class="text"> شحنات متأخرة  </span>
               </Link>
             </li>
+            <li className=''>
+              <Link to="/apikeyUsers">
+              <i class="fa-solid fa-key bx"></i>
+              <span class="text">api-key(user-integrate)</span>
+              </Link>
+            </li>
             {/* <li >
                 <Link to="/UserResendEmail">
                 <i class="fa-solid fa-envelope-circle-check bx"></i>
@@ -161,10 +167,11 @@ export default function AdminNav({logout}) {
           <Link to="/carrierRegister" onClick={closeModal} className="btn btn-orange m-2">تسجيل مندوب  </Link>            
           <Link to="/storeKeeperRegister" onClick={closeModal} className="btn btn-primary m-2">تسجيل أمين مخزن  </Link>            
           <Link to="/trackerRegister" onClick={closeModal} className="btn btn-secondary m-2">تسجيل tracker   </Link>            
+          <Link to="/integrateUserRegister" onClick={closeModal} className="btn btn-info m-2">تسجيل integrate-user   </Link>            
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={closeModal}>
+          <Button variant="dark" onClick={closeModal}>
           إغلاق
           </Button>
         </Modal.Footer>

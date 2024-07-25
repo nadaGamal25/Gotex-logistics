@@ -14,6 +14,7 @@ export default function AdminOrders() {
 const [searchPaytype, setSearchPaytype] = useState('');
 const [searchKeyword, setSearchKeyword] = useState('');
 const [searchStatus, setSearchStatus] = useState('');
+const [searchGetIntegrate, setSearchGetIntegrate] = useState('');
 const [searchBillCode, setSearchBillCode] = useState('');
 const [currentPage2, setCurrentPage2] = useState(Number(1));
     const [numberOfPages2, setNumberOfPages2] = useState(1);
@@ -105,6 +106,7 @@ const [dateFilter, setDateFilter] = useState(false);
                 status:searchStatus,
                 startDate:startDate,
                 endDate:endDate,
+                get:searchGetIntegrate
                 
               },
             headers: {
@@ -205,6 +207,7 @@ const [dateFilter, setDateFilter] = useState(false);
           status:searchStatus,
           startDate:startDate,
           endDate:endDate,
+          get:searchGetIntegrate
             
           },
         headers: {
@@ -241,6 +244,7 @@ const handleNextPage2 = async () => {
           status:searchStatus,
           startDate:startDate,
           endDate:endDate,
+          get:searchGetIntegrate
             
           },
         headers: {
@@ -275,7 +279,7 @@ async function getSearchShipmentsPage() {
         status:searchStatus,
         startDate:startDate,
         endDate:endDate,
-          
+        get:searchGetIntegrate
         },
       headers: {
         Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -308,6 +312,7 @@ const exportToExcel = async () => {
         status:searchStatus,
         startDate:startDate,
         endDate:endDate,
+        get:searchGetIntegrate
       },
       headers: {
         Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -335,7 +340,8 @@ const exportToExcel = async () => {
         item.collector && item.collector.length > 0 && item.collector[0].firstName ? `${item.collector[0].firstName} ${item.collector[0].lastName}` : '_',
         item.receiver && item.receiver.length > 0  && item.receiver[0].firstName ? `${item.receiver[0].firstName} ${item.receiver[0].lastName}` : '_',
         item.storekeeper && item.storekeeper.length > 0  && item.storekeeper[0].firstName ? `${item.storekeeper[0].firstName} ${item.storekeeper[0].lastName}` : '_',
-        item.user && item.user.length > 0  && item.user[0].firstName ? `${item.user[0].firstName} ${item.user[0].lastName}` : '_',
+        item.userIntegrate && item.userIntegrate.length > 0  && item.userIntegrate[0].firstName ? `${item.userIntegrate[0].firstName} ${item.userIntegrate[0].lastName}` : 
+        item.user && item.user.length > 0  && item.user[0].firstName ? `${item.user[0].firstName} ${item.user[0].lastName}` :'_',
 
       ];
     });
@@ -615,7 +621,17 @@ const handleEditSubmit = async (event) => {
             <option value="canceled">canceled(تم الغائها)</option>
             </select>
         </div>
-        
+        <div className="col-md-4">
+          <select className='form-control m-1'
+          
+          placeholder="جميع الشحنات(main&integrate) "
+          onChange={(e) => setSearchGetIntegrate(e.target.value)} >
+            <option value=""> جميع الشحنات(main&integrate) </option>
+            <option value="main">main</option>
+            <option value="integrate">integrate</option>
+            
+            </select>
+        </div>
         <div className="col-md-8 p-1">
           <label>
   التاريخ من:
@@ -741,7 +757,9 @@ const handleEditSubmit = async (event) => {
 ) : (
   <td></td>
 )} 
- {item.user&& item.user.length > 0 && item.user[0].firstName ? (
+ {item.userIntegrate&& item.userIntegrate.length > 0 && item.userIntegrate[0].firstName ? (
+  <td>{item.userIntegrate[0].firstName} {item.userIntegrate[0].lastName}</td>
+) :item.user&& item.user.length > 0 && item.user[0].firstName ? (
   <td>{item.user[0].firstName} {item.user[0].lastName}</td>
 ) : (
   <td></td>

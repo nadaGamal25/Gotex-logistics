@@ -51,6 +51,9 @@ import StoreLateOrder from './Components/StoreLateOrders/StoreLateOrders'
 import CarrierRegister2 from './Components/CarrierRegister2/CarrierRegister2';
 import RecieverOrdersRecieved from './Components/RecieverOrdersRecieved/RecieverOrdersRecieved';
 import StoreRequistsOrders from './Components/StoreRequistsOrders/StoreRequistsOrders';
+import IntegrateUserRegister from './Components/IntegrateUserRegister/IntegrateUserRegister';
+import IntegrateVerifyEmail from './Components/IntegrateVerifyEmail/IntegrateVerifyEmail';
+import ApikeyUsers from './Components/ApikeyUsers/ApikeyUsers';
 
 function App() {
   useEffect(() => {
@@ -141,6 +144,7 @@ function App() {
     { path: 'storeKeeperLogin', element: <StoreKeeperLogin saveStorekeeperData={saveStorekeeperData} /> },
     { path: 'store-keeper/set-password/:id', element: <StoreKeeperFirstPass /> },
     { path: 'carrierOrderNTFpreview', element: <CarrierOrderNTFpreview /> },
+    { path: 'verify-email/:id', element: <IntegrateVerifyEmail /> },
 
     {
       path: '/', element: <AdminLayout setAdminData={setAdminData} adminData={adminData} />, children: [
@@ -157,6 +161,8 @@ function App() {
         { path: 'adminOrdersWithoutCarrier', element: <AdminOrdersWithoutCarrier /> },
         { path: 'adminOrdersProblems', element: <AdminOrdersProblems/> },
         { path: 'adminLateOrders', element: <AdminLateOrders/> },
+        { path: 'integrateUserRegister', element: <IntegrateUserRegister/> },
+        { path: 'apikeyUsers', element: <ApikeyUsers/> },
 
 
       ]

@@ -8,8 +8,10 @@ export default function AdminUsers() {
     getUsersCarriersAdmin()
     getUsersStorekeepersAdmin()
     getUsersTrackerAdmin()
+    getIntegratetUsersAdmin()
   },[])
   const [usersListAdmin,setUsersListsAdmin]=useState([])
+  const [integrateUsersAdmin,setIntegrateUsersAdmin]=useState([])
   const [carriersListAdmin, setCarriersListsAdmin] = useState([]);
   const [storekeepersListAdmin, setStorekeepersListsAdmin] = useState([]);
   const [trackerListAdmin, setTrackerListsAdmin] = useState([]);
@@ -74,8 +76,23 @@ export default function AdminUsers() {
       console.error(error);
     }
   }
+  async function getIntegratetUsersAdmin() {
+    try {
+      const response = await axios.get('https://dashboard.go-tex.net/logistics-test/integrate/user/',
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
+        },
+      });
+      const usersList = response.data.data;
+      console.log(usersList)
+      setIntegrateUsersAdmin(usersList)
+    } catch (error) {
+      console.error(error);
+    }
+  }
  
-  const combinedList = [...usersListAdmin, ...carriersListAdmin, ...storekeepersListAdmin, ...trackerListAdmin];
+  const combinedList = [...usersListAdmin, ...carriersListAdmin, ...storekeepersListAdmin, ...trackerListAdmin,...integrateUsersAdmin];
 
   async function userResendEmail(userId){
     try{
@@ -124,6 +141,28 @@ async function carrierResendEmail(userId){
 async function trackerResendEmail(userId){
   try{
   const response= await axios.post(`https://dashboard.go-tex.net/logistics-test/tracker/resend-verify-email/${userId}`,{},
+  {
+      headers: {
+          Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
+      },
+  }
+    );
+  if(response.status == 200){
+    console.log(response)
+    window.alert("تم ارسال الايميل بنجاح")  
+  }
+  else{
+    window.alert(response.data.msg.name)
+  }
+
+}catch(error){
+    console.log(error.response)
+    window.alert(error.response.data.msg.name || error.response.data.msg || "error")
+}
+}
+async function integrateUserResendEmail(userId){
+  try{
+  const response= await axios.post(`https://dashboard.go-tex.net/logistics-test/integrate/user/resend-verify-email/${userId}`,{},
   {
       headers: {
           Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -236,7 +275,65 @@ const handleEditSubmitUser = async (event) => {
     alert(error.response.data.msg)
   }
 } 
+//edit integrate
+const [isModalOpenIntegrate, setIsModalOpenIntegrate] = useState(false);
+const [editedIntegrate, setEditedIntegrate] = useState(null);
+const [eIntegrate, seteIntegrate] = useState(null);
+const handleEditClickIntegrate = (integrate) => {
+  seteIntegrate(integrate);
+  setEditedIntegrate(
+    {
+      firstName: integrate?.firstName || '',
+      lastName: integrate?.lastName || '',
+      mobile: integrate?.mobile || '',
+      nid: integrate?.nid || '',
+      city: integrate?.city || '',
+      address: integrate?.address || '',
+      
+  }
+  )
+  setIsModalOpenIntegrate(true);
 
+  console.log(integrate)
+  console.log(editedIntegrate)
+  console.log("yes")
+}
+const closeModalIntegrate = () => {
+  setIsModalOpenIntegrate(false);
+  setEditedIntegrate(null)
+};
+const handleInputChangeIntegrate = (event) => {
+  const { name, value } = event.target;
+    setEditedIntegrate((prev) => ({
+      ...prev,
+      [name]: value,
+    })); 
+};
+const handleEditSubmitIntegrate = async (event) => {
+  console.log(editedIntegrate)
+  event.preventDefault();
+  try {
+    const response = await axios.post(
+      `https://dashboard.go-tex.net/logistics-test/integrate/user/${eIntegrate._id}`,
+      {...editedIntegrate},
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
+        },
+      }
+    );
+    console.log(editedIntegrate)
+    console.log(response);
+
+    closeModalIntegrate();
+    window.alert("تم تعديل بيانات المستخدم بنجاح")
+    getIntegratetUsersAdmin()
+    
+  } catch (error) {
+    console.error(error);
+    alert(error.response.data.msg)
+  }
+} 
 //edit Store
 const [isModalOpenStore, setIsModalOpenStore] = useState(false);
 const [editedStore, setEditedStore] = useState(null);
@@ -447,18 +544,24 @@ const [eCarrier, seteCarrier] = useState(null);
                   <button className="btn-dataentry btn btn-secondary" onClick={()=>{handleEditClickUser(item)}}>  تعديل البيانات</button>
                 </td>
                 :item.role == 'collector' || item.role == 'receiver'?<td>
-                  <button className="btn-carrier btn btn-secondary" onClick={()=>{handleEditClickCarrier(item,item.role)}}>تعديل   </button>
+                  <button className="btn-carrier btn btn-secondary" onClick={()=>{handleEditClickCarrier(item,item.role)}}>تعديل البيانات </button>
                 </td>
                 :item.role == 'storekeeper' ?<td>
                   <button className="btn-dataentry btn btn-secondary" onClick={()=>{handleEditClickStore(item)}}>تعديل البيانات </button>
-                </td>:<td></td>}
+                </td>:item.role == 'user' ?<td>
+                  <button className="btn-dataentry btn btn-secondary" onClick={()=>{handleEditClickIntegrate(item)}}>تعديل البيانات </button>
+                </td>
+                :<td></td>}
                 {item.role == 'data entry' ?<td>
                   <button className="btn-dataentry btn btn-orange" onClick={()=>{userResendEmail(item._id)}}>إعادة إرسال إيميل </button>
                 </td>:item.role == 'collector' || item.role == 'receiver'?<td>
                   <button className="btn-carrier btn btn-orange" onClick={()=>{carrierResendEmail(item._id)}}>إعادة إرسال إيميل </button>
                 </td>:item.role == 'tracker' ?<td>
                   <button className="btn-dataentry btn btn-orange" onClick={()=>{trackerResendEmail(item._id)}}>إعادة إرسال إيميل </button>
-                </td>:<td></td>}
+                </td>:item.role == 'user' ?<td>
+                  <button className="btn-dataentry btn btn-orange" onClick={()=>{integrateUserResendEmail(item._id)}}>إعادة إرسال إيميل </button>
+                </td>:
+                <td></td>}
                 
                 
               </tr>
@@ -529,6 +632,70 @@ const [eCarrier, seteCarrier] = useState(null);
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={closeModalUser}>
+          إغلاق
+          </Button>
+        </Modal.Footer>
+      </Modal>)} 
+      {isModalOpenIntegrate && (<Modal show={isModalOpenIntegrate} onHide={closeModalIntegrate} >
+        <Modal.Header >
+          <Modal.Title>تعديل بيانات المستخدم (integrate)
+             </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div>
+          <form onSubmit={handleEditSubmitIntegrate}>
+        <div className="row">
+                <div className="col-md-6 pb-1">
+        <label htmlFor="first_name">الاسم الاول    :</label>
+      <input onChange={handleInputChangeIntegrate} value={editedIntegrate.firstName} type="text" className='my-input my-2 form-control' name='firstName' />
+      
+      
+    </div>
+    <div className="col-md-6 pb-1">
+        <label htmlFor="company"> اسم العائلة    :</label>
+      <input onChange={handleInputChangeUser} value={editedIntegrate.lastName} type="text" className='my-input my-2 form-control' name='lastName' />
+      
+    </div>
+   
+    <div className="col-md-6 pb-1">
+    <label htmlFor="mobile">الهاتف  </label>
+   
+      <input onChange={handleInputChangeIntegrate} value={editedIntegrate.mobile} type="text" className='my-input my-2 form-control' name='mobile' />
+     
+      
+    </div>
+    <div className="col-md-6 pb-1">
+        <label htmlFor="first_name">رقم الهوية    :</label>
+      <input onChange={handleInputChangeIntegrate} value={editedIntegrate.nid} type="text" className='my-input my-2 form-control' name='nid' />
+      
+      
+    </div>
+    <div className="col-md-6 pb-1">
+        <label htmlFor="company"> المدينة    :</label>
+      <input onChange={handleInputChangeIntegrate} value={editedIntegrate.city} type="text" className='my-input my-2 form-control' name='city' />
+      
+    </div>
+   
+    <div className="col-md-6 pb-1">
+    <label htmlFor="mobile">العنوان  </label>
+   
+      <input onChange={handleInputChangeIntegrate} value={editedIntegrate.address} type="text" className='my-input my-2 form-control' name='address' />
+     
+      
+    </div>
+  
+
+    <div className="text-center pt-1">
+      <button className='btn btn-primary'>
+       تعديل البيانات
+      </button>
+      </div>
+      </div>
+      </form>  
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={closeModalIntegrate}>
           إغلاق
           </Button>
         </Modal.Footer>
@@ -671,7 +838,7 @@ const [eCarrier, seteCarrier] = useState(null);
                 </div>
               </div>
               <div className="text-center pt-1">
-                <button className='btn btn-primary'>تعديل</button>
+                <button className='btn btn-primary'>تعديل البيانات</button>
               </div>
             </form>
           </Modal.Body>

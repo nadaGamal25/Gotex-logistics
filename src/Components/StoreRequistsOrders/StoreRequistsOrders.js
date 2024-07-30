@@ -287,9 +287,9 @@ export default function StoreRequistsOrders() {
     openModal2(item._id)
    }}>تأكيد استلام الشحنة </button></td>  
    :null}
-                   <td>
+                   {/* <td>
                     <button className="btn btn-danger" onClick={() => { openModalProblem(item._id) }}>تبليغ مشكلة</button>
-                   </td>
+                   </td> */}
                     </tr>
                   );
                 })}

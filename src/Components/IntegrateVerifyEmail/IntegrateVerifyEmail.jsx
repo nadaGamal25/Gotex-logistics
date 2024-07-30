@@ -6,19 +6,15 @@ import axios from 'axios';
 
 export default function IntegrateVerifyEmail() {
     let allparams= useParams()
-    const [apikey , setApikey]= useState('')
+    const [isVerified , setIsVerified]= useState(false)
     async function veriftEmail(){
         try{
         let response= await axios.post(`https://dashboard.go-tex.net/logistics-test/integrate/user/verify-email/${allparams.id}`);
-        if(response.status == 200){
           console.log(response)
-        }
-        else{
-          window.alert(response.data)
-        }
-      
+          setIsVerified(true)
       }catch(error){
           console.log(error)
+          setIsVerified(false)
         //   window.alert(error.response.data.message||"error")
       }
     }
@@ -32,7 +28,8 @@ export default function IntegrateVerifyEmail() {
         <div className="text-center">
     <img className='m-auto logo' src={logo} alt="logo" />
     </div>
-            <p className='fw-bold py-5 text-primary'>تم تأكيد الحساب بنجاح</p>
+    {isVerified?<p className='fw-bold py-5 text-primary'>تم تأكيد الحساب بنجاح</p>
+    :<p className='fw-bold py-5 text-danger'>حدث خطأ ما..يرجى ابلاغ الادمن لاعادة ارسال ايميل التوثيق مرة اخرى   </p>}
    
     </div>
     </div>

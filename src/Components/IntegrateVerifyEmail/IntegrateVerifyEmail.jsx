@@ -12,10 +12,17 @@ export default function IntegrateVerifyEmail() {
         try{
         let response= await axios.post(`https://dashboard.go-tex.net/logistics-test/integrate/user/verify-email/${allparams.id}`);
           console.log(response)
-          setMsgVerified(response.data.msg)
+          setMsgVerified("تم تأكيد الحساب بنجاح")
       }catch(error){
           console.log(error)
-          setMsgVerified(error.response.data.message)
+          if(error.response.data.message =="User is already verified"){
+            setMsgVerified(" تم تأكيد الحساب من قبل")
+          }else if(error.response.data.message =="User is not found"){
+            setMsgVerified("لا يوجد حساب بهذا البريد")
+          }else{
+            setMsgVerified("حدث خطأ ما..")
+          }
+          // setMsgVerified(error.response.data.message)
         //   window.alert(error.response.data.message||"error")
       }
     }
@@ -29,7 +36,7 @@ export default function IntegrateVerifyEmail() {
         <div className="text-center">
     <img className='m-auto logo' src={logo} alt="logo" />
     </div>
-    <p className='fw-bold py-5 text-primary' dir='ltr'> {msgVerified}</p>
+    <p className='fw-bold py-5 text-primary' > {msgVerified}</p>
     {/* {isVerified?<p className='fw-bold py-5 text-primary'>تم تأكيد الحساب بنجاح</p>
     :<p className='fw-bold py-5 text-danger'>حدث خطأ ما..يرجى ابلاغ الادمن لاعادة ارسال ايميل التوثيق اذا لم تقم بتوثيق الايميل من قبل    </p>}
     */}

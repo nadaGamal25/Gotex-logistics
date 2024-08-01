@@ -121,7 +121,7 @@ export default function TrackOrder() {
                 <span className='fw-bold'> {orderDetails.deliveredby.firstName}{orderDetails.deliveredby.lastName}</span>:
                 null}
                 {orderDetails.status == 'in store'?
-                <span className='fw-bold'> {orderDetails.storekeeper.firstName}{orderDetails.storekeeper.lastName}</span>:
+                <span className='fw-bold'>امين المخزن: {orderDetails.storekeeper.firstName}{orderDetails.storekeeper.lastName}</span>:
                 null}
               </div>
             </div>

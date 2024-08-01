@@ -4,12 +4,31 @@ import logo from '../../assets/logo.png'
 import { useNavigate } from 'react-router-dom';
 import {Modal, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios';
 
 export default function AdminNav({logout}) {
   let navigate= useNavigate();
     
     const [sideToggle ,setSideToggle]=useState(false);
-
+    useEffect(() => {
+      getLateOrders()
+      }, [])
+  
+    const [lateOrdersNumber,setLateOrdersNumber]=useState('')  
+    async function getLateOrders() {
+      try {
+        const response = await axios.get('https://dashboard.go-tex.net/logistics-test/order/late',
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
+          },
+        });
+        console.log(response.data.orders)
+        setLateOrdersNumber(response.data.orders.length)
+      } catch (error) {
+        console.error(error);
+      }
+    }
   
 
   useEffect(() => {
@@ -95,7 +114,9 @@ export default function AdminNav({logout}) {
             <li className=''>
               <Link to="/adminLateOrders">
               <i class="fa-solid fa-boxes-packing bx"></i>
-              <span class="text"> شحنات متأخرة  </span>
+              <span class="text"> شحنات متأخرة 
+              {lateOrdersNumber>0 ?<span className="late-orders-nums">{lateOrdersNumber}</span>:null}
+                 </span>
               </Link>
             </li>
             <li className=''>

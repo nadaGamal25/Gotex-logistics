@@ -648,3 +648,24 @@ nav form .form-input button{
   color: #08354c;
   font-weight: 700;
 }
+@keyframes flash-background {
+  0%, 100% {
+    background-image: radial-gradient(rgb(247, 186, 186) 10.6%, rgb(255, 0, 0) 97.7%);
+  }
+  50% {
+    background-image: radial-gradient(rgb(255, 0, 0) 10.6%, rgb(247, 186, 186) 97.7%);
+  }
+}
+
+.late-orders-nums {
+  margin-right: 10px;
+  padding: 4px 7px;
+  background-image: radial-gradient(rgb(247, 186, 186) 10.6%, rgb(255, 0, 0) 97.7%);
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  animation: flash-background 1s infinite;
+  color: #fff !important;
+}

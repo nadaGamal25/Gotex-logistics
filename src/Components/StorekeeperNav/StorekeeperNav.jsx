@@ -88,7 +88,9 @@ export default function StorekeeperNav({logout}) {
               <Link to="/storeLateOrders">
               <i class="fa-solid fa-boxes-packing bx"></i>
               <span class="text"> شحنات متأخرة  
-                {lateOrdersNumber>0 ?<span className="late-orders-nums">{lateOrdersNumber}</span>:null}
+              {/* <span className="late-orders-nums">21</span> */}
+
+                {/* {lateOrdersNumber>0 ?<span className="late-orders-nums">{lateOrdersNumber}</span>:null} */}
               </span>
               </Link>
             </li>

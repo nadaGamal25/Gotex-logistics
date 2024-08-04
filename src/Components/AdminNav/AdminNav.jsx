@@ -10,9 +10,9 @@ export default function AdminNav({logout}) {
   let navigate= useNavigate();
     
     const [sideToggle ,setSideToggle]=useState(false);
-    useEffect(() => {
-      getLateOrders()
-      }, [])
+    // useEffect(() => {
+    //   getLateOrders()
+    //   }, [])
   
     const [lateOrdersNumber,setLateOrdersNumber]=useState('')  
     async function getLateOrders() {
@@ -115,7 +115,7 @@ export default function AdminNav({logout}) {
               <Link to="/adminLateOrders">
               <i class="fa-solid fa-boxes-packing bx"></i>
               <span class="text"> شحنات متأخرة 
-              {lateOrdersNumber>0 ?<span className="late-orders-nums">{lateOrdersNumber}</span>:null}
+              {/* {lateOrdersNumber>0 ?<span className="late-orders-nums">{lateOrdersNumber}</span>:null} */}
                  </span>
               </Link>
             </li>

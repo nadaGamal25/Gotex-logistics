@@ -458,7 +458,7 @@ export default function UserCreateOrder2() {
                           getOrderData({ target: { name: 'senderdistrict', value: selected } });
                           setOrderData(prevOrderData => ({
                               ...prevOrderData,
-                              senderdistrictId: String(item.district_id)
+                              senderdistrictId: Number(item.district_id)
                             }));                                           
 
                           document.querySelector('input[name="senderdistrict"]').value = selected;
@@ -730,7 +730,7 @@ export default function UserCreateOrder2() {
                           getOrderData({ target: { name: 'reciverdistrict', value: selected } });
                           setOrderData(prevOrderData => ({
                               ...prevOrderData,
-                              reciverdistrictId: String(item.district_id)
+                              reciverdistrictId: Number(item.district_id)
                             })); 
                           
                           document.querySelector('input[name="reciverdistrict"]').value = selected;

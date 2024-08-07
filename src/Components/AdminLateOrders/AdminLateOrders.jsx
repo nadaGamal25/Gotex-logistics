@@ -44,6 +44,8 @@ export default function AdminLateOrders() {
                <th scope="col">الوزن</th>
                <th scope="col">عدد القطع</th>
                <th scope="col">حالة الشحنة</th>
+               <th scope="col">المندوب</th>
+               <th scope="col">هاتف المندوب</th>
               
              </tr>
          </thead>
@@ -64,7 +66,10 @@ export default function AdminLateOrders() {
                    <td>{item.weight}</td>
                    <td>{item.pieces}</td>
                    <td>{item.status}</td>
-              
+                   {item.pickedby?
+                <td>{item.pickedby.firstName} {item.pickedby.lastName}</td> : <td></td>}
+                {item.pickedby?
+                <td>{item.pickedby.mobile}</td> : <td></td>}
  
 </tr>
 ))}         

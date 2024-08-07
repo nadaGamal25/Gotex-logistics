@@ -57,6 +57,15 @@ import ApikeyUsers from './Components/ApikeyUsers/ApikeyUsers';
 
 function App() {
   useEffect(() => {
+    const timeout = setTimeout(() => {
+      window.alert('الجلسة انتهت..قم بتسجيل الدخول مرة اخرى');
+      
+    }, 60 * 60 * 1000); // 1 hour in milliseconds
+
+    return () => clearTimeout(timeout);
+  }, []);
+  
+  useEffect(() => {
     if (localStorage.getItem('adminToken') !== null) {
       saveAdminData();
     }

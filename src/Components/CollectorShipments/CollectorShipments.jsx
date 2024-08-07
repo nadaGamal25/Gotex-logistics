@@ -255,7 +255,7 @@ export default function CollectorShipments() {
                    
                     openModal(item._id)
                   }}>تأكيد استلام الشنحة</button>:null}
-                  {item.status == 'pick to store'?
+                  {item.status == 'pick to store' || item.status=='late to store'?
                    <button className="btn btn-secondary m-1" onClick={()=>{
                       openModalInStore(item._id)
                   }}>تبليغ امين المخزن</button>:null}

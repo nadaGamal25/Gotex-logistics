@@ -120,6 +120,8 @@ try {
                <th scope="col">الوزن</th>
                <th scope="col">عدد القطع</th>
                <th scope="col">حالة الشحنة</th>
+               <th scope="col">المندوب</th>
+               <th scope="col">هاتف المندوب</th>
                <th></th>
               
              </tr>
@@ -141,6 +143,11 @@ try {
                    <td>{item.weight}</td>
                    <td>{item.pieces}</td>
                    <td>{item.status}</td>
+                   {item.pickedby?
+                <td>{item.pickedby.firstName} {item.pickedby.lastName}</td> : <td></td>}
+                {item.pickedby?
+                <td>{item.pickedby.mobile}</td> : <td></td>}
+                
                    <td><button className="btn btn-primary" onClick={()=>{
     openModal2(item._id)
    }}>تأكيد استلام الشحنة </button></td>  

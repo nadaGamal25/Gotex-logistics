@@ -364,7 +364,7 @@ export default function StoreKeeperOrders() {
    }}>تأكيد استلام الشحنة </button></td>  
    :null}
 
-                   {item.status=='received' && !item.receiverPaidCash?   
+                   {item.status=='received' && !item.payment && item.receiverPaidCash ==false?   
                   <td><button className="btn btn-orange" onClick={()=>{
                       takeOrderMoney(item._id)
                     }}>تأكيد استلام كاش  </button></td> :null}

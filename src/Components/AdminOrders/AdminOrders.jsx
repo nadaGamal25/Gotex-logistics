@@ -571,6 +571,44 @@ const handleEditSubmit = async (event) => {
         setSelectedImages(formattedImages);
         setShowModal(true);
       }
+      const [payments,setPayments]=useState('')
+      async function getPayments(orderId) {
+        try {
+          const token = localStorage.getItem('adminToken');
+          console.log(token)
+          if (!token) {
+            throw new Error('Token not found');
+          }
+      
+          const response = await axios.get(
+            `https://dashboard.go-tex.net/logistics-test/payment/order-payments/${orderId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+      
+          console.log(response);
+          setPayments(response.data.data)
+          
+        } catch (error) {
+          console.error(error);
+          // alert(error.response.data.msg);
+        }
+      }
+      
+      const [showModalPayments, setShowModalPayments] = useState(false);
+    
+      const openModalPayments = (orderid) => {
+        setShowModalPayments(true);
+        getPayments(orderid)
+      };
+    
+      const closeModalPayments = () => {
+        setShowModalPayments(false);
+        setPayments('')
+      };
       
       return (
         <>
@@ -692,6 +730,7 @@ const handleEditSubmit = async (event) => {
                   <th scope="col"></th>
                   <th scope="col"></th>
                   <th scope="col"></th>
+                  <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
@@ -782,6 +821,10 @@ const handleEditSubmit = async (event) => {
                       openModalCancel(item._id)
                     // }
                   }}>إلغاء الشنحة</button></td>:null}
+                   {item.status =='pick to client' || item.status == "received"?
+                  <td><button className="btn btn-outline-danger m-1" onClick={()=>{
+                      openModalPayments(item._id)
+                  }}>محاولات الدفع</button></td>:null}
   </tr>
 ))}         
         </tbody>
@@ -1075,6 +1118,54 @@ onChange={(e) => setCurrentPage2(e.target.value)} />
 </div>
           
         </Modal.Body>
+      </Modal>
+      <Modal show={showModalPayments} onHide={closeModalPayments}>
+        <Modal.Header >
+        <Modal.Title> محاولات الدفع
+             </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className=''>
+            {payments.length !=0 ?
+          <div className="my-table p-4 mt-3">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col"> القيمة</th>
+                  <th scope="col"> الكود</th>
+                  <th scope="col"> الحالة</th>
+                  
+                </tr>
+              </thead>
+              <tbody>
+                {payments && payments.map((item, index) => {
+                  return (
+                    <tr key={index}>
+                      <td>{index + 1}</td>
+                      <td>{item.amount}</td>
+                      <td>{item.code}</td>
+                      {item.status == "CAPTURED"?<td>تم الدفع</td>:<td>{item.status}</td>}
+                     
+              
+                    </tr>
+                  );
+                })}
+              </tbody>
+    
+    
+            </table>
+          </div>:<p>لا توجد محاولات دفع..تم استلام كاش</p>}
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <div className="text-center">
+       
+          <Button className='m-1' variant="secondary" onClick={closeModalPayments}>
+          إغلاق
+          </Button>
+          </div>
+        </Modal.Footer>
       </Modal>
         </>)
     }

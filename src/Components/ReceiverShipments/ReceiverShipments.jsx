@@ -199,6 +199,75 @@ export default function ReceiverShipments() {
   const filteredOrders = orderStatus
   ? orders.filter(order => order.status === orderStatus)
   : orders;
+
+  async function payWithVisa(orderId) {
+    try {
+      const token = localStorage.getItem('carrierToken');
+      if (!token) {
+        throw new Error('Token not found');
+      }
+  
+      const response = await axios.post(
+        `https://dashboard.go-tex.net/logistics-test/payment/charge/${orderId}`,
+        {}, // Empty body object
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      console.log(response);
+      getOrders();
+      window.alert('يرجى ملئ جميع البيانات التالية ')
+          const stickerUrl = `${response.data.data.transaction.url}`;
+           const newTab = window.open();
+           newTab.location.href = stickerUrl;
+    } catch (error) {
+      console.error(error);
+      // alert(error.response.data.msg);
+    }
+  }
+  const [payments,setPayments]=useState('')
+  async function getPayments(orderId) {
+    try {
+      const token = localStorage.getItem('carrierToken');
+      console.log(token)
+      if (!token) {
+        throw new Error('Token not found');
+      }
+  
+      const response = await axios.get(
+        `https://dashboard.go-tex.net/logistics-test/payment/order-payments/${orderId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      console.log(response);
+      setPayments(response.data.data)
+      
+    } catch (error) {
+      console.error(error);
+      // alert(error.response.data.msg);
+    }
+  }
+  
+  const [showModalPayments, setShowModalPayments] = useState(false);
+
+  const openModalPayments = (orderid) => {
+    setShowModalPayments(true);
+    getPayments(orderid)
+  };
+
+  const closeModalPayments = () => {
+    setShowModalPayments(false);
+    setPayments('')
+  };
+  
+  
   return (
     <>
     <div className='p-4' id='content'>
@@ -248,18 +317,27 @@ export default function ReceiverShipments() {
                     <hr className='m-0'/>
                     <button className="btn btn-success m-1" onClick={() => { getSticker(item._id) }}>عرض الاستيكر</button>
                     {item.status == "in store"?
-                  <td><button className="btn btn-orange" onClick={()=>{
+                  <button className="btn btn-orange m-1" onClick={()=>{
                       openModal(item._id)
-                  }}>تأكيد الاستلام من المخزن</button></td>:null}
+                  }}>تأكيد الاستلام من المخزن</button>:null}
+                  
                   
                   {item.status =='pick to client'?
-                  <td><button className="btn btn-primary" onClick={()=>{
+                  <button className="btn btn-danger m-1" onClick={()=>{
+                      payWithVisa(item._id)
+                  }}>الدفع بواسطة فيزا</button>:null}
+                  {item.status =='pick to client'?
+                  <button className="btn btn-primary m-1" onClick={()=>{
                       openModalRecieved(item._id)
-                  }}>تأكيد استلام العميل</button></td>:null}
+                  }}>تأكيد استلام العميل</button>:null}
+                  {item.status =='pick to client' || item.status == "received"?
+                  <button className="btn btn-danger m-1" onClick={()=>{
+                      openModalPayments(item._id)
+                  }}>محاولات الدفع</button>:null}
                   {item.status =="pick to client"?
-                  <td><button className="btn btn-secondary" onClick={()=>{
+                  <button className="btn btn-secondary m-1" onClick={()=>{
                       openModalReturn(item._id)
-                  }}>إرجاع الشنحة</button></td>:null}
+                  }}>إرجاع الشنحة</button>:null}
                   </div>
                 </div>
               )})}
@@ -410,6 +488,53 @@ export default function ReceiverShipments() {
           تأكيد ارجاع الشحنة
           </Button>
           <Button className='m-1' variant="secondary" onClick={closeModalReturn}>
+          إغلاق
+          </Button>
+          </div>
+        </Modal.Footer>
+      </Modal>
+      <Modal show={showModalPayments} onHide={closeModalPayments}>
+        <Modal.Header >
+        <Modal.Title> محاولات الدفع
+             </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className=''>
+          <div className="my-table p-4 mt-3">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col"> القيمة</th>
+                  <th scope="col"> الكود</th>
+                  <th scope="col"> الحالة</th>
+                  
+                </tr>
+              </thead>
+              <tbody>
+                {payments && payments.map((item, index) => {
+                  return (
+                    <tr key={index}>
+                      <td>{index + 1}</td>
+                      <td>{item.amount}</td>
+                      <td>{item.code}</td>
+                      {item.status == "CAPTURED"?<td>تم الدفع</td>:<td>{item.status}</td>}
+                     
+              
+                    </tr>
+                  );
+                })}
+              </tbody>
+    
+    
+            </table>
+          </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <div className="text-center">
+       
+          <Button className='m-1' variant="secondary" onClick={closeModalPayments}>
           إغلاق
           </Button>
           </div>

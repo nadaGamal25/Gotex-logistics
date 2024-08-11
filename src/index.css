@@ -96,6 +96,9 @@ label{
   box-shadow: 3px 3px 5px #8ca0aa;
   overflow-x: auto;
 }
+.bg-b{
+  background-color: #fffff6;
+}
 .star-requered{
   color: rgb(199, 61, 61);
   padding-right: 3px;

@@ -13,6 +13,7 @@ export default function StoreKeeperOrders() {
       const [carrierId, setCarrierId] = useState('');
       const [carriersListAdmin, setCarriersListsAdmin] = useState([]);
 
+
       async function getOrders() {
         try {
           const response = await axios.get('https://dashboard.go-tex.net/logistics-test/order/get-storekeeper-orders',
@@ -26,6 +27,27 @@ export default function StoreKeeperOrders() {
           setOrders(List)
         } catch (error) {
           console.error(error);
+        }
+      }
+      const [recieverName, setRecieverName] = useState('');
+      async function getSearchOrders() {
+        try {
+          const response = await axios.get(`https://dashboard.go-tex.net/logistics-testorder/order/get-storekeeper-orders`, {
+            params: {
+              receiver: recieverName,
+                
+              },
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('storekeeperToken')}`,
+            },
+          });
+      
+          setOrders(response.data.data);
+         
+          console.log(response)
+          
+        } catch (error) {
+          console.error('Error fetching students:', error);
         }
       }
     
@@ -239,12 +261,62 @@ export default function StoreKeeperOrders() {
     setShowModalProblem(false);
     setSelectedFilesProblem([])
   };
+
+  async function takeOrderMoney(orderId) {
+    try {
+      const token = localStorage.getItem('storekeeperToken');
+      if (!token) {
+        throw new Error('Token not found');
+      }
+  
+      const response = await axios.put(
+        `https://dashboard.go-tex.net/logistics-test/order/take-order-money/${orderId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      console.log(response);
+      getOrders();
+      alert("لقد تم التأكيد بنجاح")
+      
+    } catch (error) {
+      console.error(error);
+      alert(error.response.data.msg);
+    }
+  }
       return (
         <>
         <div className='p-5' id='content'>
           <div className="p-2 count-box">
             <span>عدد الشحنات : {orders.filter((order)=> order.status == 'in store').length}</span>
           </div>
+          <div className="bg-b p-2 mb-4 mt-3">
+      <div className="row">
+        
+        <div className="col-md-4">
+          <input className='form-control m-1' 
+          type="search" placeholder=" اسم مندوب التسليم"
+          onChange={(e) => setRecieverName(e.target.value)}
+          />
+        </div>
+        <div className="col-md-8">
+        <button className="btn btn-dark m-1" onClick={getSearchOrders}>
+  بحث
+ </button>  
+ <button className="btn btn-dark m-1" onClick={getOrders}>عرض جميع الشحنات  </button>
+
+ </div>
+        
+        
+       
+        
+        
+      </div>
+    </div>
     
           <div className="my-table p-4 mt-3">
             <table className="table">
@@ -253,13 +325,14 @@ export default function StoreKeeperOrders() {
                   <th scope="col">#</th>
                   <th scope="col"> المرسل</th>
                   <th scope="col"> المستلم</th>
-                  <th scope="col"> billcode</th>
+                  {/* <th scope="col"> billcode</th> */}
                   <th scope="col">رقم الشحنة</th>
                   <th scope="col">طريقة الدفع</th>
                   {/* <th scope="col">السعر </th> */}
                   <th scope="col">الوزن</th>
                   <th scope="col">عدد القطع</th>
                   <th scope="col">حالة الشحنة</th>
+                  <th scope="col">مندوب التسليم</th>
                   <th scope="col"></th>
                   <th scope="col"></th>
                   <th scope="col"></th>
@@ -272,13 +345,14 @@ export default function StoreKeeperOrders() {
                       <td>{index + 1}</td>
                       <td>{item.sendername}</td>
                       <td>{item.recivername}</td>
-                      <td>{item.billcode}</td>
+                      {/* <td>{item.billcode}</td> */}
                       <td>{item.ordernumber}</td>
                       <td>{item.paytype}</td>
                       {/* <td>{item.price}</td> */}
                       <td>{item.weight}</td>
                       <td>{item.pieces}</td>
                       <td>{item.status}</td>
+                      {item.deliveredby?<td>{item.deliveredby.fullName}</td>:<td>_</td>}
                       <td><button className="btn btn-success" onClick={() => { getSticker(item._id) }}>عرض الاستيكر</button></td>
                       {item.status == 'in store' && !item.deliveredby ?
                       <td><button className="btn btn-orange" onClick={()=>{
@@ -289,6 +363,11 @@ export default function StoreKeeperOrders() {
     openModal2(item._id)
    }}>تأكيد استلام الشحنة </button></td>  
    :null}
+
+                   {item.status=='received' && !item.receiverPaidCash?   
+                  <td><button className="btn btn-orange" onClick={()=>{
+                      takeOrderMoney(item._id)
+                    }}>تأكيد استلام كاش  </button></td> :null}
                    <td>
                     <button className="btn btn-danger" onClick={() => { openModalProblem(item._id) }}>تبليغ مشكلة</button>
                    </td>

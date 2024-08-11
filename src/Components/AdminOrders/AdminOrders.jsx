@@ -1155,7 +1155,7 @@ onChange={(e) => setCurrentPage2(e.target.value)} />
     
     
             </table>
-          </div>:<p>لا توجد محاولات دفع..تم استلام كاش</p>}
+          </div>:<p>لا توجد محاولات دفع..</p>}
           </div>
         </Modal.Body>
         <Modal.Footer>

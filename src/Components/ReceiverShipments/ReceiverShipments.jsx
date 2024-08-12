@@ -11,6 +11,7 @@ export default function ReceiverShipments() {
 
  
   const [orders, setOrders] = useState([])
+  const [cachAmount, setCachAmount] = useState(0);
 
   async function getOrders() {
     try {
@@ -21,7 +22,8 @@ export default function ReceiverShipments() {
           },
         });
       const List = response.data.data;
-      console.log(List)
+      console.log(response)
+      setCachAmount(response.data.receiver.collectedCashAmount)
       setOrders(List)
     } catch (error) {
       console.error(error);
@@ -271,6 +273,9 @@ export default function ReceiverShipments() {
   return (
     <>
     <div className='p-4' id='content'>
+    <div className="p-2 count-box mx-1">
+            <span>قيمة الكاش  : {cachAmount} ريال</span>
+          </div>
     <div className="row">
     <div className="col-md-3  p-2 mb-2">
     <select className='form-control m-1'

@@ -198,9 +198,9 @@ async function getCities() {
   }
 }
 const [districts,setDistricts]=useState()
-async function getDistricts() {
+async function getDistricts(districtid) {
   try {
-    const response = await axios.get('https://dashboard.go-tex.net/logistics-test/cities/districts',
+    const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/districts/${districtid}`,
     {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -214,7 +214,7 @@ async function getDistricts() {
 }
 useEffect(() => {
   getCities()
-  getDistricts()
+  // getDistricts()
 }, [])
 //edit user
 const [isModalOpenUser, setIsModalOpenUser] = useState(false);
@@ -408,16 +408,111 @@ const [eCarrier, seteCarrier] = useState(null);
   const [cityId, setCityId] = useState(null);
   const [isDistrict, setIsDistrict] = useState(false);
   const [carrierRole,setCarrierRole]=useState('')
-  const handleEditClickCarrier = (carrier,carrierR) => {
-    seteCarrier(carrier)
-    setCarrierRole(carrierR)
-    setEditedCarrier({
-      ...carrier,
-      deliveryDistricts: carrier.deliveryDistricts || [''],
-    });
-    setIsModalOpenCarrier(true);
-  };
+  const [hiddenDeliveryDistricts, setHiddenDeliveryDistricts] = useState([]);
+  // const handleEditClickCarrier = (carrier,carrierR) => {
+  //   // console.log(carrier)
+  //   // seteCarrier(carrier)
+  //   const {
+  //     firstName,
+  //     lastName,
+  //     mobile,
+  //     nid,
+  //     city,
+  //     address,
+  //     deliveryCity,
+  //     deliveryDistricts,
+  //     papers,
+  //     photo,
+  //     _id
+  //   } = carrier;
+  //   seteCarrier({
+  //     firstName,
+  //     lastName,
+  //     mobile,
+  //     nid,
+  //     city,
+  //     address,
+  //     deliveryCity,
+  //     deliveryDistricts: deliveryDistricts || [''],
+  //     papers,
+  //     photo,
+  //     _id
+  //   })
+  //   setEditedCarrier({
+  //     firstName,
+  //     lastName,
+  //     mobile,
+  //     nid,
+  //     city,
+  //     address,
+  //     deliveryCity,
+  //     deliveryDistricts: deliveryDistricts || [''],
+  //     papers,
+  //     photo,
+  //   });
+  //   setCarrierRole(carrierR)
+  //   // setEditedCarrier({
+  //   //   ...carrier,
+  //   //   deliveryDistricts: carrier.deliveryDistricts || [''],
+  //   // });
+  //   setIsModalOpenCarrier(true);
+  //   const selectedCity = cities.find(city => city.name_ar === carrier.deliveryCity);
+  //   if (selectedCity) {
+  //     getDistricts(selectedCity.city_id);
+  //   }
+  // };
 
+  const handleEditClickCarrier = (carrier, carrierR) => {
+    const {
+      firstName,
+      lastName,
+      mobile,
+      nid,
+      city,
+      address,
+      deliveryCity,
+      deliveryDistricts,
+      papers,
+      photo,
+      _id
+    } = carrier;
+    
+    seteCarrier({
+      firstName,
+      lastName,
+      mobile,
+      nid,
+      city,
+      address,
+      deliveryCity,
+      deliveryDistricts: deliveryDistricts || [],
+      papers,
+      photo,
+      _id
+    });
+  
+    setEditedCarrier({
+      firstName,
+      lastName,
+      mobile,
+      nid,
+      city,
+      address,
+      deliveryCity,
+      deliveryDistricts: deliveryDistricts.map(d => d.name_ar) || [],
+      papers,
+      photo,
+    });
+  
+    setCarrierRole(carrierR);
+    setIsModalOpenCarrier(true);
+    
+    const selectedCity = cities.find(city => city.name_ar === carrier.deliveryCity);
+    if (selectedCity) {
+      getDistricts(selectedCity.city_id);
+    }
+  };
+  
   const closeModalCarrier = () => {
     setIsModalOpenCarrier(false);
     setEditedCarrier({
@@ -434,29 +529,133 @@ const [eCarrier, seteCarrier] = useState(null);
 
   const handleInputChangeCarrier = (event) => {
     const { name, value } = event.target;
-    setEditedCarrier((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-
+  
+    if (name === 'deliveryDistricts') {
+      if (value === "جميع المناطق") {
+        const allDistricts = districts.map(district => district.district_id);
+        setEditedCarrier((prev) => ({
+          ...prev,
+          deliveryDistricts: [value],
+        }));
+        
+        setHiddenDeliveryDistricts(allDistricts);
+      } else {
+        const index = parseInt(event.target.dataset.index, 10);
+        const updatedAreas = [...editedCarrier.deliveryDistricts];
+        updatedAreas[index] = value;
+  
+        // Find the selected district by its Arabic name
+        const selectedDistrict = districts.find(district => district.name_ar === value);
+  
+        if (selectedDistrict) {
+          // Update the hiddenDeliveryDistricts array with the selected district ID
+          const updatedHiddenAreas = [...hiddenDeliveryDistricts];
+          updatedHiddenAreas[index] = selectedDistrict.district_id;
+  
+          setHiddenDeliveryDistricts(updatedHiddenAreas);
+        }
+  
+        setEditedCarrier((prev) => ({
+          ...prev,
+          deliveryDistricts: updatedAreas,
+        }));
+      }
+    } else {
+      setEditedCarrier((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+  
     if (name === 'deliveryCity') {
       const selectedCity = cities.find(city => city.name_ar === value);
       if (selectedCity) {
         setCityId(selectedCity.city_id);
+        getDistricts(selectedCity.city_id);
         setIsDistrict(true);
       }
     }
+  
+    console.log('Hidden Delivery Districts:', hiddenDeliveryDistricts);
+    console.log('Edited Carrier:', editedCarrier);
   };
-
   const handleDistrictChange = (event, index) => {
-    const { value } = event.target;
+  const { value } = event.target;
+  const selectedDistrict = districts.find(district => district.name_ar === value);
+
+  if (selectedDistrict) {
     const updatedDistricts = [...editedCarrier.deliveryDistricts];
-    updatedDistricts[index] = value;
+    updatedDistricts[index] = selectedDistrict.name_ar;
+
+    const updatedHiddenAreas = [...hiddenDeliveryDistricts];
+    updatedHiddenAreas[index] = selectedDistrict.district_id;
+
+    setHiddenDeliveryDistricts(updatedHiddenAreas);
     setEditedCarrier((prev) => ({
       ...prev,
       deliveryDistricts: updatedDistricts,
     }));
-  };
+  }
+};
+
+
+  // const handleInputChangeCarrier = (event) => {
+  //   const { name, value } = event.target;
+  //   if (name === 'deliveryDistricts') {
+  //     if (value === "جميع المناطق") {
+  //       const allDistricts = districts.map(district => district.district_id);
+  //       setEditedCarrier((prev) => ({
+  //         ...prev,
+  //         deliveryDistricts: [value],
+  //       }));
+        
+  //       setHiddenDeliveryDistricts(allDistricts);
+  //     } else {
+  //       const index = parseInt(event.target.dataset.index);
+  //       const updatedAreas = [...editedCarrier.deliveryDistricts];
+  //       updatedAreas[index] = value;
+
+  //       const selectedDistrict = districts.find(district => district.name_ar === value);
+  //       if (selectedDistrict) {
+  //         const updatedHiddenAreas = [...hiddenDeliveryDistricts];
+  //         updatedHiddenAreas[index] = selectedDistrict.district_id;
+  //         setHiddenDeliveryDistricts(updatedHiddenAreas);
+  //       }
+  //       setEditedCarrier((prev) => ({
+  //         ...prev,
+  //         deliveryDistricts: updatedAreas
+  //       }));    
+  //     }
+  //   } else {
+  //     setEditedCarrier((prev) => ({
+  //       ...prev,
+  //       [name]: value,
+  //     }));   
+    
+  //    }
+    
+
+  //   if (name === 'deliveryCity') {
+  //     const selectedCity = cities.find(city => city.name_ar === value);
+  //     if (selectedCity) {
+  //       setCityId(selectedCity.city_id);
+  //       getDistricts(selectedCity.city_id)
+  //       setIsDistrict(true);
+  //     }
+  //   }
+  //   console.log(hiddenDeliveryDistricts)
+  //   console.log(editedCarrier)
+  // };
+
+  // const handleDistrictChange = (event, index) => {
+  //   const { value } = event.target;
+  //   const updatedDistricts = [...editedCarrier.deliveryDistricts];
+  //   updatedDistricts[index] = value;
+  //   setEditedCarrier((prev) => ({
+  //     ...prev,
+  //     deliveryDistricts: updatedDistricts,
+  //   }));
+  // };
 
   const addAreaInput = () => {
     setEditedCarrier((prev) => ({
@@ -467,10 +666,17 @@ const [eCarrier, seteCarrier] = useState(null);
 
   const handleEditSubmitCarrier = async (event) => {
     event.preventDefault();
+    const deliveryDistrictsToSend = editedCarrier.deliveryDistricts.includes("جميع المناطق") ? hiddenDeliveryDistricts : hiddenDeliveryDistricts.length !=0?hiddenDeliveryDistricts:eCarrier.deliveryDistricts;
+  
+    const carrierDataToSend = {
+      ...editedCarrier,
+      deliveryDistricts: deliveryDistrictsToSend,
+    };
     try {
       const response = await axios.put(
         `https://dashboard.go-tex.net/logistics-test/carrier/${eCarrier._id}?role=${carrierRole}`,
-        { ...editedCarrier },
+        // { ...editedCarrier },
+        carrierDataToSend,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -481,9 +687,13 @@ const [eCarrier, seteCarrier] = useState(null);
       closeModalCarrier();
       window.alert("تم تعديل بيانات المندوب بنجاح");
       getUsersCarriersAdmin();
+      console.log(editedCarrier)
     } catch (error) {
       console.error(error);
       alert(error.response.data.msg);
+      console.log(carrierDataToSend)
+      console.log(hiddenDeliveryDistricts)
+
     }
   };
   return (
@@ -505,6 +715,7 @@ const [eCarrier, seteCarrier] = useState(null);
             <th scope="col"> الهوية </th>
             <th scope="col">صورة الهوية  </th>
             <th scope="col">صورة شخصية</th>
+            <th scope="col">قيمة الكاش </th>
             <th>role</th>
             <th></th>
             <th></th>
@@ -525,10 +736,9 @@ const [eCarrier, seteCarrier] = useState(null);
                 {item.address?<td>{item.address}</td>:<td>_</td>}
                 {item.deliveryCity?<td>{item.deliveryCity}</td>:<td>_</td>}
                 {item.deliveryDistricts ? (
-          <td>
-            {item.deliveryDistricts.join(',')}
-          </td>
-        ) : (
+                    <td>{item.deliveryDistricts.map((dist, index) => dist.name_ar).join(', ')}</td>
+                )
+           : (
           <td>_</td>
         )}
                 {item.nid?<td>{item.nid}</td>:<td>_</td>}
@@ -538,7 +748,9 @@ const [eCarrier, seteCarrier] = useState(null);
                 {item.photo && item.photo?<td>
                   <a href={item.photo.replace('public', 'https://dashboard.go-tex.net/logistics-test')} target='_blank'>رابط_الصورة</a>
                 </td>:<td>_</td>}
-                
+                {item.role == 'storekeeper' ?<td>{item.collectedCashAmount}
+                </td>:item.role == 'collector' || item.role == 'receiver'?<td>{item.collectedCashAmount}
+                </td>:<td>0</td>}
                 {item.role?<td>{item.role}</td>:<td>_</td>}
                 {item.role == 'data entry' ?<td>
                   <button className="btn-dataentry btn btn-secondary" onClick={()=>{handleEditClickUser(item)}}>  تعديل البيانات</button>
@@ -552,6 +764,7 @@ const [eCarrier, seteCarrier] = useState(null);
                   <button className="btn-dataentry btn btn-secondary" onClick={()=>{handleEditClickIntegrate(item)}}>تعديل البيانات </button>
                 </td>
                 :<td></td>}
+                
                 {item.role == 'data entry' ?<td>
                   <button className="btn-dataentry btn btn-orange" onClick={()=>{userResendEmail(item._id)}}>إعادة إرسال إيميل </button>
                 </td>:item.role == 'collector' || item.role == 'receiver'?<td>
@@ -819,14 +1032,14 @@ const [eCarrier, seteCarrier] = useState(null);
                           type="text"
                           className='my-input my-2 form-control'
                           name='deliveryDistricts'
-                          value={district}
+                          value={district.name_ar}
                           data-index={index}
                           onChange={(e) => handleDistrictChange(e, index)}
                         />
                         <datalist id={`myCities-${index}`}>
                           <option value="جميع المناطق" />
-                          {districts && districts.filter((district) => district.city_id === cityId).map((district, diIndex) => (
-                            <option key={diIndex} value={district.name_ar} />
+                          {districts && districts.map((district, diIndex) => (
+                            <option key={diIndex} value={district.name_ar} data-id={district.district_id}/>
                           ))}
                         </datalist>
                       </div>

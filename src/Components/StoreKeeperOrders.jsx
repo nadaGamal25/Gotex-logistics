@@ -12,6 +12,7 @@ export default function StoreKeeperOrders() {
       const [orderId, setOrderId] = useState('');
       const [carrierId, setCarrierId] = useState('');
       const [carriersListAdmin, setCarriersListsAdmin] = useState([]);
+      const [cachAmount, setCachAmount] = useState(0);
 
 
       async function getOrders() {
@@ -23,8 +24,9 @@ export default function StoreKeeperOrders() {
               },
             });
           const List = response.data.data;
-          console.log(List)
+          console.log(response)
           setOrders(List)
+          setCachAmount(response.data.storekeeper.collectedCashAmount)
         } catch (error) {
           console.error(error);
         }
@@ -291,8 +293,11 @@ export default function StoreKeeperOrders() {
       return (
         <>
         <div className='p-5' id='content'>
-          <div className="p-2 count-box">
+          <div className="p-2 count-box mx-1">
             <span>عدد الشحنات : {orders.filter((order)=> order.status == 'in store').length}</span>
+          </div>
+          <div className="p-2 count-box mx-1">
+            <span>قيمة الكاش  : {cachAmount} ريال</span>
           </div>
           <div className="bg-b p-2 mb-4 mt-3">
       <div className="row">

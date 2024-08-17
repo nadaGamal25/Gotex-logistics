@@ -127,6 +127,7 @@ export default function ReceiverShipments() {
       closeModalRecieved();
       setSelectedFilesRecieved([]);
       getOrders();
+      setShowModalPayType(false)
     } catch (error) {
       console.error(error);
       alert(error.response.data.msg);
@@ -225,9 +226,11 @@ export default function ReceiverShipments() {
           const stickerUrl = `${response.data.data.transaction.url}`;
            const newTab = window.open();
            newTab.location.href = stickerUrl;
+           setShowModalPayType(false)
     } catch (error) {
       console.error(error);
-      // alert(error.response.data.msg);
+      alert(error.response.data.msg);
+      setShowModalPayType(false)
     }
   }
   const [payments,setPayments]=useState('')
@@ -269,6 +272,19 @@ export default function ReceiverShipments() {
     setPayments('')
   };
   
+
+  const [showModalPayType, setShowModalPayType] = useState(false);
+  const [orderID, setOrderID] = useState('');
+
+  const openModalPayType = (orderid) => {
+    setShowModalPayType(true);
+    setOrderID(orderid)
+  };
+
+  const closeModalPayType = () => {
+    setShowModalPayType(false);
+    setOrderID('')
+  };
   
   return (
     <>
@@ -329,8 +345,9 @@ export default function ReceiverShipments() {
                   
                   {item.status =='pick to client'?
                   <button className="btn btn-danger m-1" onClick={()=>{
-                      payWithVisa(item._id)
-                  }}>الدفع بواسطة فيزا</button>:null}
+                    openModalPayType(item._id)
+                }}>اختر طريقة الدفع أولا</button>
+                  :null}
                   {item.status =='pick to client'?
                   <button className="btn btn-primary m-1" onClick={()=>{
                       openModalRecieved(item._id)
@@ -443,7 +460,7 @@ export default function ReceiverShipments() {
       </Modal>
       <Modal show={showModalRecieved} onHide={closeModalRecieved}>
   <Modal.Header>
-    <Modal.Title>هل العميل استلم الشحنة؟</Modal.Title>
+    <Modal.Title>هل العميل استلم الشحنة و تم الدفع؟</Modal.Title>
   </Modal.Header>
   <Modal.Body>
     <form onSubmit={(e) => { e.preventDefault(); changeStatusRecieved(selectedID); }}>
@@ -540,6 +557,30 @@ export default function ReceiverShipments() {
           <div className="text-center">
        
           <Button className='m-1' variant="secondary" onClick={closeModalPayments}>
+          إغلاق
+          </Button>
+          </div>
+        </Modal.Footer>
+      </Modal>
+      <Modal show={showModalPayType} onHide={closeModalPayType}>
+        <Modal.Header >
+        <Modal.Title> اختر طريقة الدفع 
+             </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className='text-center p-3'>
+          <button className="btn btn-success m-1" onClick={()=>{
+                      payWithVisa(orderID)
+                  }}>الدفع بواسطة فيزا</button>
+                   <button className="btn btn-primary m-1" onClick={()=>{
+                      openModalRecieved(orderID)
+                  }}>الدفع كاش</button>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <div className="text-center">
+       
+          <Button className='m-1' variant="secondary" onClick={closeModalPayType}>
           إغلاق
           </Button>
           </div>

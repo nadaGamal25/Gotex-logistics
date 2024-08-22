@@ -293,12 +293,33 @@ export default function StoreKeeperOrders() {
       return (
         <>
         <div className='p-5' id='content'>
-          <div className="p-2 count-box mx-1">
-            <span>عدد الشحنات : {orders.filter((order)=> order.status == 'in store').length}</span>
+          <div className="row">
+          <div className="col-md-4">
+          <div className="p-2 count-box m-1">
+            <span>الشحنات ف المخزن  : {orders.filter((order)=> order.status == 'in store').length}</span>
           </div>
-          <div className="p-2 count-box mx-1">
+          </div>
+          <div className="col-md-4">
+          <div className="p-2 count-box  m-1">
+            <span>الشحنات المستلمة كاش  : {orders.filter((order)=> order.status == 'received' && order.receiverPaidCash== true).length}</span>
+          </div>
+          </div>
+          <div className="col-md-4">
+          <div className="p-2 count-box  m-1">
+            <span>الشحنات المستلمة فيزا  : {orders.filter((order)=> order.status == 'received' && order.orderPaidWithVisa== true).length}</span>
+          </div>
+          </div>
+          <div className="col-md-4">
+          <div className="p-2 count-box  m-1">
             <span>قيمة الكاش  : {cachAmount} ريال</span>
           </div>
+          </div>
+          <div className="col-md-4"></div>
+          </div>
+          
+          
+          
+          
           <div className="bg-b p-2 mb-4 mt-3">
       <div className="row">
         

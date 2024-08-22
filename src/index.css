@@ -629,7 +629,7 @@ nav form .form-input button{
 
 
 .count-box{
-  display: inline;
+  /* display: inline; */
   background-color: #fffff6;
   border-radius: 5px;
   -webkit-border-radius: 5px;

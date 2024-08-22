@@ -355,7 +355,7 @@ export default function ReceiverShipments() {
                   {item.status =='pick to client' || item.status == "received"?
                   <button className="btn btn-danger m-1" onClick={()=>{
                       openModalPayments(item._id)
-                  }}>محاولات الدفع</button>:null}
+                  }}>حالة الدفع</button>:null}
                   {item.status =="pick to client"?
                   <button className="btn btn-secondary m-1" onClick={()=>{
                       openModalReturn(item._id)
@@ -539,7 +539,7 @@ export default function ReceiverShipments() {
                     <tr key={index}>
                       <td>{index + 1}</td>
                       <td>{item.amount}</td>
-                      <td>{item.code}</td>
+                      <td>{item.data.id}</td>
                       {item.status == "CAPTURED"?<td>تم الدفع</td>:<td>{item.status}</td>}
                      
               

@@ -610,6 +610,58 @@ const handleEditSubmit = async (event) => {
         setPayments('')
       };
       
+      async function takeOrderMoney(orderId) {
+        try {
+          const token = localStorage.getItem('adminToken');
+          if (!token) {
+            throw new Error('Token not found');
+          }
+      
+          const response = await axios.put(
+            `https://dashboard.go-tex.net/logistics-test/order/take-order-money-from-storekeeper/${orderId}`,
+            {},
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+      
+          console.log(response);
+          getShipmentsAdmin();
+          alert("لقد تم التأكيد بنجاح")
+          
+        } catch (error) {
+          console.error(error);
+          alert(error.response.data.msg);
+        }
+      }
+      async function confirmPaidWithVisa(orderId) {
+        try {
+          const token = localStorage.getItem('adminToken');
+          if (!token) {
+            throw new Error('Token not found');
+          }
+      
+          const response = await axios.put(
+            `https://dashboard.go-tex.net/logistics-test/order/order-paid-visa-from-storekeeper/${orderId}`,
+            {},
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+      
+          console.log(response);
+          getShipmentsAdmin();
+          alert("لقد تم التأكيد بنجاح")
+          
+        } catch (error) {
+          console.error(error);
+          alert(error.response.data.msg);
+        }
+      }
       return (
         <>
         <div className='p-5' id='content'>
@@ -641,7 +693,9 @@ const handleEditSubmit = async (event) => {
             <option value="">طريقة الدفع</option>
             <option value="cc">الدفع اونلاين (cc)</option>
             <option value="cod">الدفع عند الاستلام(cod)</option>
-            <option value="">كلاهما</option>
+            <option value="cash cod">المدفوعة كاش(cod)</option>
+            <option value="visa cod">المدفوعة بواسطة فيزا(cod)</option>
+            <option value="">الجميع</option>
             </select>
         </div>
         <div className="col-md-4">
@@ -825,6 +879,18 @@ const handleEditSubmit = async (event) => {
                   <td><button className="btn btn-outline-danger m-1" onClick={()=>{
                       openModalPayments(item._id)
                   }}>محاولات الدفع</button></td>:null}
+                  {item.status=='received' && !item.payment && item.receiverPaidCash ==true?   
+                  <td><button className="btn btn-orange" onClick={()=>{
+                    if(window.confirm('هل قمت باستلام المبلغ كاش لهذه الشحنة ؟')){
+                      takeOrderMoney(item._id)
+                    }
+                    }}>تأكيد استلام كاش  </button></td> :null}
+                    {item.status=='received' && item.payment  && item.orderPaidWithVisa ==true?   
+                  <td><button className="btn btn-orange" onClick={()=>{
+                    if(window.confirm('هل تم دفع المبلغ الخاص بهذه الشحنة بواسطة الفيزا ؟')){
+                      confirmPaidWithVisa(item._id)
+                    }
+                    }}>تأكيد الدفع فيزا   </button></td> :null}
   </tr>
 ))}         
         </tbody>

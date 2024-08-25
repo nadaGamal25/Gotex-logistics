@@ -13,6 +13,7 @@ export default function StoreKeeperOrders() {
       const [carrierId, setCarrierId] = useState('');
       const [carriersListAdmin, setCarriersListsAdmin] = useState([]);
       const [cachAmount, setCachAmount] = useState(0);
+      const [visaAmount, setVisaAmount] = useState(0);
 
 
       async function getOrders() {
@@ -27,6 +28,7 @@ export default function StoreKeeperOrders() {
           console.log(response)
           setOrders(List)
           setCachAmount(response.data.storekeeper.collectedCashAmount)
+          setVisaAmount(response.data.storekeeper.collectedVisaAmount)
         } catch (error) {
           console.error(error);
         }
@@ -290,6 +292,32 @@ export default function StoreKeeperOrders() {
       alert(error.response.data.msg);
     }
   }
+  async function confirmPaidWithVisa(orderId) {
+    try {
+      const token = localStorage.getItem('storekeeperToken');
+      if (!token) {
+        throw new Error('Token not found');
+      }
+  
+      const response = await axios.put(
+        `https://dashboard.go-tex.net/logistics-test/order/order-paid-with-visa/${orderId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      console.log(response);
+      getOrders();
+      alert("لقد تم التأكيد بنجاح")
+      
+    } catch (error) {
+      console.error(error);
+      alert(error.response.data.msg);
+    }
+  }
       return (
         <>
         <div className='p-5' id='content'>
@@ -314,7 +342,11 @@ export default function StoreKeeperOrders() {
             <span>قيمة الكاش  : {cachAmount} ريال</span>
           </div>
           </div>
-          <div className="col-md-4"></div>
+          <div className="col-md-4">
+      <div className="p-2 count-box m-1">
+            <span>قيمة المدفوع فيزا  : {visaAmount} ريال</span>
+          </div>
+      </div>\
           </div>
           
           
@@ -392,8 +424,16 @@ export default function StoreKeeperOrders() {
 
                    {item.status=='received' && !item.payment && item.receiverPaidCash ==false?   
                   <td><button className="btn btn-orange" onClick={()=>{
+                    if(window.confirm('هل قمت باستلام المبلغ كاش لهذه الشحنة ؟')){
                       takeOrderMoney(item._id)
+                    }
                     }}>تأكيد استلام كاش  </button></td> :null}
+                    {item.status=='received' && item.payment  && item.orderPaidWithVisa ==false?   
+                  <td><button className="btn btn-orange" onClick={()=>{
+                    if(window.confirm('هل تم دفع المبلغ الخاص بهذه الشحنة بواسطة الفيزا ؟')){
+                      confirmPaidWithVisa(item._id)
+                    }
+                    }}>تأكيد الدفع فيزا   </button></td> :null}
                    <td>
                     <button className="btn btn-danger" onClick={() => { openModalProblem(item._id) }}>تبليغ مشكلة</button>
                    </td>

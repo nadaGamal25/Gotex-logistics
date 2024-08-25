@@ -341,7 +341,7 @@ export default function StoreRequistsOrders() {
          </Modal.Header>
          <Modal.Body>
          <div className=''>
-          <label htmlFor="">إرفق ملف  (اختياري) </label>
+          <label htmlFor="">إرفق ملف  () </label>
           <input
   type="file"
   className="my-2 my-input form-control"

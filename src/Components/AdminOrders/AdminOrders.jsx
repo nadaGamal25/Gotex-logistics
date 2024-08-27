@@ -879,7 +879,7 @@ const handleEditSubmit = async (event) => {
                   <td><button className="btn btn-outline-danger m-1" onClick={()=>{
                       openModalPayments(item._id)
                   }}>محاولات الدفع</button></td>:null}
-                  {item.status=='received' && !item.payment && item.receiverPaidCash ==true?   
+                  {item.status=='received'  && item.receiverPaidCash ==true?   
                   <td><button className="btn btn-orange" onClick={()=>{
                     if(window.confirm('هل قمت باستلام المبلغ كاش لهذه الشحنة ؟')){
                       takeOrderMoney(item._id)

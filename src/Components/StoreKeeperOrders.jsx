@@ -329,12 +329,12 @@ export default function StoreKeeperOrders() {
           </div>
           <div className="col-md-4">
           <div className="p-2 count-box  m-1">
-            <span>الشحنات المستلمة كاش  : {orders.filter((order)=> order.status == 'received' && order.receiverPaidCash== true).length}</span>
+            <span>الشحنات المستلمة كاش  : {orders.filter((order)=> order.status == 'received' && order.receiverPaidCash== true && order.storekeeperPaidCash===false).length}</span>
           </div>
           </div>
           <div className="col-md-4">
           <div className="p-2 count-box  m-1">
-            <span>الشحنات المستلمة فيزا  : {orders.filter((order)=> order.status == 'received' && order.orderPaidWithVisa== true).length}</span>
+            <span>الشحنات المستلمة فيزا  : {orders.filter((order)=> order.status == 'received' && order.orderPaidWithVisa== true && order.paidWithVisaFromStorekeeper ===false).length}</span>
           </div>
           </div>
           <div className="col-md-4">
@@ -397,7 +397,9 @@ export default function StoreKeeperOrders() {
                 </tr>
               </thead>
               <tbody>
-                {orders && orders.map((item, index) => {
+                {orders && orders
+                .filter((order=>order.paidWithVisaFromStorekeeper ===false && order.storekeeperPaidCash===false))
+                .map((item, index) => {
                   return (
                     <tr key={index}>
                       <td>{index + 1}</td>

@@ -322,11 +322,7 @@ export default function StoreKeeperOrders() {
         <>
         <div className='p-5' id='content'>
           <div className="row">
-          <div className="col-md-4">
-          <div className="p-2 count-box m-1">
-            <span>الشحنات ف المخزن  : {orders.filter((order)=> order.status == 'in store').length}</span>
-          </div>
-          </div>
+          
           <div className="col-md-4">
           <div className="p-2 count-box  m-1">
             <span>الشحنات المستلمة كاش  : {orders.filter((order)=> order.status == 'received' && order.receiverPaidCash== true && order.storekeeperPaidCash===false).length}</span>
@@ -335,6 +331,11 @@ export default function StoreKeeperOrders() {
           <div className="col-md-4">
           <div className="p-2 count-box  m-1">
             <span>الشحنات المستلمة فيزا  : {orders.filter((order)=> order.status == 'received' && order.orderPaidWithVisa== true && order.paidWithVisaFromStorekeeper ===false).length}</span>
+          </div>
+          </div>
+          <div className="col-md-4">
+          <div className="p-2 count-box m-1">
+            <span>الشحنات ف المخزن  : {orders.filter((order)=> order.status == 'in store').length}</span>
           </div>
           </div>
           <div className="col-md-4">
@@ -386,7 +387,7 @@ export default function StoreKeeperOrders() {
                   {/* <th scope="col"> billcode</th> */}
                   <th scope="col">رقم الشحنة</th>
                   <th scope="col">طريقة الدفع</th>
-                  {/* <th scope="col">السعر </th> */}
+                  <th scope="col">السعر </th>
                   <th scope="col">الوزن</th>
                   <th scope="col">عدد القطع</th>
                   <th scope="col">حالة الشحنة</th>
@@ -408,7 +409,7 @@ export default function StoreKeeperOrders() {
                       {/* <td>{item.billcode}</td> */}
                       <td>{item.ordernumber}</td>
                       <td>{item.paytype}</td>
-                      {/* <td>{item.price}</td> */}
+                      <td>{item.price}</td>
                       <td>{item.weight}</td>
                       <td>{item.pieces}</td>
                       <td>{item.status}</td>

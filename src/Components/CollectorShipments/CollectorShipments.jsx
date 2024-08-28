@@ -198,9 +198,14 @@ export default function CollectorShipments() {
     setSelectedFilesCancel([])
   };
 
+  const filteredOrdersFirst = 
+   orders.filter(order => order.status === "pending"  || order.status === "pick to store"
+    || order.status === "late to store" || order.status === "canceled")
+
+  
   const filteredOrders = orderStatus
-  ? orders.filter(order => order.status === orderStatus)
-  : orders;
+  ? filteredOrdersFirst.filter(order => order.status === orderStatus)
+  : filteredOrdersFirst;
 
   return (
     <>
@@ -211,19 +216,20 @@ export default function CollectorShipments() {
           
           placeholder="اختر حالة الشحنة"
           onChange={(e) => setOrderStatus(e.target.value)} >
-            <option value="">اختر حالة الشحنة</option>
+            <option value=""> حالة الشحنة(جميع الشحنات)</option>
             <option value="pending">pending (معلقة)</option>
             <option value="pick to store">pick to store(ف الطريق للمخزن)</option>
-            <option value="in store">in store(فى المخزن)</option>
-            {/* <option value="pick to client">pick to client(ف الطريق للعميل)</option>
-            <option value="delivered">delivered(تم تسليمها)</option> */}
+            {/* <option value="in store">in store(فى المخزن)</option> */}
+             {/*<option value="delivered">delivered(تم تسليمها)</option> */}
             <option value="canceled">canceled(تم الغائها)</option>
-            <option value=''>جميع الشحنات</option>
+            <option value="late to store"> الشحنات المتأخرة</option>
+            {/* <option value=''>جميع الشحنات</option> */}
             </select>
     </div>
     </div>
     <div className="row">
-    {filteredOrders && filteredOrders.slice().reverse().map((item, index) => {
+    {filteredOrders && filteredOrders
+    .map((item, index) => {
               return (
                 <div className="col-md-4 p-2 " key={index}>
                   <div className='order-card p-2'>

@@ -89,6 +89,12 @@ export default function StorekeeperNav({ logout }) {
             </Link>
           </li>
           <li>
+            <Link to="/storeWaitingOrders">
+            <i class="fa-solid fa-boxes-stacked bx"></i>
+            <span className="text">شحنات ف انتظار الاستلام</span>
+            </Link>
+          </li>
+          <li>
             <Link to="/storeAddOrder">
               <i className="fa-solid fa-box-open bx"></i>
               <span className="text"> اضافة شحنة للمخزن</span>

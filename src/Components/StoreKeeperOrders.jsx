@@ -14,7 +14,7 @@ export default function StoreKeeperOrders() {
       const [carriersListAdmin, setCarriersListsAdmin] = useState([]);
       const [cachAmount, setCachAmount] = useState(0);
       const [visaAmount, setVisaAmount] = useState(0);
-
+ 
 
       async function getOrders() {
         try {
@@ -318,6 +318,16 @@ export default function StoreKeeperOrders() {
       alert(error.response.data.msg);
     }
   }
+
+
+  const [orderStatus, setOrderStatus]=useState(null)
+  const filteredOrdersFirst = 
+  orders.filter(order=>order.paidWithVisaFromStorekeeper ===false && order.storekeeperPaidCash===false)
+
+ 
+ const filteredOrders = orderStatus
+ ? filteredOrdersFirst.filter(order => order[orderStatus] === true)
+ : filteredOrdersFirst;
       return (
         <>
         <div className='p-5' id='content'>
@@ -370,13 +380,26 @@ export default function StoreKeeperOrders() {
 
  </div>
         
-        
-       
-        
-        
+ 
       </div>
     </div>
-    
+    <div className="bg-b p-2 mb-4 mt-3">
+    <div className="row">
+    <div className="col-md-4">
+    <select className='form-control m-1'
+          
+          placeholder="اختر حالة الشحنة"
+          onChange={(e) => {
+            setOrderStatus(e.target.value)
+          }} >
+            <option value="">  (جميع الشحنات)</option>
+            <option value="receiverPaidCash">الشحنات المدفوعة كاش</option>
+            <option value="orderPaidWithVisa">الشحنات المدفوعة فيزا</option>
+           
+            </select>
+    </div>
+    </div>
+    </div>
           <div className="my-table p-4 mt-3">
             <table className="table">
               <thead>
@@ -398,8 +421,7 @@ export default function StoreKeeperOrders() {
                 </tr>
               </thead>
               <tbody>
-                {orders && orders
-                .filter((order=>order.paidWithVisaFromStorekeeper ===false && order.storekeeperPaidCash===false))
+                {filteredOrders && filteredOrders
                 .map((item, index) => {
                   return (
                     <tr key={index}>

@@ -54,6 +54,7 @@ import StoreRequistsOrders from './Components/StoreRequistsOrders/StoreRequistsO
 import IntegrateUserRegister from './Components/IntegrateUserRegister/IntegrateUserRegister';
 import IntegrateVerifyEmail from './Components/IntegrateVerifyEmail/IntegrateVerifyEmail';
 import ApikeyUsers from './Components/ApikeyUsers/ApikeyUsers';
+import StoreWaitingOrders from './Components/StoreWaitingOrders/StoreWaitingOrders';
 
 function App() {
   useEffect(() => {
@@ -192,6 +193,7 @@ function App() {
         { path: 'storeShipments', element: <StoreKeeperOrders /> },
         { path: 'storeLateOrders', element: <StoreLateOrder/> },
         { path: 'storeRequistsOrders', element: <StoreRequistsOrders/> },
+        { path: 'storeWaitingOrders', element: <StoreWaitingOrders/> },
 
         // {path:'main',element:<Main/>},
 

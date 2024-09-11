@@ -55,7 +55,6 @@ export default function UserCreateOrder2() {
           }
         );
   
-        if (response.status === 200) {
           console.log(orderData.shipmentValue)
           setisLoading(false);
           window.alert("تم تسجيل الشحنة بنجاح");
@@ -64,12 +63,7 @@ export default function UserCreateOrder2() {
           const shipment = response.data.data;
           setShipments(prevShipments => [...prevShipments, shipment]);
           console.log(shipments)
-        } else if (response.status === 400) {
-          setisLoading(false);
-          const errorMessage = response.data.msg || "An error occurred.";
-          window.alert(`${errorMessage}`);
-          console.log(response.data);
-        }
+      
       } catch (error) {
         // Handle error
         console.error(error);

@@ -18,7 +18,7 @@ export default function AdminUsers() {
 
   async function getUsersListsAdmin() {
     try {
-      const response = await axios.get('https://dashboard.go-tex.net/logistics-test/user',
+      const response = await axios.get('https://dashboard.go-tex.net/logistics/user',
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -33,7 +33,7 @@ export default function AdminUsers() {
   }
   async function getUsersCarriersAdmin() {
     try {
-      const response = await axios.get('https://dashboard.go-tex.net/logistics-test/carrier/',
+      const response = await axios.get('https://dashboard.go-tex.net/logistics/carrier/',
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -48,7 +48,7 @@ export default function AdminUsers() {
   }
   async function getUsersStorekeepersAdmin() {
     try {
-      const response = await axios.get('https://dashboard.go-tex.net/logistics-test/store-keeper',
+      const response = await axios.get('https://dashboard.go-tex.net/logistics/store-keeper',
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -63,7 +63,7 @@ export default function AdminUsers() {
   }
   async function getUsersTrackerAdmin() {
     try {
-      const response = await axios.get('https://dashboard.go-tex.net/logistics-test/tracker/',
+      const response = await axios.get('https://dashboard.go-tex.net/logistics/tracker/',
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -78,7 +78,7 @@ export default function AdminUsers() {
   }
   async function getIntegratetUsersAdmin() {
     try {
-      const response = await axios.get('https://dashboard.go-tex.net/logistics-test/integrate/user/',
+      const response = await axios.get('https://dashboard.go-tex.net/logistics/integrate/user/',
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -96,7 +96,7 @@ export default function AdminUsers() {
 
   async function userResendEmail(userId){
     try{
-    const response= await axios.post(`https://dashboard.go-tex.net/logistics-test/user/resend-verify-email/${userId}`,{},
+    const response= await axios.post(`https://dashboard.go-tex.net/logistics/user/resend-verify-email/${userId}`,{},
     {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -118,7 +118,7 @@ export default function AdminUsers() {
 }
 async function carrierResendEmail(userId){
   try{
-  const response= await axios.post(`https://dashboard.go-tex.net/logistics-test/carrier/resend-verify-email/${userId}`,{},
+  const response= await axios.post(`https://dashboard.go-tex.net/logistics/carrier/resend-verify-email/${userId}`,{},
   {
       headers: {
           Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -140,7 +140,7 @@ async function carrierResendEmail(userId){
 }
 async function trackerResendEmail(userId){
   try{
-  const response= await axios.post(`https://dashboard.go-tex.net/logistics-test/tracker/resend-verify-email/${userId}`,{},
+  const response= await axios.post(`https://dashboard.go-tex.net/logistics/tracker/resend-verify-email/${userId}`,{},
   {
       headers: {
           Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -162,7 +162,7 @@ async function trackerResendEmail(userId){
 }
 async function integrateUserResendEmail(userId){
   try{
-  const response= await axios.post(`https://dashboard.go-tex.net/logistics-test/integrate/user/resend-verify-email/${userId}`,{},
+  const response= await axios.post(`https://dashboard.go-tex.net/logistics/integrate/user/resend-verify-email/${userId}`,{},
   {
       headers: {
           Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -185,7 +185,7 @@ async function integrateUserResendEmail(userId){
 const [cities,setCities]=useState()
 async function getCities() {
   try {
-    const response = await axios.get('https://dashboard.go-tex.net/logistics-test/cities',
+    const response = await axios.get('https://dashboard.go-tex.net/logistics/cities',
     {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -200,7 +200,7 @@ async function getCities() {
 const [districts,setDistricts]=useState()
 async function getDistricts(districtid) {
   try {
-    const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/districts/${districtid}`,
+    const response = await axios.get(`https://dashboard.go-tex.net/logistics/districts/${districtid}`,
     {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -255,7 +255,7 @@ const handleEditSubmitUser = async (event) => {
   event.preventDefault();
   try {
     const response = await axios.post(
-      `https://dashboard.go-tex.net/logistics-test/user/${eUser._id}`,
+      `https://dashboard.go-tex.net/logistics/user/${eUser._id}`,
       {...editedUser},
       {
         headers: {
@@ -314,7 +314,7 @@ const handleEditSubmitIntegrate = async (event) => {
   event.preventDefault();
   try {
     const response = await axios.post(
-      `https://dashboard.go-tex.net/logistics-test/integrate/user/${eIntegrate._id}`,
+      `https://dashboard.go-tex.net/logistics/integrate/user/${eIntegrate._id}`,
       {...editedIntegrate},
       {
         headers: {
@@ -372,7 +372,7 @@ const handleEditSubmitStore = async (event) => {
   event.preventDefault();
   try {
     const response = await axios.post(
-      `https://dashboard.go-tex.net/logistics-test/store-keeper/${eStore._id}`,
+      `https://dashboard.go-tex.net/logistics/store-keeper/${eStore._id}`,
       {...editedStore},
       {
         headers: {
@@ -674,7 +674,7 @@ const [eCarrier, seteCarrier] = useState(null);
     };
     try {
       const response = await axios.put(
-        `https://dashboard.go-tex.net/logistics-test/carrier/${eCarrier._id}?role=${carrierRole}`,
+        `https://dashboard.go-tex.net/logistics/carrier/${eCarrier._id}?role=${carrierRole}`,
         // { ...editedCarrier },
         carrierDataToSend,
         {
@@ -743,10 +743,10 @@ const [eCarrier, seteCarrier] = useState(null);
         )}
                 {item.nid?<td>{item.nid}</td>:<td>_</td>}
                 {item.papers && item.papers[0]?<td>
-                  <a href={item.papers[0].replace('public', 'https://dashboard.go-tex.net/logistics-test')} target='_blank'>رابط_الملف</a>
+                  <a href={item.papers[0].replace('public', 'https://dashboard.go-tex.net/logistics')} target='_blank'>رابط_الملف</a>
                 </td>:<td>_</td>}
                 {item.photo && item.photo?<td>
-                  <a href={item.photo.replace('public', 'https://dashboard.go-tex.net/logistics-test')} target='_blank'>رابط_الصورة</a>
+                  <a href={item.photo.replace('public', 'https://dashboard.go-tex.net/logistics')} target='_blank'>رابط_الصورة</a>
                 </td>:<td>_</td>}
                 {item.role == 'storekeeper' ?<td>{item.collectedCashAmount}
                 </td>:item.role == 'collector' || item.role == 'receiver'?<td>{item.collectedCashAmount}

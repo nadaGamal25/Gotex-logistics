@@ -24,7 +24,7 @@ export default function AdminOrdersWithoutCarrier() {
       }, [])
       async function getCollectorCarriers() {
         try {
-          const response = await axios.get('https://dashboard.go-tex.net/logistics-test/carrier/?role=collector',
+          const response = await axios.get('https://dashboard.go-tex.net/logistics/carrier/?role=collector',
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -39,7 +39,7 @@ export default function AdminOrdersWithoutCarrier() {
       }
       async function getRecieverCarriers() {
         try {
-          const response = await axios.get('https://dashboard.go-tex.net/logistics-test/carrier/?role=receiver',
+          const response = await axios.get('https://dashboard.go-tex.net/logistics/carrier/?role=receiver',
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -56,7 +56,7 @@ export default function AdminOrdersWithoutCarrier() {
       async function getShipmentsAdmin() {
         try {
           setLoading(true);
-          const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/orders-without-carriers`, {
+          const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/orders-without-carriers`, {
             params: {
                 page: currentPage,
                 limit: 100,
@@ -85,7 +85,7 @@ export default function AdminOrdersWithoutCarrier() {
           setCurrentPage(currentPage - 1); 
           try {
             setLoading(true);
-            const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/orders-without-carriers`, {
+            const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/orders-without-carriers`, {
               params: {
                   page: currentPage -1,
                   limit: 100,
@@ -114,7 +114,7 @@ export default function AdminOrdersWithoutCarrier() {
           setCurrentPage(currentPage + 1);
           try {
             setLoading(true);
-            const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/orders-without-carriers`, {
+            const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/orders-without-carriers`, {
               params: {
                   page: currentPage +1,
                   limit: 100,
@@ -164,7 +164,7 @@ export default function AdminOrdersWithoutCarrier() {
     
     try {
         const response = await axios.put(
-          `https://dashboard.go-tex.net/logistics-test/order/add-order-to-collector`,
+          `https://dashboard.go-tex.net/logistics/order/add-order-to-collector`,
           {
             orderId: orderId,
             carrierId: carrierId,
@@ -197,7 +197,7 @@ export default function AdminOrdersWithoutCarrier() {
     
     try {
         const response = await axios.put(
-          `https://dashboard.go-tex.net/logistics-test/order/add-order-to-receiver`,
+          `https://dashboard.go-tex.net/logistics/order/add-order-to-receiver`,
           {
             orderId: orderId,
             carrierId: carrierId,
@@ -294,7 +294,7 @@ export default function AdminOrdersWithoutCarrier() {
                    <td>{item.pieces}</td>
                    <td>{item.status}</td>
                    {item.images && item.images[0]?<td>
-               <a href={item.images[0].replace('public', 'https://dashboard.go-tex.net/logistics-test')} target='_blank'>رابط_الملف</a>
+               <a href={item.images[0].replace('public', 'https://dashboard.go-tex.net/logistics')} target='_blank'>رابط_الملف</a>
              </td>:<td>_</td>}
                    {item.collector && item.collector.length > 0 && item.collector[0].firstName ? (
 <td>{item.collector[0].firstName} {item.collector[0].lastName}</td>

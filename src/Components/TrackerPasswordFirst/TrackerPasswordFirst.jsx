@@ -22,7 +22,7 @@ export default function TrackerPasswordFirst() {
     })
     async function sendRegisterDataToApi(){
     try{
-    let response= await axios.post(`https://dashboard.go-tex.net/logistics-test/tracker/set-password/${allparams.id}`,theUser,
+    let response= await axios.post(`https://dashboard.go-tex.net/logistics/tracker/set-password/${allparams.id}`,theUser,
    
       );
     if(response.status == 200){

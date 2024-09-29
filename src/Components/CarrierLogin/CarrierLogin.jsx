@@ -20,7 +20,7 @@ export default function CarrierLogin({saveCarrierData}) {
    
     async function sendLoginDataToApi(){
       try {
-        const response = await axios.post('https://dashboard.go-tex.net/logistics-test/carrier/login', theUser);
+        const response = await axios.post('https://dashboard.go-tex.net/logistics/carrier/login', theUser);
         if (response.status === 201) {
           navigate('/main');
           localStorage.setItem('carrierToken', response.data.token);

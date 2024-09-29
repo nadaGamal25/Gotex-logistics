@@ -12,7 +12,7 @@ export default function StoreLateOrders() {
 
   async function getLateOrders() {
     try {
-      const response = await axios.get('https://dashboard.go-tex.net/logistics-test/order/late',
+      const response = await axios.get('https://dashboard.go-tex.net/logistics/order/late',
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('storekeeperToken')}`,
@@ -56,7 +56,7 @@ for (let pair of formData.entries()) {
 }
 try {
   const response = await axios.put(
-    `https://dashboard.go-tex.net/logistics-test/order/in-store-request-status`,
+    `https://dashboard.go-tex.net/logistics/order/in-store-request-status`,
      formData,
     {
       headers: {
@@ -78,7 +78,7 @@ try {
 async function rejectOrder(orderid) {
 try {
   const response = await axios.put(
-    `https://dashboard.go-tex.net/logistics-test/order/in-store-request-status`,
+    `https://dashboard.go-tex.net/logistics/order/in-store-request-status`,
     {
       orderId: orderid,
       requestStatus: "rejected"

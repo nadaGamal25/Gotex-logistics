@@ -11,7 +11,7 @@ export default function ApikeyUsers() {
     
       async function getUsersListsAdmin() {
         try {
-          const response = await axios.get('https://dashboard.go-tex.net/logistics-test/integrate/user/',
+          const response = await axios.get('https://dashboard.go-tex.net/logistics/integrate/user/',
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('adminToken')}`,

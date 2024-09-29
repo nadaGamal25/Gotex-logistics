@@ -20,7 +20,7 @@ export default function StoreKeeperLogin({saveStorekeeperData}) {
    
     async function sendLoginDataToApi(){
       try {
-        const response = await axios.post('https://dashboard.go-tex.net/logistics-test/store-keeper/login', theUser);
+        const response = await axios.post('https://dashboard.go-tex.net/logistics/store-keeper/login', theUser);
         if (response.status === 201) {
           navigate('/storeShipments');
           localStorage.setItem('storekeeperToken', response.data.token);

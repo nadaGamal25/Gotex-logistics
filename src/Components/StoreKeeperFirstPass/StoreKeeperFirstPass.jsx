@@ -22,7 +22,7 @@ export default function StoreKeeperFirstPass() {
     })
     async function sendRegisterDataToApi(){
     try{
-    let response= await axios.post(`https://dashboard.go-tex.net/logistics-test/store-keeper/set-password/${allparams.id}`,theUser,
+    let response= await axios.post(`https://dashboard.go-tex.net/logistics/store-keeper/set-password/${allparams.id}`,theUser,
    
       );
     if(response.status == 200){

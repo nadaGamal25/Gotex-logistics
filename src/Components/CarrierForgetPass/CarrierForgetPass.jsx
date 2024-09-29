@@ -10,7 +10,7 @@ export default function CarrierForgetPass({onTokenReceived }) {
     const handleSubmit = async (e) => {
           e.preventDefault();
           try {
-            const response = await fetch('https://dashboard.go-tex.net/logistics-test/carrier/send-forget-password-email', {
+            const response = await fetch('https://dashboard.go-tex.net/logistics/carrier/send-forget-password-email', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'

@@ -37,7 +37,7 @@ const [dateFilter, setDateFilter] = useState(false);
     
       async function geOrders() {
         try {
-          const response = await axios.get('https://dashboard.go-tex.net/logistics-test/order/get-all',
+          const response = await axios.get('https://dashboard.go-tex.net/logistics/order/get-all',
             {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -53,13 +53,13 @@ const [dateFilter, setDateFilter] = useState(false);
     
       async function getSticker(orderId) {
         try {
-          const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/getorder/${orderId}`, {
+          const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/getorder/${orderId}`, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
             },
           });
           console.log(response)
-          const stickerUrl = `${response.data.url.replace('upload', 'https://dashboard.go-tex.net/logistics-test/upload')}`;
+          const stickerUrl = `${response.data.url.replace('upload', 'https://dashboard.go-tex.net/logistics/upload')}`;
           const newTab = window.open();
           newTab.location.href = stickerUrl;
         } catch (error) {
@@ -70,7 +70,7 @@ const [dateFilter, setDateFilter] = useState(false);
       async function getShipmentsAdmin() {
         try {
           setLoading(true);
-          const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-all`, {
+          const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/get-all`, {
             params: {
                 page: currentPage,
                 limit: 100,
@@ -96,7 +96,7 @@ const [dateFilter, setDateFilter] = useState(false);
       async function getSearchShipmentsAdmin() {
         try {
           setLoading(true);
-          const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-all`, {
+          const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/get-all`, {
             params: {
                 page: currentPage2,
                 limit: 100,
@@ -137,7 +137,7 @@ const [dateFilter, setDateFilter] = useState(false);
         setCurrentPage(currentPage - 1); 
         try {
           setLoading(true);
-          const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-all`, {
+          const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/get-all`, {
             params: {
                 page: currentPage -1,
                 limit: 100,
@@ -167,7 +167,7 @@ const [dateFilter, setDateFilter] = useState(false);
         setCurrentPage(currentPage + 1);
         try {
           setLoading(true);
-          const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-all`, {
+          const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/get-all`, {
             params: {
                 page: currentPage +1,
                 limit: 100,
@@ -197,7 +197,7 @@ const [dateFilter, setDateFilter] = useState(false);
     setCurrentPage2(currentPage2 - 1); 
     try {
       setLoading(true);
-      const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-all`, {
+      const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/get-all`, {
         params: {
           page: currentPage2,
           limit: 100,
@@ -234,7 +234,7 @@ const handleNextPage2 = async () => {
     setCurrentPage2(currentPage2 + 1) 
     try {
       setLoading(true);
-      const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-all`, {
+      const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/get-all`, {
         params: {
           page: currentPage2,
           limit: 100,
@@ -269,7 +269,7 @@ const handleNextPage2 = async () => {
 async function getSearchShipmentsPage() {
   try {
     setLoading(true);
-    const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-all`, {
+    const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/get-all`, {
       params: {
         page: currentPage2,
         limit: 100,
@@ -302,7 +302,7 @@ const exportToExcel = async () => {
     setLoading(true);
 
     // Make the search request
-    const response = await axios.get('https://dashboard.go-tex.net/logistics-test/order/get-all', {
+    const response = await axios.get('https://dashboard.go-tex.net/logistics/order/get-all', {
       params: {
         page: currentPage2,
         limit: 100,
@@ -416,7 +416,7 @@ const [selectedID, setSelectedID] = useState(null);
  
    try {
      const response = await axios.put(
-       `https://dashboard.go-tex.net/logistics-test/order/change-status-to-pending`,
+       `https://dashboard.go-tex.net/logistics/order/change-status-to-pending`,
        formData,
        {
          headers: {
@@ -465,7 +465,7 @@ const [selectedFilesCancel, setSelectedFilesCancel] = useState([]);
   
     try {
       const response = await axios.put(
-        `https://dashboard.go-tex.net/logistics-test/order/cancel-order`,
+        `https://dashboard.go-tex.net/logistics/order/cancel-order`,
         formData,
         {
           headers: {
@@ -543,7 +543,7 @@ const handleEditSubmit = async (event) => {
   event.preventDefault();
   try {
     const response = await axios.put(
-      `https://dashboard.go-tex.net/logistics-test/order/edit-order/${eOrder._id}`,
+      `https://dashboard.go-tex.net/logistics/order/edit-order/${eOrder._id}`,
       {...editedOrder},
       {
         headers: {
@@ -567,7 +567,7 @@ const handleEditSubmit = async (event) => {
       const [selectedImages, setSelectedImages] = useState([]);
       const [showModal, setShowModal] = useState(false);
       function openCarousel(images) {
-        const formattedImages = images.map(img => img.replace('public', 'https://dashboard.go-tex.net/logistics-test'));
+        const formattedImages = images.map(img => img.replace('public', 'https://dashboard.go-tex.net/logistics'));
         setSelectedImages(formattedImages);
         setShowModal(true);
       }
@@ -581,7 +581,7 @@ const handleEditSubmit = async (event) => {
           }
       
           const response = await axios.get(
-            `https://dashboard.go-tex.net/logistics-test/payment/order-payments/${orderId}`,
+            `https://dashboard.go-tex.net/logistics/payment/order-payments/${orderId}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -618,7 +618,7 @@ const handleEditSubmit = async (event) => {
           }
       
           const response = await axios.put(
-            `https://dashboard.go-tex.net/logistics-test/order/take-order-money-from-storekeeper/${orderId}`,
+            `https://dashboard.go-tex.net/logistics/order/take-order-money-from-storekeeper/${orderId}`,
             {},
             {
               headers: {
@@ -644,7 +644,7 @@ const handleEditSubmit = async (event) => {
           }
       
           const response = await axios.put(
-            `https://dashboard.go-tex.net/logistics-test/order/order-paid-visa-from-storekeeper/${orderId}`,
+            `https://dashboard.go-tex.net/logistics/order/order-paid-visa-from-storekeeper/${orderId}`,
             {},
             {
               headers: {
@@ -990,7 +990,7 @@ onChange={(e) => setCurrentPage2(e.target.value)} />
                       <td>{item.pieces}</td>
                       <td>{item.status}</td>
                       {item.images && item.images[0]?<td>
-                  <a href={item.images[0].replace('public', 'https://dashboard.go-tex.net/logistics-test')} target='_blank'>رابط_الملف</a>
+                  <a href={item.images[0].replace('public', 'https://dashboard.go-tex.net/logistics')} target='_blank'>رابط_الملف</a>
                 </td>:<td>_</td>}
                       {item.pickedby && item.pickedby.firstName ? (
   <td>{item.pickedby.firstName} {item.pickedby.lastName}</td>

@@ -17,7 +17,7 @@ export default function AdminNav({logout}) {
     const [lateOrdersNumber,setLateOrdersNumber]=useState('')  
     async function getLateOrders() {
       try {
-        const response = await axios.get('https://dashboard.go-tex.net/logistics-test/order/late',
+        const response = await axios.get('https://dashboard.go-tex.net/logistics/order/late',
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('adminToken')}`,

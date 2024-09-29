@@ -24,7 +24,7 @@ export default function StorekeeperNav({ logout }) {
   async function getLateOrders() {
     try {
       console.log('Fetching late orders');
-      const response = await axios.get('https://dashboard.go-tex.net/logistics-test/order/late', {
+      const response = await axios.get('https://dashboard.go-tex.net/logistics/order/late', {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('storekeeperToken')}`,
         },
@@ -161,7 +161,7 @@ export default function StorekeeperNav({ logout }) {
   
 //     async function getLateOrders() {
 //       try {
-//         const response = await axios.get('https://dashboard.go-tex.net/logistics-test/order/late',
+//         const response = await axios.get('https://dashboard.go-tex.net/logistics/order/late',
 //         {
 //           headers: {
 //             Authorization: `Bearer ${localStorage.getItem('storekeeperToken')}`,

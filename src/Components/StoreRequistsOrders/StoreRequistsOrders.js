@@ -15,7 +15,7 @@ export default function StoreRequistsOrders() {
 
       async function getOrders() {
         try {
-          const response = await axios.get('https://dashboard.go-tex.net/logistics-test/order/in-store-requests',
+          const response = await axios.get('https://dashboard.go-tex.net/logistics/order/in-store-requests',
             {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem('storekeeperToken')}`,
@@ -31,13 +31,13 @@ export default function StoreRequistsOrders() {
     
       async function getSticker(orderId) {
         try {
-          const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/getorder/${orderId}`, {
+          const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/getorder/${orderId}`, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('storekeeperToken')}`,
             },
           });
           console.log(response)
-          const stickerUrl = `${response.data.url.replace('upload', 'https://dashboard.go-tex.net/logistics-test/upload')}`;
+          const stickerUrl = `${response.data.url.replace('upload', 'https://dashboard.go-tex.net/logistics/upload')}`;
           const newTab = window.open();
           newTab.location.href = stickerUrl;
         } catch (error) {
@@ -48,7 +48,7 @@ export default function StoreRequistsOrders() {
     
         try {
             const response = await axios.put(
-              `https://dashboard.go-tex.net/logistics-test/order/add-order-to-receiver`,
+              `https://dashboard.go-tex.net/logistics/order/add-order-to-receiver`,
               {
                 orderId: orderId,
                 carrierId: carrierId,
@@ -98,7 +98,7 @@ export default function StoreRequistsOrders() {
       
       async function getUsersCarriersAdmin() {
         try {
-          const response = await axios.get('https://dashboard.go-tex.net/logistics-test/carrier/get-receivers'
+          const response = await axios.get('https://dashboard.go-tex.net/logistics/carrier/get-receivers'
           ,{
             headers: {
               Authorization: `Bearer ${localStorage.getItem('storekeeperToken')}`,
@@ -144,7 +144,7 @@ export default function StoreRequistsOrders() {
     }
     try {
       const response = await axios.put(
-        `https://dashboard.go-tex.net/logistics-test/order/in-store-request-status`,
+        `https://dashboard.go-tex.net/logistics/order/in-store-request-status`,
          formData,
         {
           headers: {
@@ -166,7 +166,7 @@ export default function StoreRequistsOrders() {
   async function rejectOrder(orderid) {
     try {
       const response = await axios.put(
-        `https://dashboard.go-tex.net/logistics-test/order/in-store-request-status`,
+        `https://dashboard.go-tex.net/logistics/order/in-store-request-status`,
         {
           orderId: orderid,
           requestStatus: "rejected"
@@ -204,7 +204,7 @@ export default function StoreRequistsOrders() {
   
     try {
       const response = await axios.put(
-        `https://dashboard.go-tex.net/logistics-test/order/problem-request`,
+        `https://dashboard.go-tex.net/logistics/order/problem-request`,
         formData,
         {
           headers: {

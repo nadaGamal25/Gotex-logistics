@@ -11,7 +11,7 @@ export default function UserOrders() {
 
   async function getOrders() {
     try {
-      const response = await axios.get('https://dashboard.go-tex.net/logistics-test/order/get-user-orders',
+      const response = await axios.get('https://dashboard.go-tex.net/logistics/order/get-user-orders',
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('userToken')}`,
@@ -27,13 +27,13 @@ export default function UserOrders() {
 
   async function getSticker(orderId) {
     try {
-      const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/getorder/${orderId}`, {
+      const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/getorder/${orderId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('userToken')}`,
         },
       });
       console.log(response)
-      const stickerUrl = `${response.data.url.replace('upload', 'https://dashboard.go-tex.net/logistics-test/upload')}`;
+      const stickerUrl = `${response.data.url.replace('upload', 'https://dashboard.go-tex.net/logistics/upload')}`;
       const newTab = window.open();
       newTab.location.href = stickerUrl;
     } catch (error) {
@@ -58,7 +58,7 @@ export default function UserOrders() {
   
     try {
       const response = await axios.put(
-        `https://dashboard.go-tex.net/logistics-test/order/change-status-to-pending`,
+        `https://dashboard.go-tex.net/logistics/order/change-status-to-pending`,
         formData,
         {
           headers: {
@@ -108,7 +108,7 @@ export default function UserOrders() {
   
     try {
       const response = await axios.put(
-        `https://dashboard.go-tex.net/logistics-test/order/cancel-order`,
+        `https://dashboard.go-tex.net/logistics/order/cancel-order`,
         formData,
         {
           headers: {
@@ -185,7 +185,7 @@ export default function UserOrders() {
     event.preventDefault();
     try {
       const response = await axios.put(
-        `https://dashboard.go-tex.net/logistics-test/order/edit-order/${eOrder._id}`,
+        `https://dashboard.go-tex.net/logistics/order/edit-order/${eOrder._id}`,
         {...editedOrder},
         {
           headers: {

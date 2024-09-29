@@ -22,7 +22,7 @@ export default function UserPasswordFirst() {
     })
     async function sendRegisterDataToApi(){
     try{
-    let response= await axios.post(`https://dashboard.go-tex.net/logistics-test/user/set-password/${allparams.id}`,theUser,
+    let response= await axios.post(`https://dashboard.go-tex.net/logistics/user/set-password/${allparams.id}`,theUser,
    
       );
     if(response.status == 200){

@@ -12,7 +12,7 @@ export default function CollectorShipments() {
   const [orderStatus, setOrderStatus]=useState('')
   async function getOrders() {
     try {
-      const response = await axios.get('https://dashboard.go-tex.net/logistics-test/order/get-collector-orders',
+      const response = await axios.get('https://dashboard.go-tex.net/logistics/order/get-collector-orders',
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('carrierToken')}`,
@@ -28,13 +28,13 @@ export default function CollectorShipments() {
 
   async function getSticker(orderId) {
     try {
-      const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/getorder/${orderId}`, {
+      const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/getorder/${orderId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('carrierToken')}`,
         },
       });
       console.log(response)
-      const stickerUrl = `${response.data.url.replace('upload', 'https://dashboard.go-tex.net/logistics-test/upload')}`;
+      const stickerUrl = `${response.data.url.replace('upload', 'https://dashboard.go-tex.net/logistics/upload')}`;
       const newTab = window.open();
       newTab.location.href = stickerUrl;
     } catch (error) {
@@ -59,7 +59,7 @@ export default function CollectorShipments() {
     }  
     try {
       const response = await axios.put(
-        `https://dashboard.go-tex.net/logistics-test/order/picked-to-store`,
+        `https://dashboard.go-tex.net/logistics/order/picked-to-store`,
         formData,
         {
           headers: {
@@ -112,7 +112,7 @@ export default function CollectorShipments() {
   
     try {
       const response = await axios.put(
-        `https://dashboard.go-tex.net/logistics-test/order/in-store-request`,
+        `https://dashboard.go-tex.net/logistics/order/in-store-request`,
         formData,
         {
           headers: {
@@ -162,7 +162,7 @@ export default function CollectorShipments() {
   
     try {
       const response = await axios.put(
-        `https://dashboard.go-tex.net/logistics-test/order/cancel-order-by-collector`,
+        `https://dashboard.go-tex.net/logistics/order/cancel-order-by-collector`,
         formData,
         {
           headers: {

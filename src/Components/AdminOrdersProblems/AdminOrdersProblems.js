@@ -12,7 +12,7 @@ export default function AdminOrdersProblems() {
     
       async function getOrders() {
         try {
-          const response = await axios.get('https://dashboard.go-tex.net/logistics-test/order/get-problem-requests',
+          const response = await axios.get('https://dashboard.go-tex.net/logistics/order/get-problem-requests',
             {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -28,13 +28,13 @@ export default function AdminOrdersProblems() {
     
       async function getSticker(orderId) {
         try {
-          const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/getorder/${orderId}`, {
+          const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/getorder/${orderId}`, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
             },
           });
           console.log(response)
-          const stickerUrl = `${response.data.url.replace('upload', 'https://dashboard.go-tex.net/logistics-test/upload')}`;
+          const stickerUrl = `${response.data.url.replace('upload', 'https://dashboard.go-tex.net/logistics/upload')}`;
           const newTab = window.open();
           newTab.location.href = stickerUrl;
         } catch (error) {
@@ -55,7 +55,7 @@ export default function AdminOrdersProblems() {
       async function closeProblem(orderid) {
         try {
           const response = await axios.put(
-            `https://dashboard.go-tex.net/logistics-test/order/close-problem`,
+            `https://dashboard.go-tex.net/logistics/order/close-problem`,
             {
               orderId: orderid,
               description:descClose,
@@ -77,7 +77,7 @@ export default function AdminOrdersProblems() {
       }
 
       function openCarousel(images) {
-        const formattedImages = images.map(img => img.replace('public', 'https://dashboard.go-tex.net/logistics-test'));
+        const formattedImages = images.map(img => img.replace('public', 'https://dashboard.go-tex.net/logistics'));
         setSelectedImages(formattedImages);
         setShowModal(true);
       }
@@ -211,7 +211,7 @@ export default function AdminOrdersProblems() {
 
   {item.problem.images ?( item.problem.images.map((image,index) => (
     <li key={index}>
-      <a class="dropdown-item"  href={image[index].replace('public', 'https://dashboard.go-tex.net/logistics-test')} target='_blank'>
+      <a class="dropdown-item"  href={image[index].replace('public', 'https://dashboard.go-tex.net/logistics')} target='_blank'>
         صورة {index+1}
       </a>
     </li>

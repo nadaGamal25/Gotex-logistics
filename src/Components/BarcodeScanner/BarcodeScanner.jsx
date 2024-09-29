@@ -11,7 +11,7 @@ function BarcodeScanner() {
 
     async function confirmOrder(scanResult){
         try{
-        const response= await axios.patch(`https://dashboard.go-tex.net/logistics-test/store-keeper/add-order-store/${scanResult}`,{},
+        const response= await axios.patch(`https://dashboard.go-tex.net/logistics/store-keeper/add-order-store/${scanResult}`,{},
         {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('storekeeperToken')}`,

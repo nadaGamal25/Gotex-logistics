@@ -11,7 +11,7 @@ export default function StoreWaitingOrders() {
     
       async function getOrders() {
         try {
-          const response = await axios.get('https://dashboard.go-tex.net/logistics-test/order/orders-to-be-stored',
+          const response = await axios.get('https://dashboard.go-tex.net/logistics/order/orders-to-be-stored',
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('storekeeperToken')}`,
@@ -26,13 +26,13 @@ export default function StoreWaitingOrders() {
       }
       async function getSticker(orderId) {
         try {
-          const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/getorder/${orderId}`, {
+          const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/getorder/${orderId}`, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('storekeeperToken')}`,
             },
           });
           console.log(response)
-          const stickerUrl = `${response.data.url.replace('upload', 'https://dashboard.go-tex.net/logistics-test/upload')}`;
+          const stickerUrl = `${response.data.url.replace('upload', 'https://dashboard.go-tex.net/logistics/upload')}`;
           const newTab = window.open();
           newTab.location.href = stickerUrl;
         } catch (error) {

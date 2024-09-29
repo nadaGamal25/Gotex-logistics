@@ -11,7 +11,7 @@ export default function TrackerSetNewPass({ token }) {
     const handleSubmit = async (e) => {
       e.preventDefault();
       try {
-        const response = await fetch('https://dashboard.go-tex.net/logistics-test/tracker/set-new-password', {
+        const response = await fetch('https://dashboard.go-tex.net/logistics/tracker/set-new-password', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

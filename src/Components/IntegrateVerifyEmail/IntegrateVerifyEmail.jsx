@@ -10,7 +10,7 @@ export default function IntegrateVerifyEmail() {
     const [msgVerified , setMsgVerified]= useState(false)
     async function veriftEmail(){
         try{
-        let response= await axios.post(`https://dashboard.go-tex.net/logistics-test/integrate/user/verify-email/${allparams.id}`);
+        let response= await axios.post(`https://dashboard.go-tex.net/logistics/integrate/user/verify-email/${allparams.id}`);
           console.log(response)
           setMsgVerified("تم تأكيد الحساب بنجاح")
       }catch(error){

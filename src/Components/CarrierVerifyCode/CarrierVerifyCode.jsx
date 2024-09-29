@@ -8,7 +8,7 @@ const CarrierVerifyCode = ({ token, onCodeVerified }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('https://dashboard.go-tex.net/logistics-test/carrier/verify-forget-password-code', {
+      const response = await fetch('https://dashboard.go-tex.net/logistics/carrier/verify-forget-password-code', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

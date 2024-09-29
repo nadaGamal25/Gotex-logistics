@@ -16,7 +16,7 @@ export default function UserForgetPass({onTokenReceived }) {
  
   // async function sendDataToApi(){
   //   try {
-  //         const response = await axios.post('https://dashboard.go-tex.net/logistics-test/user/send-forget-password-email', theUser);
+  //         const response = await axios.post('https://dashboard.go-tex.net/logistics/user/send-forget-password-email', theUser);
   //         if (response.status === 200) {
   //           console.log(response)
   //           setisLoading(false)
@@ -67,7 +67,7 @@ export default function UserForgetPass({onTokenReceived }) {
     const handleSubmit = async (e) => {
           e.preventDefault();
           try {
-            const response = await fetch('https://dashboard.go-tex.net/logistics-test/user/send-forget-password-email', {
+            const response = await fetch('https://dashboard.go-tex.net/logistics/user/send-forget-password-email', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
@@ -118,7 +118,7 @@ export default function UserForgetPass({onTokenReceived }) {
 //   const handleSubmit = async (e) => {
 //     e.preventDefault();
 //     try {
-//       const response = await fetch('https://dashboard.go-tex.net/logistics-test/user/send-forget-password-email', {
+//       const response = await fetch('https://dashboard.go-tex.net/logistics/user/send-forget-password-email', {
 //         method: 'POST',
 //         headers: {
 //           'Content-Type': 'application/json'

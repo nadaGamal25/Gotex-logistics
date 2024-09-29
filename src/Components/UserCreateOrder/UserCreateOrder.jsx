@@ -45,7 +45,7 @@ export default function UserCreateOrder2() {
       console.log(localStorage.getItem('userToken'))
       try {
         const response = await axios.post(
-          "https://dashboard.go-tex.net/logistics-test/order/create-order",
+          "https://dashboard.go-tex.net/logistics/order/create-order",
           orderData,
           // {...orderData, shipmentValue: orderData.shipmentValue - orderData.cod},
           {
@@ -136,7 +136,7 @@ export default function UserCreateOrder2() {
       async function getCities() {
         console.log(localStorage.getItem('userToken'))
         try {
-          const response = await axios.get('https://dashboard.go-tex.net/logistics-test/cities',
+          const response = await axios.get('https://dashboard.go-tex.net/logistics/cities',
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('userToken')}`,
@@ -176,13 +176,13 @@ export default function UserCreateOrder2() {
   
     async function getSticker(orderId) {
       try {
-        const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/getorder/${orderId}`, {
+        const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/getorder/${orderId}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('userToken')}`,
           },
         });
         console.log(response)
-        const stickerUrl = `${response.data.url.replace('upload', 'https://dashboard.go-tex.net/logistics-test/upload')}`;
+        const stickerUrl = `${response.data.url.replace('upload', 'https://dashboard.go-tex.net/logistics/upload')}`;
         const newTab = window.open();
         newTab.location.href = stickerUrl;
       } catch (error) {
@@ -236,7 +236,7 @@ export default function UserCreateOrder2() {
     async function getDistricts(districtid) {
       setDistrictsLoading(true);
       try {
-        const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/districts/${districtid}`,
+        const response = await axios.get(`https://dashboard.go-tex.net/logistics/districts/${districtid}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -255,7 +255,7 @@ export default function UserCreateOrder2() {
       async function getDistricts2(districtid) {
         setDistrictsLoading2(true);
         try {
-          const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/districts/${districtid}`,
+          const response = await axios.get(`https://dashboard.go-tex.net/logistics/districts/${districtid}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('adminToken')}`,

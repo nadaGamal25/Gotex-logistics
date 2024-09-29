@@ -11,7 +11,7 @@ export default function TrackOrder() {
     
       async function trackOrder() {
         try {
-          const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/track-order/${trackNumber}`);
+          const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/track-order/${trackNumber}`);
           const List = response.data.data;
           console.log(response)
           setOrderDetails(List)
@@ -25,7 +25,7 @@ export default function TrackOrder() {
       const [selectedImages, setSelectedImages] = useState([]);
       const [showModal, setShowModal] = useState(false);
       function openCarousel(images) {
-        const formattedImages = images.map(img => img.replace('public', 'https://dashboard.go-tex.net/logistics-test'));
+        const formattedImages = images.map(img => img.replace('public', 'https://dashboard.go-tex.net/logistics'));
         setSelectedImages(formattedImages);
         setShowModal(true);
       }

@@ -67,7 +67,7 @@ const deliveryDistrictsToSend = theUser.deliveryDistricts.includes("جميع ا�
             console.log(`${key}: ${value}`);
           });
       const response = await axios.post(
-        `https://dashboard.go-tex.net/logistics-test/carrier/register?role=${carrierRole}`,
+        `https://dashboard.go-tex.net/logistics/carrier/register?role=${carrierRole}`,
         formData,
         {
           headers: {
@@ -221,7 +221,7 @@ function addAreaInput() {
   const [cities,setCities]=useState()
     async function getCities() {
       try {
-        const response = await axios.get('https://dashboard.go-tex.net/logistics-test/cities',
+        const response = await axios.get('https://dashboard.go-tex.net/logistics/cities',
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -236,7 +236,7 @@ function addAreaInput() {
     const [districts,setDistricts]=useState()
     async function getDistricts(districtid) {
         try {
-          const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/districts/${districtid}`,
+          const response = await axios.get(`https://dashboard.go-tex.net/logistics/districts/${districtid}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('adminToken')}`,

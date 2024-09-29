@@ -22,7 +22,7 @@ export default function CarrierPasswordFirst() {
     })
     async function sendRegisterDataToApi(){
     try{
-    let response= await axios.post(`https://dashboard.go-tex.net/logistics-test/carrier/set-password/${allparams.id}`,theUser,
+    let response= await axios.post(`https://dashboard.go-tex.net/logistics/carrier/set-password/${allparams.id}`,theUser,
    
       );
     if(response.status == 200){

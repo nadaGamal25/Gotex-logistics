@@ -10,7 +10,7 @@ const UserSetNewPass = ({ token }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('https://dashboard.go-tex.net/logistics-test/user/set-new-password', {
+      const response = await fetch('https://dashboard.go-tex.net/logistics/user/set-new-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

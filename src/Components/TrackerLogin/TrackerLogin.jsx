@@ -20,7 +20,7 @@ export default function TrackerLogin({saveTrackerData}) {
    
     async function sendLoginDataToApi(){
       try {
-        const response = await axios.post('https://dashboard.go-tex.net/logistics-test/tracker/login', theUser);
+        const response = await axios.post('https://dashboard.go-tex.net/logistics/tracker/login', theUser);
         if (response.status === 201) {
           navigate('/trackerOrders');
           localStorage.setItem('trackerToken', response.data.token);

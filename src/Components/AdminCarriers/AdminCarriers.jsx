@@ -9,7 +9,7 @@ export default function AdminCarriers() {
     
       async function getUsersListsAdmin() {
         try {
-          const response = await axios.get('https://dashboard.go-tex.net/logistics-test/carrier/',
+          const response = await axios.get('https://dashboard.go-tex.net/logistics/carrier/',
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -58,10 +58,10 @@ export default function AdminCarriers() {
                 {item.nid?<td>{item.nid}</td>:<td>_</td>}
                 {/* {item.role?<td>{item.role}</td>:<td>_</td>} */}
                 {item.photo && item.photo?<td>
-                  <a href={item.photo.replace('public', 'https://dashboard.go-tex.net/logistics-test')} target='_blank'>رابط_الصورة</a>
+                  <a href={item.photo.replace('public', 'https://dashboard.go-tex.net/logistics')} target='_blank'>رابط_الصورة</a>
                 </td>:<td>_</td>}
                 {item.papers && item.papers[0]?<td>
-                  <a href={item.papers[0].replace('public', 'https://dashboard.go-tex.net/logistics-test')} target='_blank'>رابط_الملف</a>
+                  <a href={item.papers[0].replace('public', 'https://dashboard.go-tex.net/logistics')} target='_blank'>رابط_الملف</a>
                 </td>:<td>_</td>}
                 
                 

@@ -20,7 +20,7 @@ export default function UserLogin({saveUserData}) {
    
     async function sendLoginDataToApi(){
       try {
-        const response = await axios.post('https://dashboard.go-tex.net/logistics-test/user/login', theUser);
+        const response = await axios.post('https://dashboard.go-tex.net/logistics/user/login', theUser);
         if (response.status === 201) {
           navigate('/userCreateOrder');
           localStorage.setItem('userToken', response.data.token);

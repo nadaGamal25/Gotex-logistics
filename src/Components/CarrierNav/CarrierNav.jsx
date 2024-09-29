@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import { io } from 'socket.io-client';
-const URL = 'https://dashboard.go-tex.net/logistics-test';
+const URL = 'https://dashboard.go-tex.net/logistics';
 const socket = io(URL);
 
 export default function CarrierNav({ carrierData, logout }) {
@@ -21,7 +21,7 @@ export default function CarrierNav({ carrierData, logout }) {
         // this notification for this carrier need to show it in ui
         console.log(data)
         setOrdersNotification(data)
-        axios.delete(`https://dashboard.go-tex.net/logistics-test/notifications/${data._id}`).then(res => {
+        axios.delete(`https://dashboard.go-tex.net/logistics/notifications/${data._id}`).then(res => {
           console.log(res)
         }).catch(err => {
           console.log(err)
@@ -49,7 +49,7 @@ export default function CarrierNav({ carrierData, logout }) {
       item.addEventListener('click', handleClick);
     });
     // when carrier offline and back online receive this array of all orders to him need to show in ui
-    axios.get(`https://dashboard.go-tex.net/logistics-test/notifications/${carrierData.id}`).then(res => {
+    axios.get(`https://dashboard.go-tex.net/logistics/notifications/${carrierData.id}`).then(res => {
       console.log(res.data.results)
       setOrdersNotification(res.data.results)
     }).catch(err => {
@@ -70,9 +70,9 @@ export default function CarrierNav({ carrierData, logout }) {
   };
   async function readNotification(orderid) {
     try {
-      const response = await axios.delete(`https://dashboard.go-tex.net/logistics-test/notifications/${orderid}`);
+      const response = await axios.delete(`https://dashboard.go-tex.net/logistics/notifications/${orderid}`);
       console.log(response)
-      axios.get(`https://dashboard.go-tex.net/logistics-test/notifications/${carrierData.id}`).then(res => {
+      axios.get(`https://dashboard.go-tex.net/logistics/notifications/${carrierData.id}`).then(res => {
         console.log(res.data.results)
         setOrdersNotification(res.data.results)
       })

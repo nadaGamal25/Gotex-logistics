@@ -9,7 +9,7 @@ export default function UserResendEmail() {
 
   async function getUsersListsAdmin() {
     try {
-      const response = await axios.get('https://dashboard.go-tex.net/logistics-test/user',
+      const response = await axios.get('https://dashboard.go-tex.net/logistics/user',
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -24,7 +24,7 @@ export default function UserResendEmail() {
   }
   async function resendEmail(userId){
     try{
-    const response= await axios.post(`https://dashboard.go-tex.net/logistics-test/user/resend-verify-email/${userId}`,{},
+    const response= await axios.post(`https://dashboard.go-tex.net/logistics/user/resend-verify-email/${userId}`,{},
     {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('adminToken')}`,

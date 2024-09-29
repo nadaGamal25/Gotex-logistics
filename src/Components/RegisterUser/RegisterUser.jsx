@@ -39,7 +39,7 @@ export default function RegisterUser() {
       // //   formData.append('nid', selectedNid, selectedNid.name);
       // // } 
       try{
-    let response= await axios.post(`https://dashboard.go-tex.net/logistics-test/user/register`,theUser,
+    let response= await axios.post(`https://dashboard.go-tex.net/logistics/user/register`,theUser,
     {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -109,7 +109,7 @@ export default function RegisterUser() {
     async function getCities() {
       console.log(localStorage.getItem('userToken'))
       try {
-        const response = await axios.get('https://dashboard.go-tex.net/logistics-test/cities',
+        const response = await axios.get('https://dashboard.go-tex.net/logistics/cities',
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('userToken')}`,

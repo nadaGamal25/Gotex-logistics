@@ -11,7 +11,7 @@ const CarrierSetNewPass = ({ token }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('https://dashboard.go-tex.net/logistics-test/carrier/set-new-password', {
+      const response = await fetch('https://dashboard.go-tex.net/logistics/carrier/set-new-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

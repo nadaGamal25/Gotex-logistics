@@ -20,7 +20,7 @@ export default function AdminLogin({saveAdminData}) {
    
     async function sendLoginDataToApi(){
       try {
-        const response = await axios.post('https://dashboard.go-tex.net/logistics-test/admin/login', theUser);
+        const response = await axios.post('https://dashboard.go-tex.net/logistics/admin/login', theUser);
         if (response.status === 200) {
           navigate('/adminUsers');
           localStorage.setItem('adminToken', response.data.token);

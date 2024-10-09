@@ -139,7 +139,7 @@ function App() {
  
 
   return (
-    <HashRouter basename="">
+    <HashRouter basename="/main-logistics">
       <Routes>
         <Route path="/" element={<AdminLogin saveAdminData={saveAdminData} setAdminData={setAdminData} adminData={adminData} />} />
         <Route path="/set-password-first-time/:id" element={<UserPasswordFirst />} />

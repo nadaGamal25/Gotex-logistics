@@ -154,9 +154,11 @@ export default function UserOrders() {
         sendername: order?.sendername || '',
         senderaddress: order?.senderaddress || '',
         senderphone: order?.senderphone || '',
+        senderphone2: order?.senderphone2 || '',
         recivername: order?.recivername || '',
         reciveraddress: order?.reciveraddress || '',
         reciverphone: order?.reciverphone || '',
+        reciverphone2: order?.reciverphone2 || '',
         price: order?.price || '',
         weight: order?.weight || '',
         pieces: order?.pieces || '',
@@ -220,7 +222,7 @@ export default function UserOrders() {
               <th scope="col"> المستلم</th>
               <th scope="col">جوال المستلم</th>
               <th scope="col">عنوان المستلم</th>
-              <th scope="col"> billcode</th>
+              {/* <th scope="col"> billcode</th> */}
               <th scope="col">رقم الشحنة</th>
               <th scope="col">طريقة الدفع</th>
               <th scope="col">السعر </th>
@@ -238,12 +240,12 @@ export default function UserOrders() {
                 <tr key={index}>
                   <td>{index + 1}</td>
                   <td>{item.sendername}</td>
-                  <td>{item.senderphone}</td>
+                  <td>{item.senderphone} {item.senderphone2 ? (<>,<br/>{item.senderphone2}</>) : null}</td>
                   <td>{item.senderaddress}</td>
                   <td>{item.recivername}</td>
-                  <td>{item.reciverphone}</td>
+                  <td>{item.reciverphone} {item.reciverphone2 ? (<>,<br/>{item.reciverphone2}</>) : null}</td>
                   <td>{item.reciveraddress}</td>
-                  <td>{item.billcode}</td>
+                  {/* <td>{item.billcode}</td> */}
                   <td>{item.ordernumber}</td>
                   <td>{item.paytype}</td>
                   <td>{item.price}</td>
@@ -251,13 +253,14 @@ export default function UserOrders() {
                   <td>{item.pieces}</td>
                   <td>{item.status}</td>
                   <td><button className="btn btn-success" onClick={() => { getSticker(item._id) }}>عرض الاستيكر</button></td>
-                  <td>
+                  {item.status ==="pending"?
+                    <td>
                   <button className="btn btn-secondary" onClick={() => handleEditClick(item)}>تعديل البيانات</button>
-                  </td>
+                  </td>:null}
                   {item.status == "canceled" ?
                   <td><button className="btn btn-orange" onClick={()=>{
                       openModalPending(item._id)
-                  }}>تعليق الشنحة</button></td>:null}
+                  }}>تحديث الشنحة</button></td>:null}
                   {item.status == "pending" ?
                   <td><button className="btn btn-danger" onClick={()=>{
                     // if(window.confirm('سوف يتم إلغاء الشنحة')){
@@ -299,8 +302,11 @@ export default function UserOrders() {
     <label htmlFor="mobile">هاتف المرسل </label>
    
       <input onChange={handleInputChange} value={editedOrder.senderphone} type="text" className='my-input my-2 form-control' name='senderphone' />
-     
-      
+ 
+    </div>
+    <div className="col-md-6 pb-1">
+    <label htmlFor="mobile">هاتف المرسل الاضافى</label> 
+      <input onChange={handleInputChange} value={editedOrder.senderphone2} type="text" className='my-input my-2 form-control' name='senderphone2' />
     </div>
     <div className="col-md-6 pb-1">
         <label htmlFor="first_name">اسم المستلم   :</label>
@@ -319,14 +325,14 @@ export default function UserOrders() {
    
       <input onChange={handleInputChange} value={editedOrder.reciverphone} type="text" className='my-input my-2 form-control' name='reciverphone' />
      
-      
     </div>
-               
-               
-    
-   
-   
     <div className="col-md-6 pb-1">
+    <label htmlFor="mobile">هاتف المستلم الاضافى</label>
+   
+      <input onChange={handleInputChange} value={editedOrder.reciverphone2} type="text" className='my-input my-2 form-control' name='reciverphone2' />
+     
+    </div>
+ <div className="col-md-6 pb-1">
         <label htmlFor="address">السعر   :</label>
       <input onChange={handleInputChange} value={editedOrder.price} type="text" className='my-input my-2 form-control' name='price' />
       

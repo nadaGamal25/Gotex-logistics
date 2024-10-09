@@ -238,12 +238,12 @@ export default function CollectorShipments() {
                     </p>
                     <span>المرسل : </span>
                     <h6>{item.sendername}</h6>
-                    <h6>{item.senderphone}</h6>
+                    <h6>{item.senderphone} {item.senderphone2 ? (<>,<br/>{item.senderphone2}</>) : null}</h6>
                     <h6>{item.sendercity} ,{item.senderdistrict}</h6>
                     <h6>{item.senderaddress}</h6>
                     <span>المستلم : </span>
                     <h6>{item.recivername}</h6>
-                    <h6>{item.reciverphone}</h6>
+                    <h6>{item.reciverphone} {item.reciverphone2 ? (<>,<br/>{item.reciverphone2}</>) : null}</h6>
                     <h6>{item.recivercity} ,{item.reciverdistrict}</h6>
                     <h6>{item.reciveraddress}</h6>
                     <hr className='m-0'/>

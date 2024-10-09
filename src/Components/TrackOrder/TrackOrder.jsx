@@ -118,8 +118,11 @@ export default function TrackOrder() {
                 {orderDetails.status == 'pick to store'?
                 <span className='fw-bold'>{orderDetails.pickedby.firstName}{orderDetails.pickedby.lastName}</span>:null}
                 {orderDetails.status == 'pick to client'?
-                <span className='fw-bold'> {orderDetails.deliveredby.firstName}{orderDetails.deliveredby.lastName}</span>:
-                null}
+                (<>
+                   <span className='fw-bold'> {orderDetails.deliveredby.firstName}{orderDetails.deliveredby.lastName}</span>
+                   {orderDetails.deliveredby.mobile?<span className='fw-bold'> {orderDetails.deliveredby.mobile}</span>:null}
+                   </>)
+                :null}
                 {orderDetails.status == 'in store'?
                 <span className='fw-bold'>امين المخزن: {orderDetails.storekeeper.firstName}{orderDetails.storekeeper.lastName}</span>:
                 null}

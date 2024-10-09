@@ -9,6 +9,8 @@ import { Link } from 'react-router-dom';
 export default function UserCreateOrder2() {
     const [phoneValue, setPhoneValue] = useState()
     const [phone2, setPhone2] = useState()
+    const [sphone2, setSphone2] = useState()
+    const [rphone2, setRphone2] = useState()
     const [cityIdSender, setCityIdSender] = useState(null)
     const [cityIdReciever, setCityIdReciever] = useState(null)
     const [districtIdSender, setDistrictIdSender] = useState('')
@@ -24,11 +26,13 @@ export default function UserCreateOrder2() {
       recivercity: "",
       reciverdistrict:"",
       reciverphone: "",
+      reciverphone2:"",
       sendername: "",
       senderaddress: "",
       sendercity: "",
       senderdistrict:"",
       senderphone: "",
+      senderphone2:"",
       paytype: "",
       price: "",
       weight: "",
@@ -114,6 +118,7 @@ export default function UserCreateOrder2() {
         recivername: Joi.string().required(),
         recivercity: Joi.string().required(),
         reciverphone: Joi.string().required(),
+        reciverphone2:Joi.string(),
         reciveraddress: Joi.string().required(),
         weight: Joi.number().required(),
         pieces: Joi.number().required(),
@@ -121,6 +126,7 @@ export default function UserCreateOrder2() {
         sendercity: Joi.string().required(),
         senderaddress: Joi.string().required(),
         senderphone: Joi.string().required(),
+        senderphone2: Joi.string(),
         description: Joi.string().required(),
         paytype: Joi.string().required(),
         price: Joi.number().required(),
@@ -368,6 +374,23 @@ export default function UserCreateOrder2() {
                       }} />
                     {errorList.map((err, index) => {
                       if (err.context.label === 'senderphone') {
+                        return <div key={index} className="alert alert-danger my-2">يجب ملئ جميع البيانات </div>
+                      }
+  
+                    })}
+  
+                  </div>
+                  <div className='pb-3'>
+                    <label htmlFor="">رقم اضافى<span className="star-requered">*</span></label>
+                    {/* <input type="text" className="form-control" /> */}
+                    <PhoneInput name='senderphone2'
+                      labels={ar} defaultCountry='SA' dir='ltr' className='phoneInput' value={sphone2}
+                      onChange={(sphone2) => {
+                        setSphone2(sphone2);
+                        getOrderData({ target: { name: 'senderphone2', value: sphone2 } });
+                      }} />
+                    {errorList.map((err, index) => {
+                      if (err.context.label === 'senderphone2') {
                         return <div key={index} className="alert alert-danger my-2">يجب ملئ جميع البيانات </div>
                       }
   
@@ -641,6 +664,23 @@ export default function UserCreateOrder2() {
                       }} />
                     {errorList.map((err, index) => {
                       if (err.context.label === 'reciverphone') {
+                        return <div key={index} className="alert alert-danger my-2"> يجب ملئ جميع البيانات</div>
+                      }
+  
+                    })}
+  
+                  </div>
+                  <div className='pb-3'>
+                    <label htmlFor=""> رقم اضافى<span className="star-requered">*</span></label>
+                    {/* <input type="text" className="form-control"/> */}
+                    <PhoneInput name='reciverphone2'
+                      labels={ar} defaultCountry='SA' dir='ltr' className='phoneInput' value={rphone2}
+                      onChange={(rphone2) => {
+                        setRphone2(rphone2);
+                        getOrderData({ target: { name: 'reciverphone2', value: rphone2 } });
+                      }} />
+                    {errorList.map((err, index) => {
+                      if (err.context.label === 'reciverphone2') {
                         return <div key={index} className="alert alert-danger my-2"> يجب ملئ جميع البيانات</div>
                       }
   

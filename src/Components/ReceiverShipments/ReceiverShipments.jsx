@@ -333,12 +333,12 @@ export default function ReceiverShipments() {
                     </p>
                     <span>المرسل : </span>
                     <h6>{item.sendername}</h6>
-                    <h6>{item.senderphone}</h6>
+                    <h6>{item.senderphone} {item.senderphone2 ? (<>,<br/>{item.senderphone2}</>) : null}</h6>
                     <h6>{item.sendercity} ,{item.senderdistrict}</h6>
                     <h6>{item.senderaddress}</h6>
                     <span>المستلم : </span>
                     <h6>{item.recivername}</h6>
-                    <h6>{item.reciverphone}</h6>
+                    <h6>{item.reciverphone} {item.reciverphone2 ? (<>,<br/>{item.reciverphone2}</>) : null}</h6>
                     <h6>{item.recivercity} ,{item.reciverdistrict}</h6>
                     <h6>{item.reciveraddress}</h6>
                     <hr className='m-0'/>
@@ -357,7 +357,7 @@ export default function ReceiverShipments() {
                   }}>تأكيد الاستلام من المخزن</button>:null}
                   
                   
-                  {item.status =='pick to client'?
+                  {item.status =='pick to client' && item.paytype === "cod"?
                   <button className="btn btn-danger m-1" onClick={()=>{
                     openModalPayType(item._id)
                 }}>اختر طريقة الدفع أولا</button>
@@ -366,7 +366,7 @@ export default function ReceiverShipments() {
                   <button className="btn btn-primary m-1" onClick={()=>{
                       openModalRecieved(item._id)
                   }}>تأكيد استلام العميل</button>:null}
-                  {item.status =='pick to client' || item.status == "received"?
+                  {(item.status =='pick to client' || item.status == "received") && item.paytype === "cod"?
                   <button className="btn btn-danger m-1" onClick={()=>{
                       openModalPayments(item._id)
                   }}>حالة الدفع</button>:null}

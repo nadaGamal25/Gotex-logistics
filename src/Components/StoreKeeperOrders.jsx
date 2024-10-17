@@ -447,13 +447,13 @@ export default function StoreKeeperOrders() {
    }}>تأكيد استلام الشحنة </button></td>  
    :null}
 
-                   {item.status=='received' && !item.payment && item.receiverPaidCash ==false?   
+                   {item.status=='received' && !item.payment && item.receiverPaidCash ==false && item.paytype !== 'cc' && item.isreturn===false?   
                   <td><button className="btn btn-orange" onClick={()=>{
                     if(window.confirm('هل قمت باستلام المبلغ كاش لهذه الشحنة ؟')){
                       takeOrderMoney(item._id)
                     }
                     }}>تأكيد استلام كاش  </button></td> :null}
-                    {item.status=='received' && item.payment  && item.orderPaidWithVisa ==false?   
+                    {item.status=='received' && item.payment  && item.orderPaidWithVisa ==false && item.isreturn===false?   
                   <td><button className="btn btn-orange" onClick={()=>{
                     if(window.confirm('هل تم دفع المبلغ الخاص بهذه الشحنة بواسطة الفيزا ؟')){
                       confirmPaidWithVisa(item._id)

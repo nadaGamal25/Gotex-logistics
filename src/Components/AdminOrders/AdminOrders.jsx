@@ -867,14 +867,14 @@ const handleEditSubmit = async (event) => {
                   {item.status == "canceled" ?
                   <td><button className="btn btn-orange" onClick={()=>{
                       openModalPending(item._id)
-                  }}>تعليق الشنحة</button></td>:null}
+                  }}>تحديث الشنحة</button></td>:null}
     {item.status == "pending" ?
                   <td><button className="btn btn-danger" onClick={()=>{
                     // if(window.confirm('سوف يتم إلغاء الشنحة')){
                       openModalCancel(item._id)
                     // }
                   }}>إلغاء الشنحة</button></td>:null}
-                   {item.status =='pick to client' || item.status == "received"?
+                   {(item.status =='pick to client' || item.status == "received" ) && item.paytype !=='cc'?
                   <td><button className="btn btn-outline-danger m-1" onClick={()=>{
                       openModalPayments(item._id)
                   }}>محاولات الدفع</button></td>:null}

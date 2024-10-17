@@ -118,7 +118,7 @@ export default function UserCreateOrder2() {
         recivername: Joi.string().required(),
         recivercity: Joi.string().required(),
         reciverphone: Joi.string().required(),
-        reciverphone2:Joi.string(),
+        reciverphone2:Joi.string().allow('',null),
         reciveraddress: Joi.string().required(),
         weight: Joi.number().required(),
         pieces: Joi.number().required(),
@@ -126,7 +126,7 @@ export default function UserCreateOrder2() {
         sendercity: Joi.string().required(),
         senderaddress: Joi.string().required(),
         senderphone: Joi.string().required(),
-        senderphone2: Joi.string(),
+        senderphone2: Joi.string().allow('',null),
         description: Joi.string().required(),
         paytype: Joi.string().required(),
         price: Joi.number().required(),
@@ -381,7 +381,7 @@ export default function UserCreateOrder2() {
   
                   </div>
                   <div className='pb-3'>
-                    <label htmlFor="">رقم اضافى<span className="star-requered">*</span></label>
+                    <label htmlFor="">رقم اضافى</label>
                     {/* <input type="text" className="form-control" /> */}
                     <PhoneInput name='senderphone2'
                       labels={ar} defaultCountry='SA' dir='ltr' className='phoneInput' value={sphone2}
@@ -671,7 +671,7 @@ export default function UserCreateOrder2() {
   
                   </div>
                   <div className='pb-3'>
-                    <label htmlFor=""> رقم اضافى<span className="star-requered">*</span></label>
+                    <label htmlFor=""> رقم اضافى</label>
                     {/* <input type="text" className="form-control"/> */}
                     <PhoneInput name='reciverphone2'
                       labels={ar} defaultCountry='SA' dir='ltr' className='phoneInput' value={rphone2}

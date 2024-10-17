@@ -237,7 +237,7 @@ export default function UserOrders() {
           <tbody>
             {orders && orders.map((item, index) => {
               return (
-                <tr key={index}>
+                <tr key={index} className={item.status === "canceled" ? 'cancel' : ''}>
                   <td>{index + 1}</td>
                   <td>{item.sendername}</td>
                   <td>{item.senderphone} {item.senderphone2 ? (<>,<br/>{item.senderphone2}</>) : null}</td>

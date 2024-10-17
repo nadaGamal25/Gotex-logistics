@@ -138,6 +138,9 @@ font-weight: 600;
   border-bottom: #c1c6c2 solid 1px;
   padding: 3px 0px;
 }
+.cancel td{
+  background-color: rgba(255, 202, 202, 0.785) !important;
+}
 .ul-cities li:hover{
   background-color: #0a95ff;
   color: #fff;

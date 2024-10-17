@@ -357,7 +357,7 @@ export default function ReceiverShipments() {
                   }}>تأكيد الاستلام من المخزن</button>:null}
                   
                   
-                  {item.status =='pick to client' && item.paytype === "cod"?
+                  {item.status =='pick to client' && item.paytype === "cod" && item.isreturn != true?
                   <button className="btn btn-danger m-1" onClick={()=>{
                     openModalPayType(item._id)
                 }}>اختر طريقة الدفع أولا</button>
@@ -366,11 +366,11 @@ export default function ReceiverShipments() {
                   <button className="btn btn-primary m-1" onClick={()=>{
                       openModalRecieved(item._id)
                   }}>تأكيد استلام العميل</button>:null}
-                  {(item.status =='pick to client' || item.status == "received") && item.paytype === "cod"?
+                  {(item.status =='pick to client' || item.status == "received") && item.paytype === "cod" && item.isreturn != true?
                   <button className="btn btn-danger m-1" onClick={()=>{
                       openModalPayments(item._id)
                   }}>حالة الدفع</button>:null}
-                  {item.status =="pick to client"?
+                  {item.status =="pick to client" && item.isreturn != true?
                   <button className="btn btn-secondary m-1" onClick={()=>{
                       openModalReturn(item._id)
                   }}>إرجاع الشنحة</button>:null}
@@ -507,20 +507,19 @@ export default function ReceiverShipments() {
              </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className=''>
-          <label htmlFor="">إرفق ملف  () </label>
-          <input
-  type="file"
-  className="my-2 my-input"
-  multiple
-  onChange={handleFileChangeReturn}
-/>
- 
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
+    <form onSubmit={(e) => { e.preventDefault(); returnOrder(selectedID); }}>
+      <div className=''>
+        <label htmlFor="">إرفق ملف (اجبارى) </label>
+        <input
+          type="file"
+          className="my-2 my-input form-control"
+          multiple
+          onChange={handleFileChangeReturn} required
+        />
+      </div>
+      <Modal.Footer>
           <div className="text-center">
-        <Button className='m-1' variant="danger" onClick={()=>{returnOrder(selectedID)}}>
+        <Button className='m-1' variant="danger" type='submit'>
           تأكيد ارجاع الشحنة
           </Button>
           <Button className='m-1' variant="secondary" onClick={closeModalReturn}>
@@ -528,7 +527,10 @@ export default function ReceiverShipments() {
           </Button>
           </div>
         </Modal.Footer>
+    </form>
+  </Modal.Body>
       </Modal>
+
       <Modal show={showModalPayments} onHide={closeModalPayments}>
         <Modal.Header >
         <Modal.Title> محاولات الدفع

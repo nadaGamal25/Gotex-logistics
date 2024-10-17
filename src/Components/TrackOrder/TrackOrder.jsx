@@ -94,8 +94,9 @@ export default function TrackOrder() {
               </div>
             <div className="col-md-4">
               <div className="p-4">
-                <h5><i class="fa-regular fa-chart-bar"></i>  حالة الشحنة </h5>
-                {orderDetails.isreturn==true?
+                <h5><i class="fa-regular fa-chart-bar"></i>  حالة الشحنة
+                {orderDetails.isreturn===true? <span className='text-danger'>(شحنة رجيع)</span> :null}</h5>
+                {orderDetails.isreturn==true && orderDetails.status =='in store'?
                 <span className='fw-bold'>سيتم ارجاع الشحنة للمرسل </span>:
                 orderDetails.status=='pending' || orderDetails.status=='late to store'?
                 <span className='fw-bold'>قيد الانتظار</span>:
@@ -103,8 +104,10 @@ export default function TrackOrder() {
                 <span className='fw-bold'>فى الطريق للمخزن</span>:
                 orderDetails.status=='in store'?
                 <span className='fw-bold'> فى المخزن</span>:
-                orderDetails.status=='pick to client'?
+                orderDetails.status=='pick to client' && orderDetails.isreturn!==true?
                 <span className='fw-bold'>فى الطريق للعميل</span>:
+                orderDetails.status=='pick to client' && orderDetails.isreturn===true?
+                <span className='fw-bold'>فى الطريق للمرسل</span>:
                 orderDetails.status=='received'?
                 <span className='fw-bold'>تم تسليمها</span>:
                 orderDetails.status=='canceled'?

@@ -807,7 +807,27 @@ const handleEditSubmit = async (event) => {
                       <td>{item.price}</td>
                       <td>{item.weight}</td>
                       <td>{item.pieces}</td>
-                      <td>{item.status}<br/>
+                      <td>
+                        {item.isreturn==true && item.status =='in store'?
+                <span >شحنة رجيع(بالمخزن) </span>:
+                item.status=='pending'?
+                <span >قيد الانتظار</span>:
+                item.status=='late to store'?
+                <span >شحنة متأخرة </span>:
+                item.status=='pick to store'?
+                <span >فى الطريق للمخزن</span>:
+                item.status=='in store'?
+                <span > فى المخزن</span>:
+                item.status=='pick to client' && item.isreturn!==true?
+                <span >فى الطريق للعميل</span>:
+                item.status=='pick to client' && item.isreturn===true?
+                <span >فى الطريق للمرسل</span>:
+                item.status=='received'?
+                <span >تم تسليمها</span>:
+                item.status=='canceled'?
+                <span >تم إلغائها</span>:
+                <span>{item.status}</span>}
+                        <br/>
                       {item.status === 'pending' && item.images?.pending?.length !== 0 ? (
                       <a className="text-primary" onClick={() => openCarousel(item.images.pending)}>الصور</a>
                     ) : item.status === 'pick to store' && item.images?.pickedToStore?.length !== 0 ? (

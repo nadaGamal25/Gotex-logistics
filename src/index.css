@@ -145,6 +145,14 @@ font-weight: 600;
   background-color: #0a95ff;
   color: #fff;
 }
+.btn-whatsapp{
+  background-color: #4CAF50 !important;
+  color: #fff !important;
+}
+.btn-whatsapp:hover{
+  background-color: #47a34a !important;
+  color: #fff !important;
+}
 /*login*/
 .login-container{
   background-image: url(../src/assets/orangedelivery.avif);

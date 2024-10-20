@@ -434,8 +434,25 @@ export default function StoreKeeperOrders() {
                       <td>{item.price}</td>
                       <td>{item.weight}</td>
                       <td>{item.pieces}</td>
-                      <td>{item.status}</td>
-                      {item.deliveredby?<td>{item.deliveredby.fullName}</td>:<td>_</td>}
+                      {item.isreturn==true && item.status =='in store'?
+                <td >شحنة رجيع(بالمخزن) </td>:
+                item.status=='pending'?
+                <td >قيد الانتظار</td>:
+                item.status=='late to store'?
+                <td >شحنة متأخرة </td>:
+                item.status=='pick to store'?
+                <td >فى الطريق للمخزن</td>:
+                item.status=='in store'?
+                <td > فى المخزن</td>:
+                item.status=='pick to client' && item.isreturn!==true?
+                <td >فى الطريق للعميل</td>:
+                item.status=='pick to client' && item.isreturn===true?
+                <td >فى الطريق للمرسل</td>:
+                item.status=='received'?
+                <td >تم تسليمها</td>:
+                item.status=='canceled'?
+                <td >تم إلغائها</td>:
+                <td>{item.status}</td>}                      {item.deliveredby?<td>{item.deliveredby.fullName}</td>:<td>_</td>}
                       <td><button className="btn btn-success" onClick={() => { getSticker(item._id) }}>عرض الاستيكر</button></td>
                       {item.status == 'in store' && !item.deliveredby ?
                       <td><button className="btn btn-orange" onClick={()=>{

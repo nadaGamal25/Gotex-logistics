@@ -3,10 +3,10 @@ import axios from 'axios'
 import {Modal, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 export default function ReceiverShipments() {
-  useEffect(() => {
+  // useEffect(() => {
 
-    getOrders()
-  }, [])
+  //   getOrders()
+  // }, [])
   
 
  
@@ -24,6 +24,8 @@ const [currentPage2, setCurrentPage2] = useState(Number(1));
 const [secondFilter, setSecondFilter] = useState(false);
 const [startDate, setStartDate] = useState('');
 const [endDate, setEndDate] = useState('');
+const [totalOrders, setTotalOrders] = useState(0);
+
   async function getOrders() {
     try {
       const response = await axios.get('https://dashboard.go-tex.net/logistics-test/order/get-receiver-orders',
@@ -36,6 +38,8 @@ const [endDate, setEndDate] = useState('');
       console.log(response)
       setCachAmount(response.data.receiver.collectedCashAmount)
       setVisaAmount(response.data.receiver.collectedVisaAmount)
+      setTotalOrders(response.data.pagination.totalOrders)
+
       setOrders(List)
     } catch (error) {
       console.error(error);
@@ -64,7 +68,7 @@ const [endDate, setEndDate] = useState('');
       const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-receiver-orders`, {
         params: {
             page: currentPage,
-            limit: 10,
+            limit: 100,
             
           },
         headers: {
@@ -78,6 +82,8 @@ const [endDate, setEndDate] = useState('');
       console.log(response)
       setCurrentPage(response.data.pagination.currentPage);
       setNumberOfPages(response.data.pagination.numberOfPages);
+      setTotalOrders(response.data.pagination.totalOrders)
+
     } catch (error) {
       console.error('Error fetching students:', error);
     } finally {
@@ -91,7 +97,7 @@ const [endDate, setEndDate] = useState('');
       const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-receiver-orders`, {
         params: {
             page: currentPage2,
-            limit: 10,
+            limit: 100,
             status:searchStatus,
             startDate:startDate,
             endDate:endDate,
@@ -108,6 +114,8 @@ const [endDate, setEndDate] = useState('');
       console.log(response)
       setCurrentPage2(response.data.pagination.currentPage);
       setNumberOfPages2(response.data.pagination.numberOfPages);
+      setTotalOrders(response.data.pagination.totalOrders)
+
     } catch (error) {
       console.error('Error fetching students:', error);
     } finally {
@@ -128,7 +136,7 @@ const handlePreviousPage = async () => {
       const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-receiver-orders`, {
         params: {
             page: currentPage -1,
-            limit: 10,
+            limit: 100,
             
           },
         headers: {
@@ -143,6 +151,8 @@ const handlePreviousPage = async () => {
       console.log(response)
       setCurrentPage(response.data.pagination.currentPage);
       setNumberOfPages(response.data.pagination.numberOfPages);
+      setTotalOrders(response.data.pagination.totalOrders)
+
     } catch (error) {
       console.error('Error fetching students:', error);
     } finally {
@@ -158,7 +168,7 @@ const handleNextPage = async () => {
       const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-receiver-orders`, {
         params: {
             page: currentPage +1,
-            limit: 10,
+            limit: 100,
             
           },
         headers: {
@@ -173,6 +183,8 @@ const handleNextPage = async () => {
       console.log(response)
       setCurrentPage(response.data.pagination.currentPage);
       setNumberOfPages(response.data.pagination.numberOfPages);
+      setTotalOrders(response.data.pagination.totalOrders)
+
     } catch (error) {
       console.error('Error fetching students:', error);
     } finally {
@@ -188,7 +200,7 @@ try {
   const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-receiver-orders`, {
     params: {
       page: currentPage2,
-      limit: 10,
+      limit: 100,
       status:searchStatus,
       startDate:startDate,
       endDate:endDate,
@@ -206,6 +218,8 @@ try {
   console.log(response)
   setCurrentPage2(response.data.pagination.currentPage);
   setNumberOfPages2(response.data.pagination.numberOfPages);
+  setTotalOrders(response.data.pagination.totalOrders)
+
 } catch (error) {
   console.error('Error fetching students:', error);
 } finally {
@@ -221,7 +235,7 @@ try {
   const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-receiver-orders`, {
     params: {
       page: currentPage2,
-      limit: 10,
+      limit: 100,
       status:searchStatus,
       startDate:startDate,
       endDate:endDate,
@@ -239,6 +253,8 @@ try {
   console.log(response)
   setCurrentPage2(response.data.pagination.currentPage);
   setNumberOfPages2(response.data.pagination.numberOfPages);
+  setTotalOrders(response.data.pagination.totalOrders)
+
 } catch (error) {
   console.error('Error fetching students:', error);
 } finally {
@@ -253,7 +269,7 @@ setLoading(true);
 const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-receiver-orders`, {
   params: {
     page: currentPage2,
-    limit: 10,
+    limit: 100,
     status:searchStatus,
     startDate:startDate,
     endDate:endDate,
@@ -268,6 +284,8 @@ setSecondFilter(true)
 console.log(response)
 setCurrentPage2(response.data.pagination.currentPage);
 setNumberOfPages2(response.data.pagination.numberOfPages);
+setTotalOrders(response.data.pagination.totalOrders)
+
 } catch (error) {
 console.error('Error fetching students:', error);
 } finally {
@@ -304,7 +322,7 @@ setLoading(false);
       console.log(response);
       closeModal();
       setSelectedFiles([]);
-      getOrders();
+      getShipmentsAdmin();
     } catch (error) {
       console.error(error);
       alert(error.response.data.msg);
@@ -356,7 +374,7 @@ setLoading(false);
       console.log(response);
       closeModalRecieved();
       setSelectedFilesRecieved([]);
-      getOrders();
+      getShipmentsAdmin();
       setShowModalPayType(false)
     } catch (error) {
       console.error(error);
@@ -404,7 +422,7 @@ setLoading(false);
       console.log(response);
       closeModalReturn();
       setSelectedFilesReturn([]);
-      getOrders();
+      getShipmentsAdmin();
     } catch (error) {
       console.error(error);
       alert(error.response.data.msg);
@@ -451,7 +469,7 @@ setLoading(false);
       );
   
       console.log(response);
-      getOrders();
+      getShipmentsAdmin();
       window.alert('يرجى ملئ جميع البيانات التالية ')
           const stickerUrl = `${response.data.data.transaction.url}`;
            const newTab = window.open();
@@ -530,6 +548,11 @@ setLoading(false);
             <span>قيمة المدفوع فيزا  : {visaAmount} ريال</span>
           </div>
       </div>
+      <div className="col-md-4">
+      <div className="p-2 count-box m-1">
+            <span className='text-primary'>عدد الشحنات  : {totalOrders} </span>
+          </div>
+      </div>
       </div>
     
     {/* <div className="row">
@@ -549,7 +572,7 @@ setLoading(false);
             </select>
     </div>
     </div> */}
-        <div className="my-table p-4 mb-4">
+        <div className="my-table p-4 mb-4 mt-2">
      <div className="row">
         
        
@@ -745,7 +768,7 @@ setLoading(false);
               return (
                 <tr key={index}>
                   <td>{index + 1}</td>
-                  <td>{item.createdAt.slice(0, 10)}</td>
+                  <td>{item.createdAt.slice(0, 100)}</td>
                   <td>{item.sendername}</td>
                   <td>{item.recivername}</td>
                   <td>{item.billcode}</td>

@@ -21,6 +21,8 @@ const [currentPage2, setCurrentPage2] = useState(Number(1));
 const [secondFilter, setSecondFilter] = useState(false);
 const [startDate, setStartDate] = useState('');
 const [endDate, setEndDate] = useState('');
+const [totalOrders, setTotalOrders] = useState(0);
+
   async function getOrders() {
     try {
       const response = await axios.get('https://dashboard.go-tex.net/logistics-test/order/get-collector-orders',
@@ -59,7 +61,7 @@ const [endDate, setEndDate] = useState('');
       const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-collector-orders`, {
         params: {
             page: currentPage,
-            limit: 10,
+            limit: 100,
             
           },
         headers: {
@@ -73,6 +75,8 @@ const [endDate, setEndDate] = useState('');
       console.log(response)
       setCurrentPage(response.data.pagination.currentPage);
       setNumberOfPages(response.data.pagination.numberOfPages);
+      setTotalOrders(response.data.pagination.totalOrders)
+
     } catch (error) {
       console.error('Error fetching students:', error);
     } finally {
@@ -86,7 +90,7 @@ const [endDate, setEndDate] = useState('');
       const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-collector-orders`, {
         params: {
             page: currentPage2,
-            limit: 10,
+            limit: 100,
             status:searchStatus,
             startDate:startDate,
             endDate:endDate,
@@ -103,6 +107,8 @@ const [endDate, setEndDate] = useState('');
       console.log(response)
       setCurrentPage2(response.data.pagination.currentPage);
       setNumberOfPages2(response.data.pagination.numberOfPages);
+      setTotalOrders(response.data.pagination.totalOrders)
+
     } catch (error) {
       console.error('Error fetching students:', error);
     } finally {
@@ -123,7 +129,7 @@ const handlePreviousPage = async () => {
       const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-collector-orders`, {
         params: {
             page: currentPage -1,
-            limit: 10,
+            limit: 100,
             
           },
         headers: {
@@ -138,6 +144,8 @@ const handlePreviousPage = async () => {
       console.log(response)
       setCurrentPage(response.data.pagination.currentPage);
       setNumberOfPages(response.data.pagination.numberOfPages);
+      setTotalOrders(response.data.pagination.totalOrders)
+
     } catch (error) {
       console.error('Error fetching students:', error);
     } finally {
@@ -153,7 +161,7 @@ const handleNextPage = async () => {
       const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-collector-orders`, {
         params: {
             page: currentPage +1,
-            limit: 10,
+            limit: 100,
             
           },
         headers: {
@@ -168,6 +176,8 @@ const handleNextPage = async () => {
       console.log(response)
       setCurrentPage(response.data.pagination.currentPage);
       setNumberOfPages(response.data.pagination.numberOfPages);
+      setTotalOrders(response.data.pagination.totalOrders)
+
     } catch (error) {
       console.error('Error fetching students:', error);
     } finally {
@@ -183,7 +193,7 @@ try {
   const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-collector-orders`, {
     params: {
       page: currentPage2,
-      limit: 10,
+      limit: 100,
       status:searchStatus,
       startDate:startDate,
       endDate:endDate,
@@ -201,6 +211,8 @@ try {
   console.log(response)
   setCurrentPage2(response.data.pagination.currentPage);
   setNumberOfPages2(response.data.pagination.numberOfPages);
+  setTotalOrders(response.data.pagination.totalOrders)
+
 } catch (error) {
   console.error('Error fetching students:', error);
 } finally {
@@ -216,7 +228,7 @@ try {
   const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-collector-orders`, {
     params: {
       page: currentPage2,
-      limit: 10,
+      limit: 100,
       status:searchStatus,
       startDate:startDate,
       endDate:endDate,
@@ -234,6 +246,8 @@ try {
   console.log(response)
   setCurrentPage2(response.data.pagination.currentPage);
   setNumberOfPages2(response.data.pagination.numberOfPages);
+  setTotalOrders(response.data.pagination.totalOrders)
+
 } catch (error) {
   console.error('Error fetching students:', error);
 } finally {
@@ -248,7 +262,7 @@ setLoading(true);
 const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-collector-orders`, {
   params: {
     page: currentPage2,
-    limit: 10,
+    limit: 100,
     status:searchStatus,
     startDate:startDate,
     endDate:endDate,
@@ -263,6 +277,8 @@ setSecondFilter(true)
 console.log(response)
 setCurrentPage2(response.data.pagination.currentPage);
 setNumberOfPages2(response.data.pagination.numberOfPages);
+setTotalOrders(response.data.pagination.totalOrders)
+
 } catch (error) {
 console.error('Error fetching students:', error);
 } finally {
@@ -300,7 +316,7 @@ setLoading(false);
       console.log(response);
       closeModal();
       setSelectedFiles([]);
-      getOrders();
+      getShipmentsAdmin();
     } catch (error) {
       console.error(error);
       alert(error.response.data.msg);
@@ -352,7 +368,7 @@ setLoading(false);
       console.log(response);
       closeModalInStore();
       setSelectedFilesInStore([]);
-      getOrders();
+      getShipmentsAdmin();
     } catch (error) {
       console.error(error);
       alert(error.response.data.msg);
@@ -402,7 +418,7 @@ setLoading(false);
       console.log(response);
       closeModalCancel();
       setSelectedFilesCancel([]);
-      getOrders();
+      getShipmentsAdmin();
     } catch (error) {
       console.error(error);
       alert(error.response.data.msg);
@@ -492,7 +508,9 @@ setLoading(false);
   بحث
 </button>  
 <button className="btn btn-dark m-1" onClick={getShipmentsAdmin}>عرض جميع الشحنات  </button>
-
+      <div className="p-2 count-box m-1">
+            <span className='text-primary'>عدد الشحنات  : {totalOrders} </span>
+          </div>
  </div>
       </div>
     </div>
@@ -720,7 +738,7 @@ onChange={(e) => setCurrentPage2(e.target.value)} />
               return (
                 <tr key={index}>
                   <td>{index + 1}</td> 
-                  <td>{item.createdAt.slice(0, 10)}</td>
+                  <td>{item.createdAt.slice(0, 100)}</td>
                   <td>{item.sendername}</td>
                   <td>{item.recivername}</td>
                   <td>{item.billcode}</td>

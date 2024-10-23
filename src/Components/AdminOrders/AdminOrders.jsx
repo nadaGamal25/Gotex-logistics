@@ -857,13 +857,13 @@ const handleEditSubmit = async (event) => {
                       {item.collector && item.collector.length > 0 && item.collector[0].firstName ? (
   <td>تجميع:{item.collector[0].firstName} {item.collector[0].lastName} <br/>
   {item.addCarrierReason.collector.images && item.addCarrierReason.collector.images[0]?
-               <a href={item.addCarrierReason.collector.images[0].replace('public', 'https://dashboard.go-tex.net/logistics-test')} target='_blank'>رابط_الملف</a>
+               <a href={item.addCarrierReason.collector.images[0].replace('public', 'https://dashboard.go-tex.net/logistics')} target='_blank'>رابط_الملف</a>
              :null} 
    <br/>
   {item.receiver&& item.receiver.length > 0 && item.receiver[0].firstName ? (
   <span>تسليم:{item.receiver[0].firstName} {item.receiver[0].lastName}  <br/>
   {item.addCarrierReason.receiver.images && item.addCarrierReason.receiver.images[0]?
-                 <a href={item.addCarrierReason.receiver.images[0].replace('public', 'https://dashboard.go-tex.net/logistics-test')} target='_blank'>رابط_الملف</a>
+                 <a href={item.addCarrierReason.receiver.images[0].replace('public', 'https://dashboard.go-tex.net/logistics')} target='_blank'>رابط_الملف</a>
                :null}</span>
 ) : (
   null

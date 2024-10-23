@@ -65,7 +65,7 @@ const [totalOrders, setTotalOrders] = useState(0);
   async function getShipmentsAdmin() {
     try {
       setLoading(true);
-      const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-receiver-orders`, {
+      const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/get-receiver-orders`, {
         params: {
             page: currentPage,
             limit: 100,
@@ -94,7 +94,7 @@ const [totalOrders, setTotalOrders] = useState(0);
     setCurrentPage2(1)
     try {
       setLoading(true);
-      const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-receiver-orders`, {
+      const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/get-receiver-orders`, {
         params: {
             page: currentPage2,
             limit: 100,
@@ -133,7 +133,7 @@ const handlePreviousPage = async () => {
     setCurrentPage(currentPage - 1); 
     try {
       setLoading(true);
-      const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-receiver-orders`, {
+      const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/get-receiver-orders`, {
         params: {
             page: currentPage -1,
             limit: 100,
@@ -165,7 +165,7 @@ const handleNextPage = async () => {
     setCurrentPage(currentPage + 1);
     try {
       setLoading(true);
-      const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-receiver-orders`, {
+      const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/get-receiver-orders`, {
         params: {
             page: currentPage +1,
             limit: 100,
@@ -197,7 +197,7 @@ if (currentPage2 > 1) {
 setCurrentPage2(currentPage2 - 1); 
 try {
   setLoading(true);
-  const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-receiver-orders`, {
+  const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/get-receiver-orders`, {
     params: {
       page: currentPage2,
       limit: 100,
@@ -232,7 +232,7 @@ if (currentPage2 < numberOfPages2) {
 setCurrentPage2(currentPage2 + 1) 
 try {
   setLoading(true);
-  const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-receiver-orders`, {
+  const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/get-receiver-orders`, {
     params: {
       page: currentPage2,
       limit: 100,
@@ -266,7 +266,7 @@ try {
 async function getSearchShipmentsPage() {
 try {
 setLoading(true);
-const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-receiver-orders`, {
+const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/get-receiver-orders`, {
   params: {
     page: currentPage2,
     limit: 100,

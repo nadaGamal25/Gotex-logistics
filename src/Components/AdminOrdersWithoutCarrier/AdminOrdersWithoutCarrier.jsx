@@ -178,7 +178,7 @@ export default function AdminOrdersWithoutCarrier() {
     
     try {
         const response = await axios.put(
-          `https://dashboard.go-tex.net/logistics-test/order/add-order-to-collector`,
+          `https://dashboard.go-tex.net/logistics/order/add-order-to-collector`,
           formData,
           {
             headers: {
@@ -214,7 +214,7 @@ export default function AdminOrdersWithoutCarrier() {
     
     try {
         const response = await axios.put(
-          `https://dashboard.go-tex.net/logistics-test/order/add-order-to-receiver`,
+          `https://dashboard.go-tex.net/logistics/order/add-order-to-receiver`,
           formData,
           {
             headers: {
@@ -332,14 +332,14 @@ export default function AdminOrdersWithoutCarrier() {
                 item.status=='canceled'?
                 <td >تم إلغائها</td>:
                 <td>{item.status}</td>}                   {item.images && item.images[0]?<td>
-               <a href={item.images[0].replace('public', 'https://dashboard.go-tex.net/logistics-test')} target='_blank'>رابط_الملف</a>
+               <a href={item.images[0].replace('public', 'https://dashboard.go-tex.net/logistics')} target='_blank'>رابط_الملف</a>
              </td>:<td>_</td>}
                    {item.collector && item.collector.length > 0 && item.collector[0].firstName ? (
 <td>{item.collector[0].firstName} {item.collector[0].lastName} <br/>
 {item.addCarrierReason?.collector?.description?
 <span className='text-danger'>{item.addCarrierReason.collector.description}</span>:null} <br/>
 {item.addCarrierReason.collector.images && item.addCarrierReason.collector.images[0]?
-               <a href={item.addCarrierReason.collector.images[0].replace('public', 'https://dashboard.go-tex.net/logistics-test')} target='_blank'>رابط_الملف</a>
+               <a href={item.addCarrierReason.collector.images[0].replace('public', 'https://dashboard.go-tex.net/logistics')} target='_blank'>رابط_الملف</a>
              :null} </td>
 ) : (
 <td></td>
@@ -349,7 +349,7 @@ export default function AdminOrdersWithoutCarrier() {
 {item.addCarrierReason?.receiver?.description?
 <span className='text-danger'>{item.addCarrierReason.receiver.description}</span>:null} <br/>
 {item.addCarrierReason.receiver.images && item.addCarrierReason.receiver.images[0]?
-               <a href={item.addCarrierReason.receiver.images[0].replace('public', 'https://dashboard.go-tex.net/logistics-test')} target='_blank'>رابط_الملف</a>
+               <a href={item.addCarrierReason.receiver.images[0].replace('public', 'https://dashboard.go-tex.net/logistics')} target='_blank'>رابط_الملف</a>
              :null}</td>
 ) : (
 <td></td>

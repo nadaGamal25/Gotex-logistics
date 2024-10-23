@@ -90,7 +90,7 @@ export default function StoreKeeperOrders() {
       async function getShipmentsAdmin() {
         try {
           setLoading(true);
-          const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-storekeeper-orders`, {
+          const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/get-storekeeper-orders`, {
             params: {
                 page: currentPage,
                 limit: 100,
@@ -120,7 +120,7 @@ export default function StoreKeeperOrders() {
         setCurrentPage2(1)
         try {
           setLoading(true);
-          const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-storekeeper-orders`, {
+          const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/get-storekeeper-orders`, {
             params: {
                 page: currentPage2,
                 limit: 100,
@@ -162,7 +162,7 @@ export default function StoreKeeperOrders() {
         setCurrentPage(currentPage - 1); 
         try {
           setLoading(true);
-          const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-storekeeper-orders`, {
+          const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/get-storekeeper-orders`, {
             params: {
                 page: currentPage -1,
                 limit: 100,
@@ -195,7 +195,7 @@ export default function StoreKeeperOrders() {
         setCurrentPage(currentPage + 1);
         try {
           setLoading(true);
-          const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-storekeeper-orders`, {
+          const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/get-storekeeper-orders`, {
             params: {
                 page: currentPage +1,
                 limit: 100,
@@ -228,7 +228,7 @@ export default function StoreKeeperOrders() {
     setCurrentPage2(currentPage2 - 1); 
     try {
       setLoading(true);
-      const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-storekeeper-orders`, {
+      const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/get-storekeeper-orders`, {
         params: {
           page: currentPage2,
           limit: 100,
@@ -266,7 +266,7 @@ export default function StoreKeeperOrders() {
     setCurrentPage2(currentPage2 + 1) 
     try {
       setLoading(true);
-      const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-storekeeper-orders`, {
+      const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/get-storekeeper-orders`, {
         params: {
           page: currentPage2,
           limit: 100,
@@ -302,7 +302,7 @@ export default function StoreKeeperOrders() {
     async function getSearchShipmentsPage() {
     try {
     setLoading(true);
-    const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-storekeeper-orders`, {
+    const response = await axios.get(`https://dashboard.go-tex.net/logistics/order/get-storekeeper-orders`, {
       params: {
         page: currentPage2,
         limit: 100,
@@ -352,7 +352,7 @@ export default function StoreKeeperOrders() {
             console.log(`${key}: ${value}`);
           });
           const response = await axios.put(
-            `https://dashboard.go-tex.net/logistics-test/order/add-order-to-receiver`,
+            `https://dashboard.go-tex.net/logistics/order/add-order-to-receiver`,
             formData,
             {
               headers: {

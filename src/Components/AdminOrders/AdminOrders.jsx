@@ -19,10 +19,10 @@ const [searchBillCode, setSearchBillCode] = useState('');
 const [currentPage2, setCurrentPage2] = useState(Number(1));
     const [numberOfPages2, setNumberOfPages2] = useState(1);
 const [secondFilter, setSecondFilter] = useState(false);
-const [currentPage3, setCurrentPage3] = useState(Number(1));
-    const [numberOfPages3, setNumberOfPages3] = useState(1);
-const [currentPage4, setCurrentPage4] = useState(Number(1));
-const [numberOfPages4, setNumberOfPages4] = useState(1);
+// const [currentPage3, setCurrentPage3] = useState(Number(1));
+//     const [numberOfPages3, setNumberOfPages3] = useState(1);
+// const [currentPage4, setCurrentPage4] = useState(Number(1));
+// const [numberOfPages4, setNumberOfPages4] = useState(1);
 const [dateFilter, setDateFilter] = useState(false);
     const [clientFilter, setClientFilter] = useState('');
   const [startDate, setStartDate] = useState('');
@@ -807,7 +807,27 @@ const handleEditSubmit = async (event) => {
                       <td>{item.price}</td>
                       <td>{item.weight}</td>
                       <td>{item.pieces}</td>
-                      <td>{item.status}<br/>
+                      <td>
+                        {item.isreturn==true && item.status =='in store'?
+                <span >شحنة رجيع(بالمخزن) </span>:
+                item.status=='pending'?
+                <span >قيد الانتظار</span>:
+                item.status=='late to store'?
+                <span >شحنة متأخرة </span>:
+                item.status=='pick to store'?
+                <span >فى الطريق للمخزن</span>:
+                item.status=='in store'?
+                <span > فى المخزن</span>:
+                item.status=='pick to client' && item.isreturn!==true?
+                <span >فى الطريق للعميل</span>:
+                item.status=='pick to client' && item.isreturn===true?
+                <span >فى الطريق للمرسل</span>:
+                item.status=='received'?
+                <span >تم تسليمها</span>:
+                item.status=='canceled'?
+                <span >تم إلغائها</span>:
+                <span>{item.status}</span>}
+                        <br/>
                       {item.status === 'pending' && item.images?.pending?.length !== 0 ? (
                       <a className="text-primary" onClick={() => openCarousel(item.images.pending)}>الصور</a>
                     ) : item.status === 'pick to store' && item.images?.pickedToStore?.length !== 0 ? (
@@ -835,9 +855,16 @@ const handleEditSubmit = async (event) => {
                 <td>{item.cancelDescription?.dataEntry || item.cancelDescription?.collector}</td> : <td></td>}
                 
                       {item.collector && item.collector.length > 0 && item.collector[0].firstName ? (
-  <td>تجميع:{item.collector[0].firstName} {item.collector[0].lastName}<br/>
+  <td>تجميع:{item.collector[0].firstName} {item.collector[0].lastName} <br/>
+  {item.addCarrierReason.collector.images && item.addCarrierReason.collector.images[0]?
+               <a href={item.addCarrierReason.collector.images[0].replace('public', 'https://dashboard.go-tex.net/logistics-test')} target='_blank'>رابط_الملف</a>
+             :null} 
+   <br/>
   {item.receiver&& item.receiver.length > 0 && item.receiver[0].firstName ? (
-  <span>تسليم:{item.receiver[0].firstName} {item.receiver[0].lastName}</span>
+  <span>تسليم:{item.receiver[0].firstName} {item.receiver[0].lastName}  <br/>
+  {item.addCarrierReason.receiver.images && item.addCarrierReason.receiver.images[0]?
+                 <a href={item.addCarrierReason.receiver.images[0].replace('public', 'https://dashboard.go-tex.net/logistics-test')} target='_blank'>رابط_الملف</a>
+               :null}</span>
 ) : (
   null
 )} </td>

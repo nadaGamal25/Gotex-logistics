@@ -4,17 +4,31 @@ import {Modal, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function StoreKeeperOrders() {
-    useEffect(() => {
-        getOrders()
-        getUsersCarriersAdmin()
-      }, [])
+    // useEffect(() => {
+    //     getOrders()
+    //     getUsersCarriersAdmin()
+    //   }, [])
       const [orders, setOrders] = useState([])
       const [orderId, setOrderId] = useState('');
       const [carrierId, setCarrierId] = useState('');
       const [carriersListAdmin, setCarriersListsAdmin] = useState([]);
       const [cachAmount, setCachAmount] = useState(0);
       const [visaAmount, setVisaAmount] = useState(0);
- 
+      const [totalOrders, setTotalOrders] = useState(0);
+      const [shipmentsAdmin,setShipmentsAdmin]=useState([])
+      const [theLimit,setLimit]=useState(30)
+      const [currentPage, setCurrentPage] = useState(Number(1));
+      const [numberOfPages, setNumberOfPages] = useState(1);
+      const [loading, setLoading] = useState(false);
+      const [searchStatus, setSearchStatus] = useState('');
+      const [searchReciever, setSearchReciever] = useState('');
+      const [searchPaytype, setSearchPaytype] = useState('');
+    const [currentPage2, setCurrentPage2] = useState(Number(1));
+      const [numberOfPages2, setNumberOfPages2] = useState(1);
+      const [secondFilter, setSecondFilter] = useState(false);
+      const [isDisabled, setIsDisabled] = useState(false);
+      const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
 
       async function getOrders() {
         try {
@@ -29,6 +43,8 @@ export default function StoreKeeperOrders() {
           setOrders(List)
           setCachAmount(response.data.storekeeper.collectedCashAmount)
           setVisaAmount(response.data.storekeeper.collectedVisaAmount)
+          setTotalOrders(response.data.pagination.totalOrders)
+
         } catch (error) {
           console.error(error);
         }
@@ -70,6 +86,308 @@ export default function StoreKeeperOrders() {
           console.error(error);
         }
       }
+    
+      async function getShipmentsAdmin() {
+        try {
+          setLoading(true);
+          const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-storekeeper-orders`, {
+            params: {
+                page: currentPage,
+                limit: 100,
+                
+              },
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('storekeeperToken')}`,
+            },
+          });
+      
+          setShipmentsAdmin(response.data.data);
+          setSecondFilter(false)
+          // setDateFilter(false)
+          console.log(response)
+          setCurrentPage(response.data.pagination.currentPage);
+          setNumberOfPages(response.data.pagination.numberOfPages);
+          setCachAmount(response.data.storekeeper.collectedCashAmount)
+          setVisaAmount(response.data.storekeeper.collectedVisaAmount)
+          setTotalOrders(response.data.pagination.totalOrders)
+          } catch (error) {
+          console.error('Error fetching students:', error);
+        } finally {
+          setLoading(false); 
+        }
+      }
+      async function getSearchShipmentsAdmin() {
+        setCurrentPage2(1)
+        try {
+          setLoading(true);
+          const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-storekeeper-orders`, {
+            params: {
+                page: currentPage2,
+                limit: 100,
+                status:searchStatus,
+                receiver:searchReciever,
+                paytype:searchPaytype,
+                startDate:startDate,
+            endDate:endDate,
+                
+              },
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('storekeeperToken')}`,
+            },
+          });
+      
+          setShipmentsAdmin(response.data.data);
+          setSecondFilter(true)
+          // setDateFilter(false)
+          console.log(response)
+          setCurrentPage2(response.data.pagination.currentPage);
+          setNumberOfPages2(response.data.pagination.numberOfPages);
+          setCachAmount(response.data.storekeeper.collectedCashAmount)
+          setVisaAmount(response.data.storekeeper.collectedVisaAmount)
+          setTotalOrders(response.data.pagination.totalOrders)
+        } catch (error) {
+          console.error('Error fetching students:', error);
+        } finally {
+          setLoading(false); 
+        }
+      }
+      
+    useEffect(() => {
+        getShipmentsAdmin();
+    }, []);
+    
+    
+    const handlePreviousPage = async () => {
+      if (currentPage > 1) {
+        setCurrentPage(currentPage - 1); 
+        try {
+          setLoading(true);
+          const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-storekeeper-orders`, {
+            params: {
+                page: currentPage -1,
+                limit: 100,
+                
+              },
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('storekeeperToken')}`,
+            },
+          });
+      
+          setShipmentsAdmin(response.data.data);
+          setSecondFilter(false)
+          // setMarketerFilter(false)
+          // setDateFilter(false)
+          console.log(response)
+          setCurrentPage(response.data.pagination.currentPage);
+          setNumberOfPages(response.data.pagination.numberOfPages);
+          setCachAmount(response.data.storekeeper.collectedCashAmount)
+          setVisaAmount(response.data.storekeeper.collectedVisaAmount)
+          setTotalOrders(response.data.pagination.totalOrders)
+        } catch (error) {
+          console.error('Error fetching students:', error);
+        } finally {
+          setLoading(false); 
+        }
+      }
+    };
+    const handleNextPage = async () => {
+      if (currentPage < numberOfPages) {
+        setCurrentPage(currentPage + 1);
+        try {
+          setLoading(true);
+          const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-storekeeper-orders`, {
+            params: {
+                page: currentPage +1,
+                limit: 100,
+                
+              },
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('storekeeperToken')}`,
+            },
+          });
+      
+          setShipmentsAdmin(response.data.data);
+          setSecondFilter(false)
+          // setMarketerFilter(false)
+          // setDateFilter(false)
+          console.log(response)
+          setCurrentPage(response.data.pagination.currentPage);
+          setNumberOfPages(response.data.pagination.numberOfPages);
+          setCachAmount(response.data.storekeeper.collectedCashAmount)
+          setVisaAmount(response.data.storekeeper.collectedVisaAmount)
+          setTotalOrders(response.data.pagination.totalOrders)
+        } catch (error) {
+          console.error('Error fetching students:', error);
+        } finally {
+          setLoading(false); 
+        }
+      }
+    };
+    const handlePreviousPage2 = async () => {
+    if (currentPage2 > 1) {
+    setCurrentPage2(currentPage2 - 1); 
+    try {
+      setLoading(true);
+      const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-storekeeper-orders`, {
+        params: {
+          page: currentPage2,
+          limit: 100,
+          status:searchStatus,
+          receiver:searchReciever,
+          paytype:searchPaytype,
+          startDate:startDate,
+            endDate:endDate,
+            
+          },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('storekeeperToken')}`,
+        },
+      });
+    
+      setShipmentsAdmin(response.data.data);
+      setSecondFilter(true)
+      // setMarketerFilter(false)
+      // setDateFilter(false)
+      console.log(response)
+      setCurrentPage2(response.data.pagination.currentPage);
+      setNumberOfPages2(response.data.pagination.numberOfPages);
+      setCachAmount(response.data.storekeeper.collectedCashAmount)
+      setVisaAmount(response.data.storekeeper.collectedVisaAmount)
+      setTotalOrders(response.data.pagination.totalOrders)
+    } catch (error) {
+      console.error('Error fetching students:', error);
+    } finally {
+      setLoading(false); 
+    }
+    }
+    };
+    const handleNextPage2 = async () => {
+    if (currentPage2 < numberOfPages2) {
+    setCurrentPage2(currentPage2 + 1) 
+    try {
+      setLoading(true);
+      const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-storekeeper-orders`, {
+        params: {
+          page: currentPage2,
+          limit: 100,
+          status:searchStatus,
+          receiver:searchReciever,
+          paytype:searchPaytype,
+          startDate:startDate,
+          endDate:endDate,
+          },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('storekeeperToken')}`,
+        },
+      });
+    
+      setShipmentsAdmin(response.data.data);
+      setSecondFilter(true)
+      // setMarketerFilter(false)
+      // setDateFilter(false)
+      console.log(response)
+      setCurrentPage2(response.data.pagination.currentPage);
+      setNumberOfPages2(response.data.pagination.numberOfPages);
+      setCachAmount(response.data.storekeeper.collectedCashAmount)
+      setVisaAmount(response.data.storekeeper.collectedVisaAmount)
+      setTotalOrders(response.data.pagination.totalOrders)
+    } catch (error) {
+      console.error('Error fetching students:', error);
+    } finally {
+      setLoading(false); 
+    }  
+    }
+    };
+    
+    async function getSearchShipmentsPage() {
+    try {
+    setLoading(true);
+    const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-storekeeper-orders`, {
+      params: {
+        page: currentPage2,
+        limit: 100,
+        status:searchStatus,
+        receiver:searchReciever,
+        paytype:searchPaytype,
+        startDate:startDate,
+            endDate:endDate,
+        },
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('storekeeperToken')}`,
+      },
+    });
+    
+    setShipmentsAdmin(response.data.data);
+    setSecondFilter(true)
+    console.log(response)
+    setCurrentPage2(response.data.pagination.currentPage);
+    setNumberOfPages2(response.data.pagination.numberOfPages);
+    setCachAmount(response.data.storekeeper.collectedCashAmount)
+    setVisaAmount(response.data.storekeeper.collectedVisaAmount)
+    setTotalOrders(response.data.pagination.totalOrders)
+    } catch (error) {
+    console.error('Error fetching students:', error);
+    } finally {
+    setLoading(false); 
+    }
+    } 
+
+
+
+      const [selectedFilesAddReciever, setSelectedFilesAddReciever] = useState([]);
+      const [descAddReciever, setDescAddReciever] = useState('');
+      async function AddRecieverOrder() {
+        console.log(selectedFilesAddReciever)
+        const formData = new FormData();
+        formData.append('orderId', orderId);
+        formData.append('carrierId', carrierId);
+        formData.append('description', descAddReciever);
+        
+        selectedFilesAddReciever.forEach((file) => {
+          formData.append('images', file);
+        });
+      
+        try {
+          formData.forEach((value, key) => {
+            console.log(`${key}: ${value}`);
+          });
+          const response = await axios.put(
+            `https://dashboard.go-tex.net/logistics-test/order/add-order-to-receiver`,
+            formData,
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem('storekeeperToken')}`,
+              },
+            }
+          );
+      
+          console.log(response);
+          closeModalAddReciever();
+          setSelectedFilesAddReciever([]);
+          window.alert('تمت اضافة المندوب بنجاح');
+          getShipmentsAdmin();
+        } catch (error) {
+          console.error(error);
+          alert(error.response.data.msg);
+        }
+      }
+      
+      function handleFileChangeAddReciever(event) {
+        const files = Array.from(event.target.files);
+        setSelectedFilesAddReciever((prevFiles) => [...prevFiles, ...files]);
+      }
+      
+      const [showModalAddReciever, setShowModalAddReciever] = useState(false);
+    
+      const openModalAddReciever = (orderid) => {
+        setShowModalAddReciever(true);
+        setOrderId(orderid)
+      };
+    
+      const closeModalAddReciever = () => {
+        setShowModalAddReciever(false);
+        setSelectedFilesAddReciever([])
+      };
       async function addReciever() {
     
         try {
@@ -90,16 +408,13 @@ export default function StoreKeeperOrders() {
             console.log(response);
             window.alert('تمت اضافة المندوب بنجاح');
             closeModal()
-            getOrders()
+            getShipmentsAdmin()
           } else {
             // setError(response.data.msg);
           }
         } catch (error) {
-            // setError(error.response.data.msg)
             console.log(error.response)
-            console.log(carrierId)
-            console.log(orderId)
-            window.alert(error.response.data.msg)
+               window.alert(error.response.data.msg)
             // window.alert(error.response?.data?.msg || error.response?.data?.msg?.name || error.response?.data?.errors[0]?.msg|| "error")
         }
       }
@@ -182,7 +497,7 @@ export default function StoreKeeperOrders() {
       closeModal2()  
       console.log(response);
       setSelectedFiles([]);
-      getOrders()
+      getShipmentsAdmin()
     } catch (error) {
       console.error(error);
       alert(error.response.data.msg)
@@ -206,7 +521,7 @@ export default function StoreKeeperOrders() {
       alert('تم رفض استلام الشحنة')
       closeModal2()
       console.log(response);
-      getOrders()
+      getShipmentsAdmin()
     } catch (error) {
       console.error(error);
       alert(error.response.data.msg)
@@ -284,7 +599,7 @@ export default function StoreKeeperOrders() {
       );
   
       console.log(response);
-      getOrders();
+      getShipmentsAdmin();
       alert("لقد تم التأكيد بنجاح")
       
     } catch (error) {
@@ -310,7 +625,7 @@ export default function StoreKeeperOrders() {
       );
   
       console.log(response);
-      getOrders();
+      getShipmentsAdmin();
       alert("لقد تم التأكيد بنجاح")
       
     } catch (error) {
@@ -357,13 +672,98 @@ export default function StoreKeeperOrders() {
       <div className="p-2 count-box m-1">
             <span>قيمة المدفوع فيزا  : {visaAmount} ريال</span>
           </div>
-      </div>\
+      </div>
+      <div className="col-md-4">
+      <div className="p-2 count-box m-1">
+            <span className='text-primary'>عدد الشحنات  : {totalOrders} </span>
+          </div>
+      </div>
           </div>
           
+          <div className="my-table p-4 mb-4 mt-3">
+      <div className="row">
+        
+       
+        <div className="col-md-4">
+          <select className='form-control m-1' disabled={isDisabled}
+          
+          placeholder="حالة الشحنة"
+        //   value={searchPaytype}
+          onChange={(e) => setSearchStatus(e.target.value)} >
+            <option value="">حالة الشحنة (الكل)</option>
+            <option value="pending">pending (معلقة)</option>
+            <option value="late to store"> الشحنات المتأخرة</option>
+            <option value="pick to store">pick to store(ف الطريق للمخزن)</option>
+            <option value="in store">in store(فى المخزن)</option>
+            <option value="pick to client">pick to client(ف الطريق للعميل)</option>
+            <option value="delivered">delivered(تم تسليمها)</option>
+            <option value="canceled">canceled(تم الغائها)</option>
+            </select>
+        </div>
+        
+        <div className="col-md-8 p-1">
+          <label>
+  التاريخ من:
+  <input
+    type="date"
+    // value={startDate}
+    onChange={(e) => setStartDate(e.target.value)}
+    max={endDate || undefined}
+  />
+</label>
+<label>
+  الى:
+  <input
+    type="date"
+    // value={endDate}
+    onChange={(e) => setEndDate(e.target.value)}
+    min={startDate || undefined}
+  />
+</label>
+
+        </div>
+        <div className="col-md-4">
+          <input className='form-control m-1' 
+          type="search" placeholder=" اسم مندوب التسليم"
+          // value={clientFilter}
+          onChange={(e) => setSearchReciever(e.target.value)}
+          />
+        </div>
+        <div className="col-md-4">
+          <select className='form-control m-1'
+          
+          placeholder="حالة الدفع"
+        //   value={searchPaytype}
+          onChange={(e) => {setSearchPaytype(e.target.value)
+            setSearchStatus('')
+            setIsDisabled(true)
+          }
+          } >
+            <option value="">حالة الدفع (الكل)</option>
+            <option value="cash cod"> المدفوعة كاش</option>
+            <option value="visa cod"> المدفوعة فيزا </option>
+            
+            </select>
+        </div>
+        {/* <div className="col-md-4">
+          <input className='form-control m-1' 
+          type="search" placeholder=" رقم الصفحة"
+          // value={clientFilter}
+          onChange={(e) => setCurrentPage2(e.target.value)}
+          />
+        </div> */}
+        <div className="text-center mt-1">
+        <button className="btn btn-dark m-1" onClick={getSearchShipmentsAdmin}>
+  بحث
+</button>  
+<button className="btn btn-dark m-1" onClick={getShipmentsAdmin}>عرض جميع الشحنات  </button>
+
+ </div>
+      </div>
+    </div>
           
           
-          
-          <div className="bg-b p-2 mb-4 mt-3">
+          {/* <div className="bg-b p-2 mb-4 mt-3">
       <div className="row">
         
         <div className="col-md-4">
@@ -376,7 +776,7 @@ export default function StoreKeeperOrders() {
         <button className="btn btn-dark m-1" onClick={getSearchOrders}>
   بحث
  </button>  
- <button className="btn btn-dark m-1" onClick={getOrders}>عرض جميع الشحنات  </button>
+ <button className="btn btn-dark m-1" onClick={getShipmentsAdmin}>عرض جميع الشحنات  </button>
 
  </div>
         
@@ -399,7 +799,7 @@ export default function StoreKeeperOrders() {
             </select>
     </div>
     </div>
-    </div>
+    </div> */}
           <div className="my-table p-4 mt-3">
             <table className="table">
               <thead>
@@ -421,10 +821,14 @@ export default function StoreKeeperOrders() {
                 </tr>
               </thead>
               <tbody>
-                {filteredOrders && filteredOrders
-                .map((item, index) => {
-                  return (
-                    <tr key={index}>
+              {shipmentsAdmin && shipmentsAdmin.map((item, index) => (
+  <tr key={index} className={item.status === "canceled" ? 'cancel' : ''}>
+    {loading ? (
+      <td>
+        <i className="fa-solid fa-spinner fa-spin"></i>
+      </td>
+    ) : (
+      <>
                       <td>{index + 1}</td>
                       <td>{item.sendername}</td>
                       <td>{item.recivername}</td>
@@ -434,12 +838,29 @@ export default function StoreKeeperOrders() {
                       <td>{item.price}</td>
                       <td>{item.weight}</td>
                       <td>{item.pieces}</td>
-                      <td>{item.status}</td>
-                      {item.deliveredby?<td>{item.deliveredby.fullName}</td>:<td>_</td>}
+                      {item.isreturn==true && item.status =='in store'?
+                <td >شحنة رجيع(بالمخزن) </td>:
+                item.status=='pending'?
+                <td >قيد الانتظار</td>:
+                item.status=='late to store'?
+                <td >شحنة متأخرة </td>:
+                item.status=='pick to store'?
+                <td >فى الطريق للمخزن</td>:
+                item.status=='in store'?
+                <td > فى المخزن</td>:
+                item.status=='pick to client' && item.isreturn!==true?
+                <td >فى الطريق للعميل</td>:
+                item.status=='pick to client' && item.isreturn===true?
+                <td >فى الطريق للمرسل</td>:
+                item.status=='received'?
+                <td >تم تسليمها</td>:
+                item.status=='canceled'?
+                <td >تم إلغائها</td>:
+                <td>{item.status}</td>}                      {item.deliveredby?<td>{item.deliveredby.fullName}</td>:<td>_</td>}
                       <td><button className="btn btn-success" onClick={() => { getSticker(item._id) }}>عرض الاستيكر</button></td>
-                      {item.status == 'in store' && !item.deliveredby ?
+                      {item.status == 'in store'?
                       <td><button className="btn btn-orange" onClick={()=>{
-    openModal(item._id)
+    openModalAddReciever(item._id)
    }}>إضافة مندوب </button></td>  :null}
    {item.status=='pick to store'?
    <td><button className="btn btn-primary" onClick={()=>{
@@ -462,16 +883,97 @@ export default function StoreKeeperOrders() {
                    <td>
                     <button className="btn btn-danger" onClick={() => { openModalProblem(item._id) }}>تبليغ مشكلة</button>
                    </td>
-                    </tr>
-                  );
-                })}
+                   </>
+    )}
+                   </tr>
+))}                  
+                
               </tbody>
     
     
             </table>
+            {secondFilter?(
+      <div>
+        <button className="btn btn-dark" onClick={handlePreviousPage2} disabled={currentPage2 === 1}>
+          الصفحة السابقة 
+        </button>
+        <span className='px-1'>
+          Page {currentPage2} of {numberOfPages2}
+        </span>
+        <button className="btn btn-dark" onClick={handleNextPage2} disabled={currentPage2 === numberOfPages2}>
+          الصفحة التالية 
+        </button>
+      </div>
+      ):
+      
+      (
+        <div>
+        <button className="btn btn-dark" onClick={handlePreviousPage} disabled={currentPage === 1}>
+          الصفحة السابقة 
+        </button>
+        <span className='px-1'>
+          Page {currentPage} of {numberOfPages}
+        </span>
+        <button className="btn btn-dark" onClick={handleNextPage} disabled={currentPage === numberOfPages}>
+          الصفحة التالية 
+        </button>
+      </div>
+      )}
           </div>
         
         </div>
+        <Modal show={showModalAddReciever} onHide={closeModalAddReciever}>
+  <Modal.Header>
+    <Modal.Title>قم باختيار مندوب </Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    <form onSubmit={(e) => { e.preventDefault(); AddRecieverOrder(selectedID); }}>
+      <div className=''>
+        <label>اسم المندوب</label>
+      <input list='myData'
+           onChange={(e) => handleSelectCarrier(e.target.value)}
+                                             type="text"
+                                             className='my-input my-2 form-control' placeholder='اسم المندوب'
+                                         />
+                                      <datalist id='myData'>
+   {carriersListAdmin && carriersListAdmin.map((carrier, ciIndex) => (
+     <option key={ciIndex} value={`${carrier.firstName} ${carrier.lastName}, ${carrier.mobile}, ${carrier.role}`}  
+       onClick={() => {
+         setCarrierId(carrier._id);
+       }}
+     />
+   ))}
+ </datalist>
+        <label htmlFor="">إضافة ملاحظة: </label>
+        <input
+          type="text"
+          className="my-2 my-input form-control"
+          onChange={(e) => { setDescAddReciever(e.target.value); }} required
+        />
+        <label htmlFor="">إرفق ملف () </label>
+        <input
+          type="file"
+          className="my-2 my-input form-control"
+          name="images"
+          multiple
+          onChange={handleFileChangeAddReciever} required
+        />
+      </div>
+      <Modal.Footer>
+        <div className="text-center">
+          <Button className='m-1' variant="danger" type="submit">
+          إضافة مندوب تسليم
+          </Button>
+          <Button className='m-1' variant="secondary" type='button' onClick={closeModalAddReciever}>
+            إغلاق
+          </Button>
+        </div>
+      </Modal.Footer>
+    </form>
+  </Modal.Body>
+</Modal>
+
+
          <Modal show={showModal} onHide={closeModal}>
          <Modal.Header >
            <Modal.Title> قم باختيار مندوب

@@ -4,12 +4,25 @@ import {Modal, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function CollectorShipments() {
-  useEffect(() => {
+  // useEffect(() => {
 
-    getOrders()
-  }, [])
+  //   getOrders()
+  // }, [])
   const [orders, setOrders] = useState([])
   const [orderStatus, setOrderStatus]=useState('')
+  const [shipmentsAdmin,setShipmentsAdmin]=useState([])
+  const [theLimit,setLimit]=useState(30)
+  const [currentPage, setCurrentPage] = useState(Number(1));
+  const [numberOfPages, setNumberOfPages] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [searchStatus, setSearchStatus] = useState('');
+const [currentPage2, setCurrentPage2] = useState(Number(1));
+  const [numberOfPages2, setNumberOfPages2] = useState(1);
+const [secondFilter, setSecondFilter] = useState(false);
+const [startDate, setStartDate] = useState('');
+const [endDate, setEndDate] = useState('');
+const [totalOrders, setTotalOrders] = useState(0);
+
   async function getOrders() {
     try {
       const response = await axios.get('https://dashboard.go-tex.net/logistics/order/get-collector-orders',
@@ -42,6 +55,237 @@ export default function CollectorShipments() {
     }
   }
 
+  async function getShipmentsAdmin() {
+    try {
+      setLoading(true);
+      const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-collector-orders`, {
+        params: {
+            page: currentPage,
+            limit: 100,
+            
+          },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('carrierToken')}`,
+        },
+      });
+  
+      setShipmentsAdmin(response.data.data);
+      setSecondFilter(false)
+      // setDateFilter(false)
+      console.log(response)
+      setCurrentPage(response.data.pagination.currentPage);
+      setNumberOfPages(response.data.pagination.numberOfPages);
+      setTotalOrders(response.data.pagination.totalOrders)
+
+    } catch (error) {
+      console.error('Error fetching students:', error);
+    } finally {
+      setLoading(false); 
+    }
+  }
+  async function getSearchShipmentsAdmin() {
+    setCurrentPage2(1)
+    try {
+      setLoading(true);
+      const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-collector-orders`, {
+        params: {
+            page: currentPage2,
+            limit: 100,
+            status:searchStatus,
+            startDate:startDate,
+            endDate:endDate,
+            
+          },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('carrierToken')}`,
+        },
+      });
+  
+      setShipmentsAdmin(response.data.data);
+      setSecondFilter(true)
+      // setDateFilter(false)
+      console.log(response)
+      setCurrentPage2(response.data.pagination.currentPage);
+      setNumberOfPages2(response.data.pagination.numberOfPages);
+      setTotalOrders(response.data.pagination.totalOrders)
+
+    } catch (error) {
+      console.error('Error fetching students:', error);
+    } finally {
+      setLoading(false); 
+    }
+  }
+  
+useEffect(() => {
+    getShipmentsAdmin();
+}, []);
+
+
+const handlePreviousPage = async () => {
+  if (currentPage > 1) {
+    setCurrentPage(currentPage - 1); 
+    try {
+      setLoading(true);
+      const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-collector-orders`, {
+        params: {
+            page: currentPage -1,
+            limit: 100,
+            
+          },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('carrierToken')}`,
+        },
+      });
+  
+      setShipmentsAdmin(response.data.data);
+      setSecondFilter(false)
+      // setMarketerFilter(false)
+      // setDateFilter(false)
+      console.log(response)
+      setCurrentPage(response.data.pagination.currentPage);
+      setNumberOfPages(response.data.pagination.numberOfPages);
+      setTotalOrders(response.data.pagination.totalOrders)
+
+    } catch (error) {
+      console.error('Error fetching students:', error);
+    } finally {
+      setLoading(false); 
+    }
+  }
+};
+const handleNextPage = async () => {
+  if (currentPage < numberOfPages) {
+    setCurrentPage(currentPage + 1);
+    try {
+      setLoading(true);
+      const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-collector-orders`, {
+        params: {
+            page: currentPage +1,
+            limit: 100,
+            
+          },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('carrierToken')}`,
+        },
+      });
+  
+      setShipmentsAdmin(response.data.data);
+      setSecondFilter(false)
+      // setMarketerFilter(false)
+      // setDateFilter(false)
+      console.log(response)
+      setCurrentPage(response.data.pagination.currentPage);
+      setNumberOfPages(response.data.pagination.numberOfPages);
+      setTotalOrders(response.data.pagination.totalOrders)
+
+    } catch (error) {
+      console.error('Error fetching students:', error);
+    } finally {
+      setLoading(false); 
+    }
+  }
+};
+const handlePreviousPage2 = async () => {
+if (currentPage2 > 1) {
+setCurrentPage2(currentPage2 - 1); 
+try {
+  setLoading(true);
+  const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-collector-orders`, {
+    params: {
+      page: currentPage2,
+      limit: 100,
+      status:searchStatus,
+      startDate:startDate,
+      endDate:endDate,
+        
+      },
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('carrierToken')}`,
+    },
+  });
+
+  setShipmentsAdmin(response.data.data);
+  setSecondFilter(true)
+  // setMarketerFilter(false)
+  // setDateFilter(false)
+  console.log(response)
+  setCurrentPage2(response.data.pagination.currentPage);
+  setNumberOfPages2(response.data.pagination.numberOfPages);
+  setTotalOrders(response.data.pagination.totalOrders)
+
+} catch (error) {
+  console.error('Error fetching students:', error);
+} finally {
+  setLoading(false); 
+}
+}
+};
+const handleNextPage2 = async () => {
+if (currentPage2 < numberOfPages2) {
+setCurrentPage2(currentPage2 + 1) 
+try {
+  setLoading(true);
+  const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-collector-orders`, {
+    params: {
+      page: currentPage2,
+      limit: 100,
+      status:searchStatus,
+      startDate:startDate,
+      endDate:endDate,
+        
+      },
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('carrierToken')}`,
+    },
+  });
+
+  setShipmentsAdmin(response.data.data);
+  setSecondFilter(true)
+  // setMarketerFilter(false)
+  // setDateFilter(false)
+  console.log(response)
+  setCurrentPage2(response.data.pagination.currentPage);
+  setNumberOfPages2(response.data.pagination.numberOfPages);
+  setTotalOrders(response.data.pagination.totalOrders)
+
+} catch (error) {
+  console.error('Error fetching students:', error);
+} finally {
+  setLoading(false); 
+}  
+}
+};
+
+async function getSearchShipmentsPage() {
+try {
+setLoading(true);
+const response = await axios.get(`https://dashboard.go-tex.net/logistics-test/order/get-collector-orders`, {
+  params: {
+    page: currentPage2,
+    limit: 100,
+    status:searchStatus,
+    startDate:startDate,
+    endDate:endDate,
+    },
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem('carrierToken')}`,
+  },
+});
+
+setShipmentsAdmin(response.data.data);
+setSecondFilter(true)
+console.log(response)
+setCurrentPage2(response.data.pagination.currentPage);
+setNumberOfPages2(response.data.pagination.numberOfPages);
+setTotalOrders(response.data.pagination.totalOrders)
+
+} catch (error) {
+console.error('Error fetching students:', error);
+} finally {
+setLoading(false); 
+}
+} 
+
   const [selectedID, setSelectedID] = useState(null);
 
   // picked to store request
@@ -72,7 +316,7 @@ export default function CollectorShipments() {
       console.log(response);
       closeModal();
       setSelectedFiles([]);
-      getOrders();
+      getShipmentsAdmin();
     } catch (error) {
       console.error(error);
       alert(error.response.data.msg);
@@ -124,7 +368,7 @@ export default function CollectorShipments() {
       console.log(response);
       closeModalInStore();
       setSelectedFilesInStore([]);
-      getOrders();
+      getShipmentsAdmin();
     } catch (error) {
       console.error(error);
       alert(error.response.data.msg);
@@ -174,7 +418,7 @@ export default function CollectorShipments() {
       console.log(response);
       closeModalCancel();
       setSelectedFilesCancel([]);
-      getOrders();
+      getShipmentsAdmin();
     } catch (error) {
       console.error(error);
       alert(error.response.data.msg);
@@ -210,7 +454,67 @@ export default function CollectorShipments() {
   return (
     <>
     <div className='p-4' id='content'>
-    <div className="row">
+    <div className="my-table p-4 mb-4">
+      <div className="row">
+        
+       
+        <div className="col-md-4">
+          <select className='form-control m-1'
+          
+          placeholder="حالة الشحنة"
+        //   value={searchPaytype}
+          onChange={(e) => setSearchStatus(e.target.value)} >
+            <option value="">حالة الشحنة (الكل)</option>
+            <option value="pending">pending (معلقة)</option>
+            <option value="late to store"> الشحنات المتأخرة</option>
+            <option value="pick to store">pick to store(ف الطريق للمخزن)</option>
+            <option value="in store">in store(فى المخزن)</option>
+            <option value="pick to client">pick to client(ف الطريق للعميل)</option>
+            <option value="delivered">delivered(تم تسليمها)</option>
+            <option value="canceled">canceled(تم الغائها)</option>
+            </select>
+        </div>
+        
+        <div className="col-md-8 p-1">
+          <label>
+  التاريخ من:
+  <input
+    type="date"
+    // value={startDate}
+    onChange={(e) => setStartDate(e.target.value)}
+    max={endDate || undefined}
+  />
+</label>
+<label>
+  الى:
+  <input
+    type="date"
+    // value={endDate}
+    onChange={(e) => setEndDate(e.target.value)}
+    min={startDate || undefined}
+  />
+</label>
+
+        </div>
+        {/* <div className="col-md-4">
+          <input className='form-control m-1' 
+          type="search" placeholder=" رقم الصفحة"
+          // value={clientFilter}
+          onChange={(e) => setCurrentPage2(e.target.value)}
+          />
+        </div> */}
+        <div className="text-center mt-1">
+        <button className="btn btn-dark m-1" onClick={getSearchShipmentsAdmin}>
+  بحث
+</button>  
+<button className="btn btn-dark m-1" onClick={getShipmentsAdmin}>عرض جميع الشحنات  </button>
+      <div className="p-2 count-box m-1">
+            <span className='text-primary'>عدد الشحنات  : {totalOrders} </span>
+          </div>
+ </div>
+      </div>
+    </div>
+    {/* <div className="row">
     <div className="col-md-3  p-2 mb-2">
     <select className='form-control m-1'
           
@@ -219,16 +523,129 @@ export default function CollectorShipments() {
             <option value=""> حالة الشحنة(جميع الشحنات)</option>
             <option value="pending">pending (معلقة)</option>
             <option value="pick to store">pick to store(ف الطريق للمخزن)</option>
-            {/* <option value="in store">in store(فى المخزن)</option> */}
-             {/*<option value="delivered">delivered(تم تسليمها)</option> */}
+            {/* <option value="in store">in store(فى المخزن)</option> 
+             {/*<option value="delivered">delivered(تم تسليمها)</option> 
             <option value="canceled">canceled(تم الغائها)</option>
             <option value="late to store"> الشحنات المتأخرة</option>
-            {/* <option value=''>جميع الشحنات</option> */}
+            {/* <option value=''>جميع الشحنات</option> 
             </select>
     </div>
-    </div>
+    </div> */}
     <div className="row">
-    {filteredOrders && filteredOrders
+    {shipmentsAdmin && shipmentsAdmin.map((item, index) => (
+      <div className="col-md-4 p-2 " key={index}>
+    {loading ? (
+      <span>
+        <i className="fa-solid fa-spinner fa-spin"></i>
+      </span>
+    ) : (
+      <>
+      <div >
+                  <div className='order-card p-2'>
+                    <p className="text-danger text-center">
+                      {item.ordernumber}
+                    </p>
+                    <span>المرسل : </span>
+                    <h6>{item.sendername}</h6>
+                    <h6>{item.senderphone} {item.senderphone2 ? (<>,<br/>{item.senderphone2}</>) : null}</h6>
+                    <h6>{item.sendercity} ,{item.senderdistrict}</h6>
+                    <h6>{item.senderaddress}</h6>
+                    <span>المستلم : </span>
+                    <h6>{item.recivername}</h6>
+                    <h6>{item.reciverphone} {item.reciverphone2 ? (<>,<br/>{item.reciverphone2}</>) : null}</h6>
+                    <h6>{item.recivercity} ,{item.reciverdistrict}</h6>
+                    <h6>{item.reciveraddress}</h6>
+                    <hr className='m-0'/>
+                    <span>الوزن : {item.weight}</span>
+                    <span className='fw-bold text-dark px-2'> | </span>
+                    <span>عدد القطع : {item.pieces}</span>
+                    <hr className='m-0'/>
+                    <span>الدفع : {item.paytype}</span>
+                    <span className='fw-bold text-dark px-2'> | </span>
+                    <span>الحالة : 
+                    {item.isreturn==true && item.status =='in store'?
+                <span className='fw-bold'>شحنة رجيع(بالمخزن) </span>:
+                item.status=='pending'?
+                <span className='fw-bold'>قيد الانتظار</span>:
+                item.status=='late to store'?
+                <span className='fw-bold'>شحنة متأخرة </span>:
+                item.status=='pick to store'?
+                <span className='fw-bold'>فى الطريق للمخزن</span>:
+                item.status=='in store'?
+                <span className='fw-bold'> فى المخزن</span>:
+                item.status=='pick to client' && item.isreturn!==true?
+                <span className='fw-bold'>فى الطريق للعميل</span>:
+                item.status=='pick to client' && item.isreturn===true?
+                <span className='fw-bold'>فى الطريق للمرسل</span>:
+                item.status=='received'?
+                <span className='fw-bold'>تم تسليمها</span>:
+                item.status=='canceled'?
+                <span className='fw-bold'>تم إلغائها</span>:
+                <span>{item.status}</span>}
+                      </span> 
+                    <hr className='m-0'/>
+                    <button className="btn btn-success m-1" onClick={() => { getSticker(item._id) }}>عرض الاستيكر</button>
+                    {item.status == 'pending'?
+                  <button className="btn btn-orange m-1" onClick={()=>{
+                   
+                    openModal(item._id)
+                  }}>تأكيد استلام الشنحة</button>:null}
+                  {item.status == 'pick to store' || item.status=='late to store'?
+                   <button className="btn btn-secondary m-1" onClick={()=>{
+                      openModalInStore(item._id)
+                  }}>تبليغ امين المخزن</button>:null}
+                  {item.status == "pending" ?
+                  <button className="btn btn-danger m-1" onClick={()=>{
+                      openModalCancel(item._id)
+                  }}>إلغاء الشنحة</button>:null}
+                  <a href={`https://wa.me/${item.senderphone}`} className="btn btn-whatsapp" target='_blank'>
+                  <i class="fa-brands fa-whatsapp"></i> 
+                  للتواصل مع المرسل 
+                  </a>
+                  </div>
+                </div>
+      </>)}
+      </div>
+      ))}
+      {secondFilter?(
+      <div>
+        <button className="btn btn-dark" onClick={handlePreviousPage2} disabled={currentPage2 === 1}>
+          الصفحة السابقة 
+        </button>
+        <span className='px-1'>
+          Page {currentPage2} of {numberOfPages2}
+        </span>
+        <button className="btn btn-dark" onClick={handleNextPage2} disabled={currentPage2 === numberOfPages2}>
+          الصفحة التالية 
+        </button>
+      </div>
+      ):
+      
+      (
+        <div>
+        <button className="btn btn-dark" onClick={handlePreviousPage} disabled={currentPage === 1}>
+          الصفحة السابقة 
+        </button>
+        <span className='px-1'>
+          Page {currentPage} of {numberOfPages}
+        </span>
+        <button className="btn btn-dark" onClick={handleNextPage} disabled={currentPage === numberOfPages}>
+          الصفحة التالية 
+        </button>
+      </div>
+      )}
+      {/* <div>
+<input className=' m-1' type="number" 
+
+placeholder="رقم الصفحة "
+onChange={(e) => setCurrentPage2(e.target.value)} />
+<button className="btn btn-primary m-1" onClick={getSearchShipmentsPage}>
+            بحث برقم الصفحة
+        </button>
+      </div>
+      */}
+      
+    {/* {filteredOrders && filteredOrders
     .map((item, index) => {
               return (
                 <div className="col-md-4 p-2 " key={index}>
@@ -253,7 +670,27 @@ export default function CollectorShipments() {
                     <hr className='m-0'/>
                     <span>الدفع : {item.paytype}</span>
                     <span className='fw-bold text-dark px-2'> | </span>
-                    <span>الحالة : {item.status}</span>
+                    <span>الحالة : 
+                    {item.isreturn==true && item.status =='in store'?
+                <span className='fw-bold'>شحنة رجيع(بالمخزن) </span>:
+                item.status=='pending'?
+                <span className='fw-bold'>قيد الانتظار</span>:
+                item.status=='late to store'?
+                <span className='fw-bold'>شحنة متأخرة </span>:
+                item.status=='pick to store'?
+                <span className='fw-bold'>فى الطريق للمخزن</span>:
+                item.status=='in store'?
+                <span className='fw-bold'> فى المخزن</span>:
+                item.status=='pick to client' && item.isreturn!==true?
+                <span className='fw-bold'>فى الطريق للعميل</span>:
+                item.status=='pick to client' && item.isreturn===true?
+                <span className='fw-bold'>فى الطريق للمرسل</span>:
+                item.status=='received'?
+                <span className='fw-bold'>تم تسليمها</span>:
+                item.status=='canceled'?
+                <span className='fw-bold'>تم إلغائها</span>:
+                <span>{item.status}</span>}
+                      </span> 
                     <hr className='m-0'/>
                     <button className="btn btn-success m-1" onClick={() => { getSticker(item._id) }}>عرض الاستيكر</button>
                     {item.status == 'pending'?
@@ -269,9 +706,13 @@ export default function CollectorShipments() {
                   <button className="btn btn-danger m-1" onClick={()=>{
                       openModalCancel(item._id)
                   }}>إلغاء الشنحة</button>:null}
+                  <a href={`https://wa.me/${item.senderphone}`} className="btn btn-whatsapp" target='_blank'>
+                  <i class="fa-brands fa-whatsapp"></i> 
+                  للتواصل مع المرسل 
+                  </a>
                   </div>
                 </div>
-              )})}
+              )})} */}
     </div>
       {/* <div className="my-table p-4 ">
         <table className="table">
@@ -297,7 +738,7 @@ export default function CollectorShipments() {
               return (
                 <tr key={index}>
                   <td>{index + 1}</td> 
-                  <td>{item.createdAt.slice(0, 10)}</td>
+                  <td>{item.createdAt.slice(0, 100)}</td>
                   <td>{item.sendername}</td>
                   <td>{item.recivername}</td>
                   <td>{item.billcode}</td>

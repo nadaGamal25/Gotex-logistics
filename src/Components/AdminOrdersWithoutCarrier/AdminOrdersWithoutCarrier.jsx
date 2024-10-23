@@ -16,7 +16,10 @@ export default function AdminOrdersWithoutCarrier() {
     const [numberOfPages2, setNumberOfPages2] = useState(1);
     const [orderId, setOrderId] = useState('');
     const [carrierId, setCarrierId] = useState('');
-
+    const [selectedFilesReciever, setSelectedFilesReciever] = useState([]);
+    const [desReciever, setDescReciever] = useState('');
+    const [selectedFilesCollector, setSelectedFilesCollector] = useState([]);
+    const [descCollector, setDesCollector] = useState('');
     useEffect(() => {
       getCollectorCarriers()
       getRecieverCarriers()
@@ -148,6 +151,7 @@ export default function AdminOrdersWithoutCarrier() {
 
   const closeModal = () => {
     setShowModal(false);
+    setSelectedFilesCollector([])
   }
   const [showModal2, setShowModal2] = useState(false);
 
@@ -158,17 +162,24 @@ export default function AdminOrdersWithoutCarrier() {
 
   const closeModal2 = () => {
     setShowModal2(false);
+    setSelectedFilesReciever([])
   }
 
+
   async function addCollector() {
+    const formData = new FormData();
+        formData.append('orderId', orderId);
+        formData.append('carrierId', carrierId);
+        formData.append('description', descCollector);
+        
+        selectedFilesCollector.forEach((file) => {
+          formData.append('images', file);
+        });
     
     try {
         const response = await axios.put(
-          `https://dashboard.go-tex.net/logistics/order/add-order-to-collector`,
-          {
-            orderId: orderId,
-            carrierId: carrierId,
-          },
+          `https://dashboard.go-tex.net/logistics-test/order/add-order-to-collector`,
+          formData,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -176,14 +187,12 @@ export default function AdminOrdersWithoutCarrier() {
           }
         );
   
-      if (response.status === 200) {
         console.log(response);
         window.alert('تمت اضافة المندوب بنجاح');
         closeModal()
         getShipmentsAdmin()
-      } else {
-        // setError(response.data.msg);
-      }
+        setSelectedFilesCollector([])
+     
     } catch (error) {
         // setError(error.response.data.msg)
         console.log(error.response)
@@ -194,14 +203,19 @@ export default function AdminOrdersWithoutCarrier() {
     }
   }
   async function addReciever() {
+    const formData = new FormData();
+        formData.append('orderId', orderId);
+        formData.append('carrierId', carrierId);
+        formData.append('description', desReciever);
+        
+        selectedFilesCollector.forEach((file) => {
+          formData.append('images', file);
+        });
     
     try {
         const response = await axios.put(
-          `https://dashboard.go-tex.net/logistics/order/add-order-to-receiver`,
-          {
-            orderId: orderId,
-            carrierId: carrierId,
-          },
+          `https://dashboard.go-tex.net/logistics-test/order/add-order-to-receiver`,
+          formData,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -209,14 +223,12 @@ export default function AdminOrdersWithoutCarrier() {
           }
         );
   
-      if (response.status === 200) {
         console.log(response);
         window.alert('تمت اضافة المندوب بنجاح');
         closeModal2()
         getShipmentsAdmin()
-      } else {
-        // setError(response.data.msg);
-      }
+        selectedFilesReciever([])
+      
     } catch (error) {
         // setError(error.response.data.msg)
         console.log(error.response)
@@ -226,6 +238,15 @@ export default function AdminOrdersWithoutCarrier() {
         // window.alert(error.response?.data?.msg || error.response?.data?.msg?.name || error.response?.data?.errors[0]?.msg|| "error")
     }
   }
+  function handleFileChangeReciever(event) {
+    const files = Array.from(event.target.files);
+    setSelectedFilesReciever((prevFiles) => [...prevFiles, ...files]);
+  }
+  function handleFileChangeCollector(event) {
+    const files = Array.from(event.target.files);
+    setSelectedFilesCollector((prevFiles) => [...prevFiles, ...files]);
+  }
+
   const handleSelectCarrierCollector = (selectedValue) => {
     const selectedCarrier = carrierCollector.find(carrier =>
       `${carrier.firstName} ${carrier.lastName}, ${carrier.mobile}, ${carrier.role}` === selectedValue
@@ -292,17 +313,44 @@ export default function AdminOrdersWithoutCarrier() {
                    <td>{item.price}</td>
                    <td>{item.weight}</td>
                    <td>{item.pieces}</td>
-                   <td>{item.status}</td>
-                   {item.images && item.images[0]?<td>
-               <a href={item.images[0].replace('public', 'https://dashboard.go-tex.net/logistics')} target='_blank'>رابط_الملف</a>
+                   {item.isreturn==true && item.status =='in store'?
+                <td >شحنة رجيع(بالمخزن) </td>:
+                item.status=='pending'?
+                <td >قيد الانتظار</td>:
+                item.status=='late to store'?
+                <td >شحنة متأخرة </td>:
+                item.status=='pick to store'?
+                <td >فى الطريق للمخزن</td>:
+                item.status=='in store'?
+                <td > فى المخزن</td>:
+                item.status=='pick to client' && item.isreturn!==true?
+                <td >فى الطريق للعميل</td>:
+                item.status=='pick to client' && item.isreturn===true?
+                <td >فى الطريق للمرسل</td>:
+                item.status=='received'?
+                <td >تم تسليمها</td>:
+                item.status=='canceled'?
+                <td >تم إلغائها</td>:
+                <td>{item.status}</td>}                   {item.images && item.images[0]?<td>
+               <a href={item.images[0].replace('public', 'https://dashboard.go-tex.net/logistics-test')} target='_blank'>رابط_الملف</a>
              </td>:<td>_</td>}
                    {item.collector && item.collector.length > 0 && item.collector[0].firstName ? (
-<td>{item.collector[0].firstName} {item.collector[0].lastName}</td>
+<td>{item.collector[0].firstName} {item.collector[0].lastName} <br/>
+{item.addCarrierReason?.collector?.description?
+<span className='text-danger'>{item.addCarrierReason.collector.description}</span>:null} <br/>
+{item.addCarrierReason.collector.images && item.addCarrierReason.collector.images[0]?
+               <a href={item.addCarrierReason.collector.images[0].replace('public', 'https://dashboard.go-tex.net/logistics-test')} target='_blank'>رابط_الملف</a>
+             :null} </td>
 ) : (
 <td></td>
 )}
 {item.receiver&& item.receiver.length > 0 && item.receiver[0].firstName ? (
-<td>{item.receiver[0].firstName} {item.receiver[0].lastName}</td>
+<td>{item.receiver[0].firstName} {item.receiver[0].lastName}  <br/>
+{item.addCarrierReason?.receiver?.description?
+<span className='text-danger'>{item.addCarrierReason.receiver.description}</span>:null} <br/>
+{item.addCarrierReason.receiver.images && item.addCarrierReason.receiver.images[0]?
+               <a href={item.addCarrierReason.receiver.images[0].replace('public', 'https://dashboard.go-tex.net/logistics-test')} target='_blank'>رابط_الملف</a>
+             :null}</td>
 ) : (
 <td></td>
 )}  
@@ -316,11 +364,14 @@ export default function AdminOrdersWithoutCarrier() {
 ) : (
 <td></td>
 )}  
-   {item.status == 'pending'?<td><button className="btn btn-success" onClick={()=>{
+   {item.status == 'pending'?
+   <td><button className="btn btn-success" onClick={()=>{
     openModal(item._id)
-   }}>إضافة مندوب</button></td>:item.status=='in store'?<td><button className="btn btn-success" onClick={()=>{
+   }}>إضافة مندوب تجميع</button></td>
+   :item.status=='in store'?<td><button className="btn btn-success" onClick={()=>{
     openModal2(item._id)
-   }}>إضافة مندوب</button></td>:null}                 
+   }}>إضافة مندوب تسليم</button></td>
+   :null}                 
  
                  
    </>
@@ -348,8 +399,10 @@ export default function AdminOrdersWithoutCarrier() {
              </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className='text-center'>
-          <input list='myData'
+    <form onSubmit={(e) => { e.preventDefault(); addCollector(orderId); }}>
+      <div className=''>
+        <label>اسم المندوب</label>
+        <input list='myData'
           onChange={(e) => handleSelectCarrierCollector(e.target.value)}
                                             type="text"
                                             className='my-input my-2 form-control' placeholder='اسم المندوب'
@@ -363,18 +416,35 @@ export default function AdminOrdersWithoutCarrier() {
     />
   ))}
 </datalist>
-           </div>
-        </Modal.Body>
-        <Modal.Footer>
-          
-          <Button variant="primary" onClick={()=>{addCollector()}}>
-           إضافة مندوب تجميع
+        <label htmlFor="">إضافة ملاحظة: </label>
+        <input
+          type="text"
+          className="my-2 my-input form-control"
+          onChange={(e) => { setDesCollector(e.target.value); }} required
+        />
+        <label htmlFor="">إرفق ملف () </label>
+        <input
+          type="file"
+          className="my-2 my-input form-control"
+          name="images"
+          multiple
+          onChange={handleFileChangeCollector} required
+        />
+      </div>
+      <Modal.Footer>
+        <div className="text-center">
+          <Button className='m-1' variant="danger" type="submit">
+          إضافة مندوب تجميع
           </Button>
-          
-          <Button variant="secondary" onClick={closeModal}>
-          إغلاق
+          <Button variant="secondary" type='button' onClick={closeModal}>
+            إغلاق
           </Button>
-        </Modal.Footer>
+        </div>
+      </Modal.Footer>
+    </form>
+  </Modal.Body>
+       
+        
       </Modal>
       <Modal show={showModal2} onHide={closeModal2}>
         <Modal.Header >
@@ -382,8 +452,10 @@ export default function AdminOrdersWithoutCarrier() {
              </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className='text-center'>
-          <input list='myData'
+    <form onSubmit={(e) => { e.preventDefault(); addReciever(orderId); }}>
+      <div className=''>
+        <label>اسم المندوب</label>
+        <input list='myData'
           onChange={(e) => handleSelectCarrierReciever(e.target.value)}
                                             type="text"
                                             className='my-input my-2 form-control' placeholder='اسم المندوب'
@@ -397,17 +469,35 @@ export default function AdminOrdersWithoutCarrier() {
     />
   ))}
 </datalist>
-           </div>
-        </Modal.Body>
-        <Modal.Footer>
-       
-          <Button variant="success" onClick={()=>{addReciever()}}>
+        <label htmlFor="">إضافة ملاحظة: </label>
+        <input
+          type="text"
+          className="my-2 my-input form-control"
+          onChange={(e) => { setDesCollector(e.target.value); }} required
+        />
+        <label htmlFor="">إرفق ملف () </label>
+        <input
+          type="file"
+          className="my-2 my-input form-control"
+          name="images"
+          multiple
+          onChange={handleFileChangeReciever} required
+        />
+      </div>
+      <Modal.Footer>
+        <div className="text-center">
+          <Button className='m-1' variant="danger" type="submit">
           إضافة مندوب تسليم
           </Button>
-          <Button variant="secondary" onClick={closeModal2}>
-          إغلاق
+          <Button variant="secondary" type='button' onClick={closeModal2}>
+            إغلاق
           </Button>
-        </Modal.Footer>
+        </div>
+      </Modal.Footer>
+    </form>
+  </Modal.Body>
+     
+      
       </Modal>
     </>
 )

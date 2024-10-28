@@ -650,17 +650,17 @@ export default function StoreKeeperOrders() {
           
           <div className="col-md-4">
           <div className="p-2 count-box  m-1">
-            <span>الشحنات المستلمة كاش  : {orders.filter((order)=> order.status == 'received' && order.receiverPaidCash== true && order.storekeeperPaidCash===false).length}</span>
+            <span>الشحنات المستلمة كاش  : {shipmentsAdmin.filter((order)=> order.status == 'received' && order.receiverPaidCash== true && order.storekeeperPaidCash===false).length}</span>
           </div>
           </div>
           <div className="col-md-4">
           <div className="p-2 count-box  m-1">
-            <span>الشحنات المستلمة فيزا  : {orders.filter((order)=> order.status == 'received' && order.orderPaidWithVisa== true && order.paidWithVisaFromStorekeeper ===false).length}</span>
+            <span>الشحنات المستلمة فيزا  : {shipmentsAdmin.filter((order)=> order.status == 'received' && order.orderPaidWithVisa== true && order.paidWithVisaFromStorekeeper ===false).length}</span>
           </div>
           </div>
           <div className="col-md-4">
           <div className="p-2 count-box m-1">
-            <span>الشحنات ف المخزن  : {orders.filter((order)=> order.status == 'in store').length}</span>
+            <span>الشحنات ف المخزن  : {shipmentsAdmin.filter((order)=> order.status == 'in store').length}</span>
           </div>
           </div>
           <div className="col-md-4">

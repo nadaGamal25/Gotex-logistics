@@ -83,7 +83,8 @@ const [totalOrders, setTotalOrders] = useState(0);
       setCurrentPage(response.data.pagination.currentPage);
       setNumberOfPages(response.data.pagination.numberOfPages);
       setTotalOrders(response.data.pagination.totalOrders)
-
+      setCachAmount(response.data.receiver.collectedCashAmount)
+      setVisaAmount(response.data.receiver.collectedVisaAmount)
     } catch (error) {
       console.error('Error fetching students:', error);
     } finally {
@@ -115,7 +116,8 @@ const [totalOrders, setTotalOrders] = useState(0);
       setCurrentPage2(response.data.pagination.currentPage);
       setNumberOfPages2(response.data.pagination.numberOfPages);
       setTotalOrders(response.data.pagination.totalOrders)
-
+      setCachAmount(response.data.receiver.collectedCashAmount)
+      setVisaAmount(response.data.receiver.collectedVisaAmount)
     } catch (error) {
       console.error('Error fetching students:', error);
     } finally {
@@ -152,7 +154,8 @@ const handlePreviousPage = async () => {
       setCurrentPage(response.data.pagination.currentPage);
       setNumberOfPages(response.data.pagination.numberOfPages);
       setTotalOrders(response.data.pagination.totalOrders)
-
+      setCachAmount(response.data.receiver.collectedCashAmount)
+      setVisaAmount(response.data.receiver.collectedVisaAmount)
     } catch (error) {
       console.error('Error fetching students:', error);
     } finally {
@@ -184,6 +187,8 @@ const handleNextPage = async () => {
       setCurrentPage(response.data.pagination.currentPage);
       setNumberOfPages(response.data.pagination.numberOfPages);
       setTotalOrders(response.data.pagination.totalOrders)
+      setCachAmount(response.data.receiver.collectedCashAmount)
+      setVisaAmount(response.data.receiver.collectedVisaAmount)
 
     } catch (error) {
       console.error('Error fetching students:', error);
@@ -219,7 +224,8 @@ try {
   setCurrentPage2(response.data.pagination.currentPage);
   setNumberOfPages2(response.data.pagination.numberOfPages);
   setTotalOrders(response.data.pagination.totalOrders)
-
+  setCachAmount(response.data.receiver.collectedCashAmount)
+  setVisaAmount(response.data.receiver.collectedVisaAmount)
 } catch (error) {
   console.error('Error fetching students:', error);
 } finally {
@@ -254,7 +260,8 @@ try {
   setCurrentPage2(response.data.pagination.currentPage);
   setNumberOfPages2(response.data.pagination.numberOfPages);
   setTotalOrders(response.data.pagination.totalOrders)
-
+  setCachAmount(response.data.receiver.collectedCashAmount)
+  setVisaAmount(response.data.receiver.collectedVisaAmount)
 } catch (error) {
   console.error('Error fetching students:', error);
 } finally {
@@ -285,7 +292,8 @@ console.log(response)
 setCurrentPage2(response.data.pagination.currentPage);
 setNumberOfPages2(response.data.pagination.numberOfPages);
 setTotalOrders(response.data.pagination.totalOrders)
-
+setCachAmount(response.data.receiver.collectedCashAmount)
+      setVisaAmount(response.data.receiver.collectedVisaAmount)
 } catch (error) {
 console.error('Error fetching students:', error);
 } finally {
@@ -699,7 +707,7 @@ setLoading(false);
                   <button className="btn btn-primary m-1" onClick={()=>{
                       openModalRecieved(item._id)
                   }}>تأكيد استلام العميل</button>:null}
-                  {(item.status =='pick to client' || item.status == "received") && item.paytype === "cod" && item.isreturn != true?
+                  {((item.status =='pick to client' || item.status == "received" )&& item.payment) && item.paytype === "cod" && item.isreturn != true?
                   <button className="btn btn-danger m-1" onClick={()=>{
                       openModalPayments(item._id)
                   }}>حالة الدفع</button>:null}
